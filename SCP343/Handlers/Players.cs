@@ -472,7 +472,7 @@ namespace SCP343.Handlers
             if (scp343badgelist.Count() < 1) return;
             if (ev.Player.IsSCP343())
             {
-                ev.Allowed = false;
+                ev.Allowed = scp343.cfg.scp343_canescape;
             }
         }
 
