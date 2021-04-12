@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 namespace SCP343
 {
     using System.Collections.Generic;
@@ -61,6 +61,9 @@ namespace SCP343
         [Description("Moving Speed lift for all players")]
         public float lift_moving_speed { get; set; } = 6.5f;
 
+        [Description("UnitName for scp-343")]
+        public string scp343_unitname { get; set; } = "SCP-343";
+
         private static Config cfg => scp343.cfg;
         public static void Reload()
         {
@@ -88,6 +91,7 @@ namespace SCP343
             cfg.scp343_heckerrordisable = conf.GetString("scp343_heckerrordisable", cfg.scp343_heckerrordisable);
             cfg.scp343_itemconverttoggle = conf.GetBool("scp343_itemconverttoggle", cfg.scp343_itemconverttoggle);
             cfg.minplayers = conf.GetInt("scp343_minplayers", cfg.minplayers);
+            cfg.scp343_unitname = conf.GetString("scp343_unitname", cfg.scp343_unitname);
         }
     }
 }
