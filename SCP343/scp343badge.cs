@@ -92,11 +92,20 @@ namespace SCP343
     {
         private static Dictionary<int, Badge> badges { get; } = new Dictionary<int, Badge>();
 
+        private static void AntiSCP575(Player player)
+        {
+            if(player.IsSCP343())
+            {
+                player.HP = 100;
+                Timing.CallDelayed(1f, () => AntiSCP575(player));
+            }
+        }
+
         internal static IEnumerable<Player> List
         {
             get
             {
-                IEnumerable<Player> players = Player.List.Where(e => e.IsSCP343());
+                IEnumerable<Player> players = ListBadges.Select(p => p.Player);
                 return players;
             }
         }
@@ -115,6 +124,7 @@ namespace SCP343
             scp343.revive343 = 3;
             scp343.canheal = true;
             badges.Add(scp343.Id, scp343);
+            Timing.CallDelayed(0.5f, () => AntiSCP575(scp343.Player));
         }
         internal static bool Remove(Player player) => badges.Remove(player.Id);
         internal static bool Remove(int PlayerId) => badges.Remove(PlayerId);
