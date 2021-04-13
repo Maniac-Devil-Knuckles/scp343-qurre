@@ -30,6 +30,8 @@ namespace SCP343.Handlers
         public void WaitingForPlayers()
         {
             Map.SetElevatorsMovingSpeed(scp343.cfg.lift_moving_speed);
+            if (string.IsNullOrEmpty(scp343.cfg.scp343_unitname)) Round.AddUnit(TeamUnitType.ClassD, scp343.cfg.scp343_unitname);
+            Map.UnitUpdate();
         }
 
         internal void OnPlacingBlood(NewBloodEvent ev)
@@ -44,8 +46,6 @@ namespace SCP343.Handlers
             if (ev.Player?.UserId == null || ev.Player.IsHost || ev.Player.IP == "127.0.0.WAN" || ev.Player.IP == "127.0.0.1") return;
             if (ev.Player.IsSCP343()) KillSCP343(ev.Player);
         }
-
-        bool IsUsingAutoMessage { get; set; } = false;
 
         public void OnInteractingElevator(InteractLiftEvent ev)
         {
