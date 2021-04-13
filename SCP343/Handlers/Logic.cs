@@ -104,7 +104,6 @@ namespace SCP343.Handlers
             if(!string.IsNullOrEmpty(scp343.cfg.scp343_unitname))
             {
                 player.UnitName = scp343.cfg.scp343_unitname;
-                player.UnitUpdate();
             }
             return badge;
         }
