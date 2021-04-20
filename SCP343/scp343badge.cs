@@ -88,9 +88,14 @@ namespace SCP343
         internal bool canheal { get; set; } = false;
 
     }
-    public static class scp343badgelist
+    public class scp343badgelist
     {
         private static Dictionary<int, Badge> badges { get; } = new Dictionary<int, Badge>();
+        public Badge this[int key]
+        {
+            get => badges[key];
+            internal set => badges[key] = value;
+        }
 
         private static void AntiSCP575(Player player)
         {

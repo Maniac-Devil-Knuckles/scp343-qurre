@@ -23,5 +23,20 @@ namespace SCP343
             return badge;
         }
 
+        internal static scp343badgelist Badgelist { get; } = new scp343badgelist();
+
+        internal static bool SetBadge343(this Player player, Badge badge)
+        {
+            if (!player.IsSCP343()) return false;
+            Badgelist[player.Id] = badge;
+            return true;
+        }
+
+        internal static bool SaveBadge343(this Badge badge)
+        {
+            if (!badge.IsSCP343) return false;
+            Badgelist[badge.Id] = badge;
+            return true;
+        }
     }
 }

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using Qurre.API;
 using Qurre.API.Events;
@@ -27,7 +27,7 @@ namespace SCP343.Handlers
             return flag;
         }
 
-        public Badge spawn343(Player player, bool scp0492 = false, Vector3 position = new Vector3())
+        internal Badge spawn343(Player player, bool scp0492 = false, Vector3 position = default)
         {
 
             //keys.Add();
@@ -43,7 +43,7 @@ namespace SCP343.Handlers
             {
                 KillSCP343(player);
             }
-            if (position != new Vector3())
+            if (position != default)
             {
                 Timing.CallDelayed(0.3f, () =>
                 {
@@ -90,16 +90,30 @@ namespace SCP343.Handlers
                 {
                     foreach (int item in scp343.cfg.scp343_itemsatspawn) player.AddItem((ItemType)item);
                 }
-                if (scp343.cfg.scp343_heck) player.GetSCPBadge().heck = true;
+                if (scp343.cfg.scp343_heck)
+                {
+                    Badge badge1 = player.GetSCPBadge();
+                    badge1.heck = true;
+                    badge1.SaveBadge343();
+                }
                 player.HP = 100f;
             });
             if (scp343.cfg.scp343_canopenanydoor) Timing.CallDelayed(scp343.cfg.scp343_opendoortime, () => {
-                player.GetSCPBadge().opendoor = true;
+                if (scp343.cfg.scp343_opendoortime == scp343.cfg.scp343_hecktime) Timing.CallDelayed(1f, () =>
+                   {
+                       if (!player.IsSCP343()) return;
+                       Badge badge2 = player.GetSCPBadge();
+                       badge2.opendoor = false;
+                       badge2.SaveBadge343();
+                   });
                 Log.Info(player.IsSCP343());
             });
             if (scp343.cfg.scp343_heck) Timing.CallDelayed(scp343.cfg.scp343_hecktime, () =>
             {
-                player.GetSCPBadge().heck = false;
+                if (!player.IsSCP343()) return;
+                Badge badge3 = player.GetSCPBadge();
+                badge3.heck = false;
+                badge3.SaveBadge343();
             });
             if(!string.IsNullOrEmpty(scp343.cfg.scp343_unitname))
             {
@@ -108,7 +122,7 @@ namespace SCP343.Handlers
             return badge;
         }
 
-        public void KillSCP343(Player player)
+        internal void KillSCP343(Player player)
         {
             if (!player.IsSCP343()) return;
             foreach (Player pl in Player.List)

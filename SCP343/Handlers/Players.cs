@@ -22,12 +22,12 @@ namespace SCP343.Handlers
 
         private scp343 plugin;
         private Dictionary<int, Badge> deadplayers { get; } = new Dictionary<int, Badge>();
-        public Players(scp343 plugin)
+        internal Players(scp343 plugin)
         {
             this.plugin = plugin;
         }
 
-        public void WaitingForPlayers()
+        internal void WaitingForPlayers()
         {
             Map.SetElevatorsMovingSpeed(scp343.cfg.lift_moving_speed);
             if (string.IsNullOrEmpty(scp343.cfg.scp343_unitname)) Round.AddUnit(TeamUnitType.ClassD, scp343.cfg.scp343_unitname);
@@ -47,7 +47,7 @@ namespace SCP343.Handlers
             if (ev.Player.IsSCP343()) KillSCP343(ev.Player);
         }
 
-        public void OnInteractingElevator(InteractLiftEvent ev)
+        internal void OnInteractingElevator(InteractLiftEvent ev)
         {
             if (ev.Player.IsSCP343())
             {
@@ -55,27 +55,20 @@ namespace SCP343.Handlers
             }
             else ev.Lift.MovingSpeed = scp343.cfg.lift_moving_speed;
         }
-        public void OnRoundEnd(RoundEndEvent ev)
+        internal void OnRoundEnd(RoundEndEvent ev)
         {
             scp343badgelist.Clear();
         }
 
 
-        public void OnRoundEnding(CheckEvent ev)
+        internal void OnRoundEnding(CheckEvent ev)
         {
             if (scp343badgelist.Count() > 0)
             {
-                List<Player> mtf = new List<Player>();
-                List<Player> classd = new List<Player>();
-                List<Player> chaos = new List<Player>();
-                List<Player> scps = new List<Player>();
-                foreach (Player player in Player.List)
-                {
-                    if (player.Team == Team.MTF || player.Role == RoleType.Scientist) mtf.Add(player);
-                    if (player.Role == RoleType.ClassD && !player.IsSCP343()) classd.Add(player);
-                    if (player.Team == Team.SCP) scps.Add(player);
-                    if (player.Role == RoleType.ChaosInsurgency) chaos.Add(player);
-                }
+                List<Player> mtf = Player.List.Where(p => p.Team == Team.MTF).ToList();
+                List<Player> classd = Player.List.Where(p => p.Role == RoleType.ClassD && !p.IsSCP343()).ToList();
+                List<Player> chaos = Player.List.Where(p => p.Role == RoleType.ChaosInsurgency).ToList();
+                List<Player> scps = Player.List.Where(p => p.Team == Team.SCP).ToList(); ;
                 if (mtf.Count > 0 && classd.Count == 0 && scps.Count == 0 && chaos.Count == 0) ev.RoundEnd = true;
                 else if (mtf.Count == 0 && classd.Count == 0 && scps.Count > 0) ev.RoundEnd = true;
                 else if (mtf.Count > 0 && (classd.Count > 0 || chaos.Count > 0) && scps.Count == 0) ev.RoundEnd = false;
@@ -86,8 +79,7 @@ namespace SCP343.Handlers
         }
 
 
-
-        public void OnSendingConsoleCommand(SendingConsoleEvent ev)
+        internal void OnSendingConsoleCommand(SendingConsoleEvent ev)
         {
             if (ev.Name.ToLower() == "invis")
             {
@@ -174,7 +166,7 @@ namespace SCP343.Handlers
             else if (ev.Name.ToLower() == "rt")
             {
                 ev.Allowed = false;
-                ev.ReturnMessage = $"Раунд длится {Round.ElapsedTime}";
+                ev.ReturnMessage = $"Round Time is {Round.ElapsedTime}";
             }
             else if (ev.Name.ToLower() == "heal343")
             {
@@ -200,9 +192,15 @@ namespace SCP343.Handlers
                         }
                         else
                         {
-                            ev.Player.GetSCPBadge().canheal = false;
+                            Badge badge = ev.Player.GetSCPBadge();
+                            badge.canheal = false;
+                            badge.SaveBadge343();
                             ev.ReturnMessage = "Вы восстановили игрокам hp";
-                            Timing.CallDelayed(120f, () => ev.Player.GetSCPBadge().canheal = true);
+                            Timing.CallDelayed(120f, () =>
+                            {
+                                badge.canheal = true;
+                                badge.SaveBadge343();
+                            });
                         }
                     }
                     else
@@ -249,7 +247,9 @@ namespace SCP343.Handlers
                                 player.Position = deadplayers[player.Id].pos;
                                 deadplayers.Remove(player.Id);
                             });
-                            ev.Player.GetSCPBadge().revive343--;
+                            Badge badge = ev.Player.GetSCPBadge();
+                            badge.revive343--;
+                            badge.SaveBadge343();
                             ev.ReturnMessage = $"Вы возродили {player.Nickname}";
                         }
                     }
@@ -259,7 +259,7 @@ namespace SCP343.Handlers
             }
         }
 
-        public void OnEnteringPocketDimension(PocketDimensionEnterEvent ev)
+        internal void OnEnteringPocketDimension(PocketDimensionEnterEvent ev)
         {
             if (scp343badgelist.Count() < 1) return;
             if (ev.Player.IsSCP343())
@@ -269,33 +269,33 @@ namespace SCP343.Handlers
             }
         }
 
-        public void OnStarting(AlphaStartEvent ev)
+        internal void OnStarting(AlphaStartEvent ev)
         {
             if (scp343badgelist.Count() < 1) return;
             if (ev.Player == null) return;
             if (ev.Player.IsSCP343() && !scp343.cfg.scp343_nuke_interact) ev.Allowed = false;
         }
 
-        public void OnStopping(AlphaStopEvent ev)
+        internal void OnStopping(AlphaStopEvent ev)
         {
             if (scp343badgelist.Count() < 1) return;
             if (ev.Player == null) return;
             if (ev.Player.IsSCP343() && !scp343.cfg.scp343_nuke_interact) ev.Allowed = false;
         }
 
-        public void OnActivatingWarheadPanel(EnableAlphaPanelEvent ev)
+        internal void OnActivatingWarheadPanel(EnableAlphaPanelEvent ev)
         {
             if (scp343badgelist.Count() < 1) return;
             if (ev.Player.IsSCP343() && !scp343.cfg.scp343_nuke_interact) ev.Allowed = false;
         }
 
-        public void OnHandcuffing(CuffEvent ev)
+        internal void OnHandcuffing(CuffEvent ev)
         {
             if (scp343badgelist.Count() < 1) return;
             if (ev.Target.IsSCP343() || ev.Cuffer.IsSCP343()) ev.Allowed = false;
         }
 
-        public void OnInteractingLocker(InteractLockerEvent ev)
+        internal void OnInteractingLocker(InteractLockerEvent ev)
         {
             if (scp343badgelist.Count() < 1) return;
             if (ev.Player.IsSCP343() && ev.Player.GetSCPBadge().canopendoor) ev.Allowed = scp343.cfg.scp343_canopenanydoor;
@@ -303,7 +303,7 @@ namespace SCP343.Handlers
 
 
 
-        public void OnDied(DiesEvent ev)
+        internal void OnDied(DiesEvent ev)
         {
             if (!deadplayers.ContainsKey(ev.Target.Id)) deadplayers.Add(ev.Target.Id, new Badge(ev.Target, ev.Target.Role, ev.Target.Position));
 
@@ -318,7 +318,7 @@ namespace SCP343.Handlers
 
         Random RNG => new Random();
 
-        public void OnHurting(DamageEvent ev)
+        internal void OnHurting(DamageEvent ev)
         {
             if (scp343badgelist.Count() < 1) return;
 
@@ -351,7 +351,7 @@ namespace SCP343.Handlers
 
 
 
-        public void OnRestartingRound()
+        internal void OnRestartingRound()
         {
             foreach (Player pl in Player.List)
             {
@@ -359,7 +359,7 @@ namespace SCP343.Handlers
             }
             scp343badgelist.Clear();
         }
-        public void OnRoundStarted()
+        internal void OnRoundStarted()
         {
             scp343badgelist.Clear();
             if (!scp343.cfg.IsEnabled)
@@ -390,7 +390,7 @@ namespace SCP343.Handlers
 
 
 
-        public void OnInteractingDoor(InteractDoorEvent ev)
+        internal void OnInteractingDoor(InteractDoorEvent ev)
         {
             if (scp343badgelist.Count() < 1) return;
             if (ev.Player.IsSCP343() && scp343badgelist.Get(ev.Player).canopendoor)
@@ -399,7 +399,7 @@ namespace SCP343.Handlers
             }
         }
 
-        public void OnChangingRole(RoleChangeEvent ev)
+        internal void OnChangingRole(RoleChangeEvent ev)
         {
             if (scp343badgelist.Count() < 1) return;
             List<ItemType> itemss = new List<ItemType>();
@@ -428,7 +428,7 @@ namespace SCP343.Handlers
             }
         }
 
-        public void OnDestroyingEvent(LeaveEvent ev)
+        internal void OnDestroyingEvent(LeaveEvent ev)
         {
             if (scp343badgelist.Count() < 1) return;
             if (ev.Player.Id == Server.Host.Id) return;
@@ -437,13 +437,13 @@ namespace SCP343.Handlers
             if (deadplayers.ContainsKey(ev.Player.Id)) deadplayers.Remove(ev.Player.Id);
         }
 
-        public void OnContaining(ContainEvent ev)
+        internal void OnContaining(ContainEvent ev)
         {
                 if (scp343badgelist.Count() < 1) return;
                 if (ev.Player.IsSCP343()) ev.Allowed = false;
         }
 
-        public void OnEnraging(EnrageEvent ev)
+        internal void OnEnraging(EnrageEvent ev)
         {
             if (scp343badgelist.Count() < 1) return;
             if (ev.Player.IsSCP343())
@@ -451,7 +451,7 @@ namespace SCP343.Handlers
                 ev.Allowed = false;
             }
         }
-        public void OnAddingTarget(AddTargetEvent ev)
+        internal void OnAddingTarget(AddTargetEvent ev)
         {
 
             if (scp343badgelist.Count() < 1) return;
@@ -461,13 +461,13 @@ namespace SCP343.Handlers
             }
         }
 
-        public void OnActivating(ActivatingEvent ev)
+        internal void OnActivating(ActivatingEvent ev)
         {
             if (scp343badgelist.Count() < 1) return;
             if (ev.Player.IsSCP343()) ev.Allowed = false;
         }
 
-        public void OnEscaping(EscapeEvent ev)
+        internal void OnEscaping(EscapeEvent ev)
         {
             if (scp343badgelist.Count() < 1) return;
             if (ev.Player.IsSCP343())
@@ -476,7 +476,7 @@ namespace SCP343.Handlers
             }
         }
 
-        public void OnMedicalUsing(MedicalUsingEvent ev)
+        internal void OnMedicalUsing(MedicalUsingEvent ev)
         {
             if (scp343badgelist.Count() < 1) return;
             if (!ev.Player.IsSCP343()) return;
@@ -487,7 +487,7 @@ namespace SCP343.Handlers
             }
         }
 
-        public void OnDropingItem(DroppingItemEvent ev)
+        internal void OnDropingItem(DroppingItemEvent ev)
         {
             if (scp343badgelist.Count() < 0) return;
             if (!ev.Player.IsSCP343()) return;
@@ -541,7 +541,9 @@ namespace SCP343.Handlers
                     }
                     else
                     {
-                        ev.Player.GetSCPBadge().canheal = false;
+                        Badge badge = ev.Player.GetSCPBadge();
+                        badge.canheal = false;
+                        badge.SaveBadge343();
                         console.ReturnMessage = "Вы восстановили игрокам hp";
                         Timing.CallDelayed(120f, () => ev.Player.GetSCPBadge().canheal = true);
                     }
@@ -584,7 +586,9 @@ namespace SCP343.Handlers
                             deadplayers.Remove(player.Id);
                         }); ;
                         console.ReturnMessage = $"Вы возродили {player.Nickname}";
-                        ev.Player.GetSCPBadge().revive343--;
+                        Badge badge = ev.Player.GetSCPBadge();
+                        badge.revive343--;
+                        badge.SaveBadge343();
                     }
                 }
                 ev.Player.ClearBroadcasts();
@@ -592,16 +596,16 @@ namespace SCP343.Handlers
             }
         }
 
-        public void OnUnlockingGenerator(InteractGeneratorEvent ev)
+        internal void OnUnlockingGenerator(InteractGeneratorEvent ev)
         {
             if (scp343badgelist.Count() < 1) return;
             if (ev.Player.IsSCP343() && ev.Player.GetSCPBadge().canopendoor) ev.Allowed = true;
         }
-        public void OnTriggeringTesla(TeslaTriggerEvent ev)
+        internal void OnTriggeringTesla(TeslaTriggerEvent ev)
         {
             if (ev.Player.IsSCP343()) ev.Triggerable = false;
         }
-        public void OnPickingUpItem(PickupItemEvent ev)
+        internal void OnPickingUpItem(PickupItemEvent ev)
         {
             if (scp343badgelist.Count() < 1) return;
             if (ev.Player.IsSCP343())
