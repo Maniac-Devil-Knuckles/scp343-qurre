@@ -58,6 +58,9 @@
     <Reference Include="Mirror">
       <HintPath>..\..\Managed\Mirror.dll</HintPath>
     </Reference>
+    <Reference Include="Unity.TextMeshPro">
+      <HintPath>..\..\Managed\Unity.TextMeshPro.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Scp343.cs" />
@@ -69,6 +72,7 @@
     <Compile Include="Commands\Spawn343.cs" />
     <Compile Include="scp343badge.cs" />
     <Compile Include="Handlers\Logic.cs" />
+    <Compile Include="patches\EscapePatch.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="qurre_ol.ico" />

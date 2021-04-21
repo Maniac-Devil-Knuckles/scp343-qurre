@@ -29,9 +29,6 @@ namespace SCP343.Handlers
 
         internal Badge spawn343(Player player, bool scp0492 = false, Vector3 position = default)
         {
-
-            //keys.Add();
-            //if (!Patches.GhostMode.TurnedPlayers.Contains(player)) Patches.GhostMode.TurnedPlayers.Add(player);
             player.ClearInventory();
             Timing.CallDelayed(1f, () =>
             {

@@ -69,7 +69,7 @@ namespace SCP343
         {
             var conf = Plugin.Config;
             cfg.IsEnabled = conf.GetBool("scp343_IsEnabled", true);
-            cfg.scp343_canescape = conf.GetBool("scp343_canescape", true);
+            cfg.scp343_canescape = conf.GetBool("scp343_canescape", false);
             cfg.scp343_alerttext = conf.GetString("scp343_alerttext", cfg.scp343_alerttext);
             cfg.scp343_consoletext = conf.GetString("scp343_consoletext", cfg.scp343_consoletext);
             cfg.scp343_alertbackd = conf.GetString("scp343_alertbackd", cfg.scp343_alertbackd);

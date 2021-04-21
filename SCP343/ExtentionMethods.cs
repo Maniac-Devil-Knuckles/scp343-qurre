@@ -23,7 +23,7 @@ namespace SCP343
             return badge;
         }
 
-        internal static scp343badgelist Badgelist { get; } = new scp343badgelist();
+        private static scp343badgelist Badgelist { get; } = new scp343badgelist();
 
         internal static bool SetBadge343(this Player player, Badge badge)
         {

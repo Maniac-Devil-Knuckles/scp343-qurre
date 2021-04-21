@@ -74,18 +74,18 @@ namespace SCP343
         public string RoleName { get; } = "";
         public Player Player { get; } = null;
         public int Id { get; } = 0;
-        public string UserId { get; } = null;
-        internal bool heck { get; set; } = false;
-        internal bool opendoor { get; set; } = false;
+        public string UserId => Player.UserId;
+        public bool heck { get; internal set; } = false;
+        public bool opendoor { get; internal set; } = false;
         public bool canopendoor => opendoor;
         public bool canheck => heck;
         public GameObject GameObject => Player.GameObject;
         public bool IsSCP343 { get; } = false;
-        public string SCPName { get; } = "";
-        internal int revive343 { get; set; } = 0;
+        public string SCPName { get; set; } = "";
+        public int revive343 { get;  internal set; } = 0;
         public RoleType role { get; } = RoleType.None;
         public Vector3 pos { get; } = Vector3.zero;
-        internal bool canheal { get; set; } = false;
+        public bool canheal { get; internal set; } = false;
 
     }
     public class scp343badgelist
@@ -94,7 +94,11 @@ namespace SCP343
         public Badge this[int key]
         {
             get => badges[key];
-            internal set => badges[key] = value;
+            internal set
+            {
+                if (!badges.ContainsKey(key)) return;
+                badges[key] = value;
+            }
         }
 
         private static void AntiSCP575(Player player)
@@ -151,6 +155,11 @@ namespace SCP343
         /// Count of <see cref="scp343"/>
         /// </summary>
         public static int Count(Func<Badge, bool> predicate) => ListBadges.Count(predicate);
+
+        /// <summary>
+        /// Count of <see cref="scp343"/>l
+        /// </summary>
+        public static int Count(Func<KeyValuePair<int,Badge>, bool> predicate) => badges.Count(predicate);
 
         /// <summary>
         /// Get Badge by <see cref="Player"/>
