@@ -29,9 +29,12 @@ namespace SCP343.Handlers
 
         internal void WaitingForPlayers()
         {
-            Map.SetElevatorsMovingSpeed(scp343.cfg.lift_moving_speed);
-            if (string.IsNullOrEmpty(scp343.cfg.scp343_unitname)) Round.AddUnit(TeamUnitType.ClassD, scp343.cfg.scp343_unitname);
-            Map.UnitUpdate();
+            Map.ElevatorsMovingSpeed=scp343.cfg.lift_moving_speed;
+            if (string.IsNullOrEmpty(scp343.cfg.scp343_unitname))
+            {
+                Round.AddUnit(TeamUnitType.ClassD, "Class D");
+                Round.AddUnit(TeamUnitType.ClassD, scp343.cfg.scp343_unitname);
+            }
         }
 
         internal void OnPlacingBlood(NewBloodEvent ev)

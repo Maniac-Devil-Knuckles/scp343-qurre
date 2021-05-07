@@ -9,7 +9,7 @@ namespace SCP343.Commands
     [CommandHandler(typeof(RemoteAdminCommandHandler))]
     public class Spawn343 : ParentCommand
     {
-        internal Spawn343() => LoadGeneratedCommands();
+        public Spawn343() => LoadGeneratedCommands();
         public override string Command => "spawn343";
 
         public override string[] Aliases => new string[] { "spawnscp343", "343" };

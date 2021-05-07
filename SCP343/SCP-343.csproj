@@ -32,7 +32,7 @@
       <HintPath>..\..\..\Downloads\Exiled\EXILED\Plugins\dependencies\System.ComponentModel.DataAnnotations.dll</HintPath>
     </Reference>
     <Reference Include="Qurre">
-      <HintPath>..\packages\Qurre.1.3.4\lib\net472\Qurre.dll</HintPath>
+      <HintPath>..\packages\Qurre.1.3.9\lib\net472\Qurre.dll</HintPath>
     </Reference>
     <Reference Include="Assembly-CSharp_publicized">
       <HintPath>..\..\Assembly-CSharp_publicized.dll</HintPath>
@@ -42,12 +42,6 @@
     </Reference>
     <Reference Include="UnityEngine.CoreModule">
       <HintPath>..\..\Managed\UnityEngine.CoreModule.dll</HintPath>
-    </Reference>
-    <Reference Include="YamlDotNet">
-      <HintPath>..\..\Downloads\Exiled\EXILED\Plugins\dependencies\YamlDotNet.dll</HintPath>
-    </Reference>
-    <Reference Include="0Harmony">
-      <HintPath>..\..\Downloads\Exiled\EXILED\Plugins\dependencies\0Harmony.dll</HintPath>
     </Reference>
     <Reference Include="Assembly-CSharp-firstpass">
       <HintPath>..\..\Managed\Assembly-CSharp-firstpass.dll</HintPath>
@@ -61,6 +55,12 @@
     <Reference Include="Unity.TextMeshPro">
       <HintPath>..\..\Managed\Unity.TextMeshPro.dll</HintPath>
     </Reference>
+    <Reference Include="0Harmony">
+      <HintPath>..\..\Downloads\Qurre\Qurre\Plugins\dependencies\0Harmony.dll</HintPath>
+    </Reference>
+    <Reference Include="YamlDotNet">
+      <HintPath>..\..\Downloads\Qurre\Qurre\Plugins\dependencies\YamlDotNet.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Scp343.cs" />
@@ -73,6 +73,8 @@
     <Compile Include="scp343badge.cs" />
     <Compile Include="Handlers\Logic.cs" />
     <Compile Include="patches\EscapePatch.cs" />
+    <Compile Include="patches\Scp079TeslaPatch.cs" />
+    <Compile Include="patches\ExtraTeslaPatch.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="qurre_ol.ico" />

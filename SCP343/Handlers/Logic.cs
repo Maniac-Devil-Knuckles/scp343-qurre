@@ -128,7 +128,6 @@ namespace SCP343.Handlers
                 if (pl.Scp173Controller.ConfrontingPlayers.Contains(player)) pl.Scp173Controller.ConfrontingPlayers.Remove(player);
             }
             player.UnitName = "";
-            player.UnitUpdate();
             //if (Patches.GhostMode.TurnedPlayers.Contains(player)) Patches.GhostMode.TurnedPlayers.Remove(player);
             foreach (Player pl in Player.List) if (pl.Scp173Controller.IgnoredPlayers.Contains(player)) pl.Scp173Controller.IgnoredPlayers.Remove(player);
             player.RoleColor = player.GetSCPBadge().RoleColor;

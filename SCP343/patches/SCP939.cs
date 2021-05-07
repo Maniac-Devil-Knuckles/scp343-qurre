@@ -2,6 +2,7 @@
 using Qurre.API;
 using HarmonyLib;
 using UnityEngine;
+using System;
 
 namespace SCP343.Patches
 {
