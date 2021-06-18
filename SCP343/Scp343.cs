@@ -178,7 +178,7 @@ namespace SCP343
 
                 if (!Attribute.IsDefined(type, typeof(CommandHandlerAttribute)))
                     continue;
-
+                    
                 foreach (CustomAttributeData customAttributeData in type.CustomAttributes)
                 {
                     try
