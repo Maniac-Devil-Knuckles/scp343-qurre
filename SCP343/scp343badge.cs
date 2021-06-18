@@ -93,13 +93,18 @@ namespace SCP343
         private static Dictionary<int, Badge> badges { get; } = new Dictionary<int, Badge>();
         public Badge this[int key]
         {
-            get => badges[key];
+            get
+            {
+                if (badges.ContainsKey(key)) return badges[key];
+                else return null;
+            }
             internal set
             {
                 if (!badges.ContainsKey(key)) return;
                 badges[key] = value;
             }
         }
+
 
         private static void AntiSCP575(Player player)
         {
@@ -134,6 +139,17 @@ namespace SCP343
             scp343.canheal = true;
             badges.Add(scp343.Id, scp343);
             Timing.CallDelayed(0.5f, () => AntiSCP575(scp343.Player));
+        }
+
+        internal static void Add(params Badge[] Badges)
+        {
+            foreach(Badge scp343 in Badges)
+            {
+                scp343.revive343 = 3;
+                scp343.canheal = true;
+                badges.Add(scp343.Id, scp343);
+                Timing.CallDelayed(0.5f, () => AntiSCP575(scp343.Player));
+            }
         }
         internal static bool Remove(Player player) => badges.Remove(player.Id);
         internal static bool Remove(int PlayerId) => badges.Remove(PlayerId);

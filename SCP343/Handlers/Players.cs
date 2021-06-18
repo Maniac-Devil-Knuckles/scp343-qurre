@@ -127,8 +127,8 @@ namespace SCP343.Handlers
                         ev.Player.SetRole(RoleType.ClassD);
                         ev.Player.DisableAllEffects();
                         KillSCP343(ev.Player);
-                        if (scp343.cfg.scp343_alert) ev.Player.Broadcast(10, scp343.cfg.scp343_alertbackd);
-                        ev.ReturnMessage = scp343.cfg.scp343_alertbackd;
+                        if (scp343.cfg.scp343_alert) ev.Player.Broadcast(10, scp343.cfg.scp343_alertbackd.Replace("\\n", "\n"));
+                        ev.ReturnMessage = scp343.cfg.scp343_alertbackd.Replace("\\n", "\n");
                         return;
                     }
                     else

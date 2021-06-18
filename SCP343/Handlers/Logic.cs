@@ -62,10 +62,9 @@ namespace SCP343.Handlers
                 else player.RoleName = "SCP-343";
                 player.RoleColor = "red";
             });
-            foreach (Player pl in Player.List)
+            if (scp343.cfg.scp343_invisible_for_173) foreach (Player pl in Player.List)
             {
                 if (!pl.Scp173Controller.IgnoredPlayers.Contains(player)) pl.Scp173Controller.IgnoredPlayers.Add(player);
-                if (!pl.Scp173Controller.ConfrontingPlayers.Contains(player)) pl.Scp173Controller.ConfrontingPlayers.Add(player);
             }
             if (player.Group.HiddenByDefault)
             {
@@ -74,9 +73,9 @@ namespace SCP343.Handlers
             if (scp343.cfg.scp343_alert && !scp0492)
             {
                 player.ClearBroadcasts();
-                player.Broadcast(15, scp343.cfg.scp343_alerttext);
+                player.Broadcast(15, scp343.cfg.scp343_alerttext.Replace("\\n","\n"));
             }
-            if (scp343.cfg.scp343_console && !scp0492) player.SendConsoleMessage("\n----------------------------------------------------------- \n" + scp343.cfg.scp343_consoletext.Replace("343DOORTIME", scp343.cfg.scp343_opendoortime.ToString()).Replace("343HECKTIME", scp343.cfg.scp343_hecktime.ToString()) + "\n-----------------------------------------------------------", "green");
+            if (scp343.cfg.scp343_console && !scp0492) player.SendConsoleMessage("\n----------------------------------------------------------- \n" + scp343.cfg.scp343_consoletext.Replace("343DOORTIME", scp343.cfg.scp343_opendoortime.ToString()).Replace("343HECKTIME", scp343.cfg.scp343_hecktime.ToString()).Replace("\\n", "\n") + "\n-----------------------------------------------------------", "green");
 
             Timing.CallDelayed(0.5f, () =>
             {
@@ -122,10 +121,9 @@ namespace SCP343.Handlers
         internal void KillSCP343(Player player)
         {
             if (!player.IsSCP343()) return;
-            foreach (Player pl in Player.List)
+            if(scp343.cfg.scp343_invisible_for_173) foreach(Player pl in Player.List)
             {
                 if (pl.Scp173Controller.IgnoredPlayers.Contains(player)) pl.Scp173Controller.IgnoredPlayers.Remove(player);
-                if (pl.Scp173Controller.ConfrontingPlayers.Contains(player)) pl.Scp173Controller.ConfrontingPlayers.Remove(player);
             }
             player.UnitName = "";
             //if (Patches.GhostMode.TurnedPlayers.Contains(player)) Patches.GhostMode.TurnedPlayers.Remove(player);

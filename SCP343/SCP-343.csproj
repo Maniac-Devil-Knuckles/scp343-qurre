@@ -32,7 +32,7 @@
       <HintPath>..\..\..\Downloads\Exiled\EXILED\Plugins\dependencies\System.ComponentModel.DataAnnotations.dll</HintPath>
     </Reference>
     <Reference Include="Qurre">
-      <HintPath>..\packages\Qurre.1.3.9\lib\net472\Qurre.dll</HintPath>
+      <HintPath>..\packages\Qurre.1.4.5\lib\net472\Qurre.dll</HintPath>
     </Reference>
     <Reference Include="Assembly-CSharp_publicized">
       <HintPath>..\..\Assembly-CSharp_publicized.dll</HintPath>
@@ -75,6 +75,7 @@
     <Compile Include="patches\EscapePatch.cs" />
     <Compile Include="patches\Scp079TeslaPatch.cs" />
     <Compile Include="patches\ExtraTeslaPatch.cs" />
+    <Compile Include="ds.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="qurre_ol.ico" />

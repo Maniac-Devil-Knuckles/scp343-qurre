@@ -80,7 +80,7 @@ namespace SCP343.Patches
                                     continue;
                                 if (teslaGate.PlayerInRange(allHub.Value)) players.Add(allHub.Value);
                             }
-                            if (players.Count>0)
+                            if (players.Count()>0)
                             {
                                 bool allowed = false;
                               if (players.Any(d=>Player.Get(d).IsSCP343())) allowed =  scp343.cfg.scp343_activating_tesla_in_range;
@@ -120,7 +120,6 @@ namespace SCP343.Patches
             catch (Exception e)
             {
                 Log.Error($"{typeof(Scp079InteractTesla).FullName}.{nameof(Prefix)}:\n{e}");
-
                 return true;
             }
         }
