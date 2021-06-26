@@ -67,8 +67,11 @@ namespace SCP343
 
         public bool scp343_activating_tesla_in_range { get; internal set; } = true;
 
+        public bool scp343_turned_for_scp173_andscp096 { get; internal set; } = true;
+
         public bool scp343_invisible_for_173 { get; internal set; } = false;
-        
+
+
         private static Config cfg { get => scp343.cfg; }
         internal static void Reload()
         {
@@ -100,6 +103,7 @@ namespace SCP343
             cfg.scp343_unitname = conf.GetString("scp343_unitname", cfg.scp343_unitname);
             cfg.scp343_activating_tesla_in_range = conf.GetBool("scp343_activating_tesla_in_range", cfg.scp343_activating_tesla_in_range);
             cfg.scp343_invisible_for_173 = conf.GetBool("scp343_invisible_for_173", false);
+            cfg.scp343_turned_for_scp173_andscp096 = conf.GetBool("scp343_turned_for_scp173_andscp096", true);
         }
 
     }

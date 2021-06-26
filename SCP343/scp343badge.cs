@@ -149,6 +149,15 @@ namespace SCP343
         /// </summary>
         public static bool Contains(Player player) => badges.ContainsKey(player.Id);
         /// <summary>
+        /// This returns if someone <see cref="Player"/> is scp343 or isn`t
+        /// </summary>
+        public static bool Contains(List<Player> players)
+        {
+            foreach (Player player in players) if (badges.ContainsKey(player.Id)) return true;
+            return false;
+        }
+
+        /// <summary>
         /// This returns if <see cref="Player.Id"/> is scp343 or isn`t
         /// </summary>
         public static bool Contains(int PlayerId) => badges.ContainsKey(PlayerId);

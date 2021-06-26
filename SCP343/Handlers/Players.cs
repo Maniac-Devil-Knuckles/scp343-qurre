@@ -453,14 +453,26 @@ namespace SCP343.Handlers
                 if (ev.Player.IsSCP343()) ev.Allowed = false;
         }
 
-        internal void OnEnraging(EnrageEvent ev)
+        private static Vector3 FindLookRotation(Vector3 player, Vector3 target) => (target - player).normalized;
+
+        internal void OnTransmitPlayerData(TransmitPlayerDataEvent ev)
+        {
+            if (ev.PlayerToShow.IsSCP343() && (ev.Player.Role == RoleType.Scp096 || ev.Player.Role == RoleType.Scp173))
+            {
+                Vector3 vector = FindLookRotation(ev.Player.Position, ev.PlayerToShow.Position);
+                ev.Rotation = Quaternion.LookRotation(vector).eulerAngles.y;
+            }
+        }
+
+            internal void OnEnraging(EnrageEvent ev)
         {
             if (scp343badgelist.Count() < 1) return;
-            if (ev.Player.IsSCP343())
+            if (ev.Player.Scp096Controller.Targets.Count<=1&& ev.Player.Scp096Controller.Targets.Count==0 ? true: scp343badgelist.Contains(ev.Player.Scp096Controller.Targets))
             {
                 ev.Allowed = false;
             }
         }
+
         internal void OnAddingTarget(AddTargetEvent ev)
         {
 

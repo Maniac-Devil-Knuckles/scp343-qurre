@@ -95,6 +95,7 @@ namespace SCP343
                 Players = new Players(this);
                 Log.Info("Enabling SCP343 by Maniac Devil Knuckles");
                 SCP343.Config.Reload();
+                PLAYER.TransmitPlayerData += Players.OnTransmitPlayerData;
                 Qurre.Events.Round.WaitingForPlayers += Players.WaitingForPlayers;
                 Qurre.Events.Round.Check += Players.OnRoundEnding;
                 PLAYER.TeslaTrigger += Players.OnTriggeringTesla;
@@ -134,6 +135,7 @@ namespace SCP343
             Log.Info("Disabling SCP343 by Maniac Devil Knuckles");
             harmony.UnpatchAll(harmony.Id);
             harmony = null;
+            PLAYER.TransmitPlayerData -= Players.OnTransmitPlayerData;
             Qurre.Events.Round.WaitingForPlayers -= Players.WaitingForPlayers;
             Qurre.Events.Round.Check -= Players.OnRoundEnding;
             PLAYER.TeslaTrigger -= Players.OnTriggeringTesla;
