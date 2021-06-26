@@ -69,7 +69,7 @@ namespace SCP343
 
         public bool scp343_invisible_for_173 { get; internal set; } = false;
         
-        private static Config cfg { get => new Config(); }
+        private static Config cfg { get => scp343.cfg; }
         internal static void Reload()
         {
             Plugin.Config.Reload();
