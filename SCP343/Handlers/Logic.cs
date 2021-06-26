@@ -27,6 +27,23 @@ namespace SCP343.Handlers
             return flag;
         }
 
+        internal IEnumerator<float> WhenOpenDoor(Player player)
+        {
+            int _time = scp343.cfg.scp343_opendoortime;
+            yield return Timing.WaitForSeconds(1f);
+            for(; ; )
+            {
+                if (!player.IsSCP343()) break;
+                if(_time<=0)
+                {
+                    break;
+                }
+                player.ShowHint(scp343.cfg.scp343_text_show_timer_when_can_open_door.Replace("{343_time_open_door}", _time.ToString()));
+                _time--;
+                yield return Timing.WaitForSeconds(1f);
+            }
+        }
+
         internal Badge spawn343(Player player, bool scp0492 = false, Vector3 position = default)
         {
             player.ClearInventory();
@@ -86,16 +103,21 @@ namespace SCP343.Handlers
                 }
                 player.HP = 100f;
             });
-            if (scp343.cfg.scp343_canopenanydoor) Timing.CallDelayed(scp343.cfg.scp343_opendoortime, () => {
-                if (scp343.cfg.scp343_opendoortime == scp343.cfg.scp343_hecktime) Timing.CallDelayed(1f, () =>
-                   {
-                       if (!player.IsSCP343()) return;
-                       Badge badge2 = player.GetSCPBadge();
-                       badge2.opendoor = false;
-                       badge2.SaveBadge343();
-                   });
-                Log.Info(player.IsSCP343());
-            });
+            if (scp343.cfg.scp343_canopenanydoor)
+            {
+                Timing.RunCoroutine(WhenOpenDoor(player), "player_scp343_" + player.Id);
+                Timing.CallDelayed(scp343.cfg.scp343_opendoortime, () =>
+                {
+                    if (scp343.cfg.scp343_opendoortime == scp343.cfg.scp343_hecktime) Timing.CallDelayed(1f, () =>
+                       {
+                           if (!player.IsSCP343()) return;
+                           Badge badge2 = player.GetSCPBadge();
+                           badge2.opendoor = false;
+                           badge2.SaveBadge343();
+                       });
+                    Log.Info(player.IsSCP343());
+                });
+            }
             if (scp343.cfg.scp343_heck) Timing.CallDelayed(scp343.cfg.scp343_hecktime, () =>
             {
                 if (!player.IsSCP343()) return;

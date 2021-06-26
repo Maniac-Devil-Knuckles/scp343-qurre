@@ -75,7 +75,6 @@
     <Compile Include="patches\EscapePatch.cs" />
     <Compile Include="patches\Scp079TeslaPatch.cs" />
     <Compile Include="patches\ExtraTeslaPatch.cs" />
-    <Compile Include="ds.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="qurre_ol.ico" />

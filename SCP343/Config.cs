@@ -71,6 +71,9 @@ namespace SCP343
 
         public bool scp343_invisible_for_173 { get; internal set; } = false;
 
+        public bool scp343_show_timer_when_can_open_door { get; internal set; } = false;
+
+        public string scp343_text_show_timer_when_can_open_door { get; internal set; } = "In {343_time_open_door} seconds you can open door";
 
         private static Config cfg { get => scp343.cfg; }
         internal static void Reload()
@@ -104,6 +107,8 @@ namespace SCP343
             cfg.scp343_activating_tesla_in_range = conf.GetBool("scp343_activating_tesla_in_range", cfg.scp343_activating_tesla_in_range);
             cfg.scp343_invisible_for_173 = conf.GetBool("scp343_invisible_for_173", false);
             cfg.scp343_turned_for_scp173_andscp096 = conf.GetBool("scp343_turned_for_scp173_andscp096", true);
+            cfg.scp343_show_timer_when_can_open_door = conf.GetBool("scp343_show_timer_when_can_open_door", false);
+            cfg.scp343_text_show_timer_when_can_open_door = conf.GetString("scp343_text_show_timer_when_can_open_door", cfg.scp343_text_show_timer_when_can_open_door);
         }
 
     }
