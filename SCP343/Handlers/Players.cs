@@ -45,6 +45,7 @@ namespace SCP343.Handlers
 
         internal void OnPlayerLeft(LeaveEvent ev)
         {
+            if (deadplayers.ContainsKey(ev.Player.Id)) deadplayers.Remove(ev.Player.Id);
             if (scp343badgelist.Count() < 1) return;
             if (ev.Player?.UserId == null || ev.Player.IsHost || ev.Player.IP == "127.0.0.WAN" || ev.Player.IP == "127.0.0.1") return;
             if (ev.Player.IsSCP343()) KillSCP343(ev.Player);
@@ -197,14 +198,11 @@ namespace SCP343.Handlers
                             }
                             else
                             {
-                                Badge badge = ev.Player.GetSCPBadge();
-                                badge.canheal = false;
-                                badge.SaveBadge343();
+                                ev.Player.GetSCPBadge().canheal = false;
                                 ev.ReturnMessage = "Вы восстановили игрокам hp";
                                 Timing.CallDelayed(120f, () =>
                                 {
-                                    badge.canheal = true;
-                                    badge.SaveBadge343();
+                                    ev.Player.GetSCPBadge().canheal = true;
                                 });
                             }
                         }
@@ -233,11 +231,10 @@ namespace SCP343.Handlers
                         else
                         {
                             Player player = null;
-                            foreach (Player ply in from Player x in Player.List where x.Role == RoleType.Spectator && deadplayers.ContainsKey(x.Id) select x)
+                            foreach (Player ply in Player.List.Where(p=>deadplayers.ContainsKey(p.Id) && p.Role==RoleType.Spectator))
                             {
                                 if (player != null) continue;
-                                bool boo = Vector3.Distance(ev.Player.Position, ply.Position) <= 1f;
-                                //    Log.Info($"Debug - {ply.Nickname} - {Vector3.Distance(ev.Player.Position, ply.Position)} - {boo}");
+                                bool boo = Vector3.Distance(ev.Player.Position, deadplayers[player.Id].pos) <= 3f;
                                 if (!boo) continue;
                                 player = ply;
                             }
@@ -252,9 +249,7 @@ namespace SCP343.Handlers
                                     player.Position = deadplayers[player.Id].pos;
                                     deadplayers.Remove(player.Id);
                                 });
-                                Badge badge = ev.Player.GetSCPBadge();
-                                badge.revive343--;
-                                badge.SaveBadge343();
+                                ev.Player.GetSCPBadge().revive343--;
                                 ev.ReturnMessage = $"Вы возродили {player.Nickname}";
                             }
                         }
@@ -315,9 +310,8 @@ namespace SCP343.Handlers
 
         internal void OnDied(DiesEvent ev)
         {
-            if (!deadplayers.ContainsKey(ev.Target.Id)) deadplayers.Add(ev.Target.Id, new Badge(ev.Target, ev.Target.Role, ev.Target.Position));
-
-
+            if (deadplayers.ContainsKey(ev.Target.Id)) deadplayers.Remove(ev.Target.Id);
+            deadplayers.Add(ev.Target.Id, new Badge(ev.Target, ev.Target.Role, ev.Target.Position));
             if (scp343badgelist.Count() < 1) return;
             Player player = ev.Target;
             if (player.IsSCP343())
@@ -563,9 +557,7 @@ namespace SCP343.Handlers
                     }
                     else
                     {
-                        Badge badge = ev.Player.GetSCPBadge();
-                        badge.canheal = false;
-                        badge.SaveBadge343();
+                        ev.Player.GetSCPBadge().canheal = false;
                         console.ReturnMessage = "Вы восстановили игрокам hp";
                         Timing.CallDelayed(120f, () => ev.Player.GetSCPBadge().canheal = true);
                     }
@@ -588,11 +580,10 @@ namespace SCP343.Handlers
                 else
                 {
                     Player player = null;
-                    foreach (Player ply in from Player x in Player.List where x.Role == RoleType.Spectator && deadplayers.ContainsKey(x.Id) select x)
+                    foreach (Player ply in Player.List.Where(p => deadplayers.ContainsKey(p.Id) && p.Role == RoleType.Spectator))
                     {
                         if (player != null) continue;
-                        bool boo = Vector3.Distance(ev.Player.Position, ply.Position) <= 1f;
-                        //    Log.Info($"Debug - {ply.Nickname} - {Vector3.Distance(ev.Player.Position, ply.Position)} - {boo}");
+                        bool boo = Vector3.Distance(ev.Player.Position, deadplayers[player.Id].pos) <= 3f;
                         if (!boo) continue;
                         player = ply;
                     }
@@ -608,9 +599,7 @@ namespace SCP343.Handlers
                             deadplayers.Remove(player.Id);
                         }); ;
                         console.ReturnMessage = $"Вы возродили {player.Nickname}";
-                        Badge badge = ev.Player.GetSCPBadge();
-                        badge.revive343--;
-                        badge.SaveBadge343();
+                        ev.Player.GetSCPBadge().revive343--;
                     }
                 }
                 ev.Player.ClearBroadcasts();
@@ -632,6 +621,7 @@ namespace SCP343.Handlers
             if (scp343badgelist.Count() < 1) return;
             if (ev.Player.IsSCP343())
             {
+                if (ev.Pickup.durability == 1337035) ev.Allowed = false;
                 if (!scp343.cfg.scp343_itemconverttoggle)
                 {
                     ev.Allowed = false;

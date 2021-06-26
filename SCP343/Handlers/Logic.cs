@@ -34,8 +34,10 @@ namespace SCP343.Handlers
             for(; ; )
             {
                 if (!player.IsSCP343()) break;
-                if(_time<=0)
+                if (_time<=0)
                 {
+                    player.GetSCPBadge().canopendoor = true;
+                    Log.Info(player.GetSCPBadge().canopendoor);
                     break;
                 }
                 player.ShowHint(scp343.cfg.scp343_text_show_timer_when_can_open_door.Replace("{343_time_open_door}", _time.ToString()));
@@ -97,33 +99,18 @@ namespace SCP343.Handlers
                 }
                 if (scp343.cfg.scp343_heck)
                 {
-                    Badge badge1 = player.GetSCPBadge();
-                    badge1.heck = true;
-                    badge1.SaveBadge343();
+                    player.GetSCPBadge().canheck = true;
                 }
                 player.HP = 100f;
             });
             if (scp343.cfg.scp343_canopenanydoor)
             {
                 Timing.RunCoroutine(WhenOpenDoor(player), "player_scp343_" + player.Id);
-                Timing.CallDelayed(scp343.cfg.scp343_opendoortime, () =>
-                {
-                    if (scp343.cfg.scp343_opendoortime == scp343.cfg.scp343_hecktime) Timing.CallDelayed(1f, () =>
-                       {
-                           if (!player.IsSCP343()) return;
-                           Badge badge2 = player.GetSCPBadge();
-                           badge2.opendoor = false;
-                           badge2.SaveBadge343();
-                       });
-                    Log.Info(player.IsSCP343());
-                });
             }
             if (scp343.cfg.scp343_heck) Timing.CallDelayed(scp343.cfg.scp343_hecktime, () =>
             {
                 if (!player.IsSCP343()) return;
-                Badge badge3 = player.GetSCPBadge();
-                badge3.heck = false;
-                badge3.SaveBadge343();
+                player.GetSCPBadge().canheck = false;
             });
             if(!string.IsNullOrEmpty(scp343.cfg.scp343_unitname))
             {

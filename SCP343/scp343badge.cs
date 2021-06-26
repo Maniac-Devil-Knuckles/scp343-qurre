@@ -75,10 +75,8 @@ namespace SCP343
         public Player Player { get; } = null;
         public int Id { get; } = 0;
         public string UserId => Player.UserId;
-        public bool heck { get; internal set; } = false;
-        public bool opendoor { get; internal set; } = false;
-        public bool canopendoor => opendoor;
-        public bool canheck => heck;
+        public bool canopendoor { get; internal set; } = false;
+        public bool canheck { get; internal set; } = false;
         public GameObject GameObject => Player.GameObject;
         public bool IsSCP343 { get; } = false;
         public string SCPName { get; set; } = "";

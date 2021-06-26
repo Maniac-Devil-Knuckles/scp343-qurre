@@ -16,19 +16,18 @@ namespace SCP343.Patche
         {
             try
             {
-                    foreach (TeslaGate teslaGate in __instance.TeslaGates)
-                    {
-                        if (teslaGate.InProgress)
-                            continue;
-                    IEnumerable<ReferenceHub> hubs = ReferenceHub.GetAllHubs().Where(h=>Player.Get(h.Value).Role!=RoleType.Spectator&&teslaGate.PlayerInRange(h.Value)).Select(h=>h.Value);
+                foreach (TeslaGate teslaGate in __instance.TeslaGates)
+                {
+                    if (teslaGate.InProgress)
+                        continue;
+                    IEnumerable<ReferenceHub> hubs = ReferenceHub.GetAllHubs().Where(h => Player.Get(h.Value).Role != RoleType.Spectator && teslaGate.PlayerInRange(h.Value)).Select(h => h.Value);
                     bool allowed = false;
-                    if(hubs.Count()>0)
+                    if (hubs.Count() > 0)
                     {
-                      if(hubs.Any(h=>Player.Get(h).IsSCP343()))  allowed = !scp343.cfg.scp343_activating_tesla_in_range;
+                        if (hubs.Any(h => Player.Get(h).IsSCP343())) allowed = !scp343.cfg.scp343_activating_tesla_in_range;
                     }
-                    if(allowed) teslaGate.ServerSideCode();
-                    }
-
+                    if (allowed) teslaGate.ServerSideCode();
+                }
                 return false;
             }
             catch (Exception e)
