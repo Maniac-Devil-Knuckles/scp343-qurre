@@ -59,6 +59,7 @@ namespace SCP343
     public class scp343 : Plugin
     {
         public static Players Players { get; private set; } = null;
+        public override int Priority => int.MaxValue;
         public override string Name => "SCP-343";
         public override string Developer => "Maniac Devil Knuckles";
         public override Version Version { get; } = new Version(1, 0, 0);
@@ -70,55 +71,62 @@ namespace SCP343
         internal static Config cfg { get; } = new Config();
         public override void Enable()
         {
-            if (!cfg.IsEnabled)
-            {
-                Disable();
-                return;
-            }
-            Instance = this;
             try
             {
-                //Config.betaitemsatspawn.ParseInventorySettings();
-                harmony = new Harmony("knuckles.scp343\nVersion " + i++);
-                harmony.PatchAll();
-                Log.Info("cool");
+                if (!cfg.IsEnabled)
+                {
+                    Disable();
+                    return;
+                }
+                Instance = this;
+                try
+                {
+                    //Config.betaitemsatspawn.ParseInventorySettings();
+                    harmony = new Harmony("knuckles.scp343\nVersion " + i++);
+                    harmony.PatchAll();
+                    Log.Info("cool");
+                }
+                catch (Exception ex)
+                {
+                    Log.Info("error\n\n\n\n\n\n\n\\n\n");
+                    Log.Info(ex.Message);//
+                }
+                OnRegisteringCommands();
+                Players = new Players(this);
+                Log.Info("Enabling SCP343 by Maniac Devil Knuckles");
+                SCP343.Config.Reload();
+                Qurre.Events.Round.WaitingForPlayers += Players.WaitingForPlayers;
+                Qurre.Events.Round.Check += Players.OnRoundEnding;
+                PLAYER.TeslaTrigger += Players.OnTriggeringTesla;
+                Qurre.Events.Round.Start += Players.OnRoundStarted;
+                SERVER.SendingConsole += Players.OnSendingConsoleCommand;
+                PLAYER.InteractDoor += Players.OnInteractingDoor;
+                PLAYER.InteractLift += Players.OnInteractingElevator;
+                Qurre.Events.Round.Restart += Players.OnRestartingRound;
+                PLAYER.Leave += Players.OnPlayerLeft;
+                SCP106.Contain += Players.OnContaining;
+                SCP096.Enrage += Players.OnEnraging;
+                SCP096.AddTarget += Players.OnAddingTarget;
+                Scps914.Activating += Players.OnActivating;
+                PLAYER.InteractLocker += Players.OnInteractingLocker;
+                PLAYER.PickupItem += Players.OnPickingUpItem;
+                WARHEAD.Starting += Players.OnStarting;
+                WARHEAD.Stopping += Players.OnStopping;
+                WARHEAD.EnablePanel += Players.OnActivatingWarheadPanel;
+                SCP106.PocketDimensionEnter += Players.OnEnteringPocketDimension;
+                Qurre.Events.Map.NewBlood += Players.OnPlacingBlood;
+                PLAYER.Cuff += Players.OnHandcuffing;
+                PLAYER.Damage += Players.OnHurting;
+                PLAYER.Dies += Players.OnDied;
+                PLAYER.RoleChange += Players.OnChangingRole;
+                PLAYER.Escape += Players.OnEscaping;
+                PLAYER.DroppingItem += Players.OnDropingItem;
+                PLAYER.MedicalUsing += Players.OnMedicalUsing;
             }
             catch (Exception ex)
             {
-                Log.Info("error\n\n\n\n\n\n\n\\n\n");
-                Log.Info(ex.Message);//
+                Log.Error(ex);
             }
-            OnRegisteringCommands();
-            Players = new Players(this);
-            Log.Info("Enabling SCP343 by Maniac Devil Knuckles");
-            SCP343.Config.Reload();
-            Qurre.Events.Round.WaitingForPlayers += Players.WaitingForPlayers;
-            Qurre.Events.Round.Check += Players.OnRoundEnding;
-            PLAYER.TeslaTrigger += Players.OnTriggeringTesla;
-            Qurre.Events.Round.Start += Players.OnRoundStarted;
-            SERVER.SendingConsole += Players.OnSendingConsoleCommand;
-            PLAYER.InteractDoor += Players.OnInteractingDoor;
-            PLAYER.InteractLift += Players.OnInteractingElevator;
-            Qurre.Events.Round.Restart += Players.OnRestartingRound;
-            PLAYER.Leave += Players.OnPlayerLeft;
-            SCP106.Contain += Players.OnContaining;
-            SCP096.Enrage += Players.OnEnraging;
-            SCP096.AddTarget += Players.OnAddingTarget;
-            Scps914.Activating += Players.OnActivating;
-            PLAYER.InteractLocker += Players.OnInteractingLocker;
-            PLAYER.PickupItem += Players.OnPickingUpItem;
-            WARHEAD.Starting += Players.OnStarting;
-            WARHEAD.Stopping += Players.OnStopping;
-            WARHEAD.EnablePanel += Players.OnActivatingWarheadPanel;
-            SCP106.PocketDimensionEnter += Players.OnEnteringPocketDimension;
-            Qurre.Events.Map.NewBlood += Players.OnPlacingBlood;
-            PLAYER.Cuff += Players.OnHandcuffing;
-            PLAYER.Damage += Players.OnHurting;
-            PLAYER.Dies += Players.OnDied;
-            PLAYER.RoleChange += Players.OnChangingRole;
-            PLAYER.Escape += Players.OnEscaping;
-            PLAYER.DroppingItem += Players.OnDropingItem;
-            PLAYER.MedicalUsing += Players.OnMedicalUsing;
         }
 
         public override void Disable()

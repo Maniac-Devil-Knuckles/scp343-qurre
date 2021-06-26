@@ -105,16 +105,6 @@ namespace SCP343
             }
         }
 
-
-        private static void AntiSCP575(Player player)
-        {
-            if(player.IsSCP343())
-            {
-                player.HP = 100;
-                Timing.CallDelayed(1f, () => AntiSCP575(player));
-            }
-        }
-
         internal static IEnumerable<Player> List
         {
             get
@@ -135,20 +125,20 @@ namespace SCP343
 
         internal static void Add(Badge scp343)
         {
+            if (badges.ContainsKey(scp343.Id)) return;
             scp343.revive343 = 3;
             scp343.canheal = true;
             badges.Add(scp343.Id, scp343);
-            Timing.CallDelayed(0.5f, () => AntiSCP575(scp343.Player));
         }
 
         internal static void Add(params Badge[] Badges)
         {
             foreach(Badge scp343 in Badges)
             {
+                if (badges.ContainsKey(scp343.Id)) continue;
                 scp343.revive343 = 3;
                 scp343.canheal = true;
                 badges.Add(scp343.Id, scp343);
-                Timing.CallDelayed(0.5f, () => AntiSCP575(scp343.Player));
             }
         }
         internal static bool Remove(Player player) => badges.Remove(player.Id);

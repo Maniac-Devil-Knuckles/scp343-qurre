@@ -15,7 +15,7 @@ namespace SCP343
     public static class ExtentionMethods
     {
         internal static List<int> GetIntList(this Qurre.API.Config config, string key,List<int> def, string comment = "")
-        {
+        {   
             try
             {
                 string _def = "";
@@ -42,6 +42,7 @@ namespace SCP343
             }
             catch (Exception ex)
             {
+                
                 Log.Info(key);
                 Log.Error(ex);
                 return def;

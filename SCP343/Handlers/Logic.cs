@@ -48,13 +48,8 @@ namespace SCP343.Handlers
                 });
             }
             if (player.IsSCP343()) return player.GetSCPBadge();
-            if (player.Group.HiddenByDefault)
-            {
-                // player.BadgeHidden = false;
-                player.ReferenceHub.characterClassManager.CallCmdRequestShowTag(false);
-            }
             Badge badge = new Badge(player,true);
-            scp343badgelist.Add(badge);
+            Log.Info(badge.Player.Nickname + " | " + badge.IsSCP343);
             // player.ReferenceHub.characterClassManager.CurRole.team = Team.SCP;
             Timing.CallDelayed(1f, () =>
             {
@@ -65,10 +60,6 @@ namespace SCP343.Handlers
             if (scp343.cfg.scp343_invisible_for_173) foreach (Player pl in Player.List)
             {
                 if (!pl.Scp173Controller.IgnoredPlayers.Contains(player)) pl.Scp173Controller.IgnoredPlayers.Add(player);
-            }
-            if (player.Group.HiddenByDefault)
-            {
-                player.ReferenceHub.characterClassManager.CallCmdRequestShowTag(false);
             }
             if (scp343.cfg.scp343_alert && !scp0492)
             {
@@ -84,6 +75,7 @@ namespace SCP343.Handlers
                 player.ClearInventory();
                 if (!scp0492)
                 {
+                    Log.Debug(scp343.cfg.scp343_itemsatspawn.Count);
                     foreach (int item in scp343.cfg.scp343_itemsatspawn) player.AddItem((ItemType)item);
                 }
                 if (scp343.cfg.scp343_heck)
@@ -130,10 +122,6 @@ namespace SCP343.Handlers
             foreach (Player pl in Player.List) if (pl.Scp173Controller.IgnoredPlayers.Contains(player)) pl.Scp173Controller.IgnoredPlayers.Remove(player);
             player.RoleColor = player.GetSCPBadge().RoleColor;
             player.RoleName = player.GetSCPBadge().RoleName;
-            if (player.Group.HiddenByDefault)
-            {
-                player.ReferenceHub.characterClassManager.CallCmdRequestShowTag(false);
-            }
             scp343badgelist.Remove(player);
         }
     }

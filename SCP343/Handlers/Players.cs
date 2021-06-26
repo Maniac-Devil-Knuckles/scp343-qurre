@@ -84,181 +84,188 @@ namespace SCP343.Handlers
 
         internal void OnSendingConsoleCommand(SendingConsoleEvent ev)
         {
-            if (ev.Name.ToLower() == "invis")
+            try
             {
-                /*
-                return;
-                ev.Allowed = false;
-                if(!adminsor343(ev.Player))
+                if (ev.Name.ToLower() == "invis")
                 {
-                    ev.ReturnMessage = "Вы не scp343 или вы не Админ";
+                    /*
                     return;
-                }
-                //ev.Player.IsInvisible=!ev.Player.IsInvisible
-                //ev.ReturnMessage = $"Вы стали {(ev.Player.IsInvisible()?"невидимым":"видимым")}";
-                if(!ev.Player.IsSCP343())
-                {
-                    if (!ev.Player.HasItem(ItemType.Flashlight)) ev.Player.AddItem(ItemType.Flashlight);
-                    if (ev.Player.Role == RoleType.Tutorial) return;
-                    Vector3 pos = ev.Player.Position;
-                    ev.Player.Role = RoleType.Tutorial;
-                    Timing.CallDelayed(0.6f, () =>
+                    ev.Allowed = false;
+                    if(!adminsor343(ev.Player))
                     {
-                        ev.Player.Position = pos;
+                        ev.ReturnMessage = "Вы не scp343 или вы не Админ";
+                        return;
+                    }
+                    //ev.Player.IsInvisible=!ev.Player.IsInvisible
+                    //ev.ReturnMessage = $"Вы стали {(ev.Player.IsInvisible()?"невидимым":"видимым")}";
+                    if(!ev.Player.IsSCP343())
+                    {
                         if (!ev.Player.HasItem(ItemType.Flashlight)) ev.Player.AddItem(ItemType.Flashlight);
-                    });
-                }
-                return;
-                //*/
-            }
-            if (ev.Name.ToLower() == "heck343")
-            {
-                ev.Allowed = false;
-                if (ev.Player.IsSCP343())
-                {
-                    if (!scp343.cfg.scp343_heck)
-                    {
-                        ev.ReturnMessage = scp343.cfg.scp343_heckerrordisable;
-                        return;
-                    }
-                    bool allowed = ev.Player.GetSCPBadge().canheck;
-                    if (allowed)
-                    {
-                        ev.Player.SetRole(RoleType.ClassD);
-                        ev.Player.DisableAllEffects();
-                        KillSCP343(ev.Player);
-                        if (scp343.cfg.scp343_alert) ev.Player.Broadcast(10, scp343.cfg.scp343_alertbackd.Replace("\\n", "\n"));
-                        ev.ReturnMessage = scp343.cfg.scp343_alertbackd.Replace("\\n", "\n");
-                        return;
-                    }
-                    else
-                    {
-                        ev.ReturnMessage = $"Error.....{scp343.cfg.scp343_alertheckerrortime}";
-                    }
-                }
-                else
-                {
-                    ev.ReturnMessage = $"Error........{scp343.cfg.scp343_alertheckerrornot343}";
-                }
-            }
-            else if (ev.Name.ToLower() == "tp343")
-            {
-                ev.Allowed = false;
-                if (ev.Player.IsSCP343())
-                {
-                    List<Player> players = Player.List.Where(e => !e.IsSCP343() && e.Role != RoleType.Spectator && e.Role != RoleType.None).ToList();
-                    Player player = players[RNG.Next(players.Count)];
-                    if (player == null || players.Count < 1)
-                    {
-                        ev.ReturnMessage = $"Не найден живой человек";
-                    }
-                    else
-                    {
-                        ev.Player.Position = player.Position;
-                        ev.ReturnMessage = $"Вы телепортнулись к {player.Nickname} играющего за {player.Role}";
-                    }
-                    ev.Player.ClearBroadcasts();
-                    ev.Player.Broadcast(10, ev.ReturnMessage);
-                }
-                else
-                {
-                    ev.ReturnMessage = $"Error........{scp343.cfg.scp343_alertheckerrornot343}";
-                }
-
-            }
-            else if (ev.Name.ToLower() == "rt")
-            {
-                ev.Allowed = false;
-                ev.ReturnMessage = $"Round Time is {Round.ElapsedTime}";
-            }
-            else if (ev.Name.ToLower() == "heal343")
-            {
-                ev.Allowed = false;
-                if (!ev.Player.IsSCP343()) ev.ReturnMessage = $"{scp343.cfg.scp343_alertheckerrornot343}";
-                else
-                {
-                    if (ev.Player.GetSCPBadge().canheal)
-                    {
-                        int count = 0;
-                        foreach (var ply in from x in Player.List where x.Role != RoleType.Spectator select x)
+                        if (ev.Player.Role == RoleType.Tutorial) return;
+                        Vector3 pos = ev.Player.Position;
+                        ev.Player.Role = RoleType.Tutorial;
+                        Timing.CallDelayed(0.6f, () =>
                         {
-                            if (ply.IsSCP343()) continue;
-                            bool boo = Vector3.Distance(ev.Player.Position, ply.Position) <= 5f;
-
-                            //Log.Info($"Debug - {ply.Nickname} - {Vector3.Distance(ev.Player.Position, ply.Position)} - {boo}");
-                            if (boo) ply.HP = ply.MaxHP;
-                            count++;
-                        }
-                        if (count == 0)
-                        {
-                            ev.ReturnMessage = "Рядом с вам никого не было";
-                        }
-                        else
-                        {
-                            Badge badge = ev.Player.GetSCPBadge();
-                            badge.canheal = false;
-                            badge.SaveBadge343();
-                            ev.ReturnMessage = "Вы восстановили игрокам hp";
-                            Timing.CallDelayed(120f, () =>
-                            {
-                                badge.canheal = true;
-                                badge.SaveBadge343();
-                            });
-                        }
+                            ev.Player.Position = pos;
+                            if (!ev.Player.HasItem(ItemType.Flashlight)) ev.Player.AddItem(ItemType.Flashlight);
+                        });
                     }
-                    else
-                    {
-                        ev.ReturnMessage = "Ожидайте кулдаун на восстановление игрокам hp";
-                    }
-                    ev.Player.ClearBroadcasts();
-                    ev.Player.Broadcast(10, ev.ReturnMessage);
-                }
-            }
-            else if (ev.Name.ToLower() == "revive343")
-            {
-                ev.Allowed = false;
-                if (!ev.Player.IsSCP343())
-                {
-                    ev.ReturnMessage = $"{scp343.cfg.scp343_alertheckerrornot343}";
                     return;
+                    //*/
                 }
-                else
+                if (ev.Name.ToLower() == "heck343")
                 {
-                    if (ev.Player.GetSCPBadge().revive343 == 0)
+                    ev.Allowed = false;
+                    if (ev.Player.IsSCP343())
                     {
-                        ev.ReturnMessage = $"Вы больше не можете возродить людей";
+                        if (!scp343.cfg.scp343_heck)
+                        {
+                            ev.ReturnMessage = scp343.cfg.scp343_heckerrordisable;
+                            return;
+                        }
+                        bool allowed = ev.Player.GetSCPBadge().canheck;
+                        if (allowed)
+                        {
+                            ev.Player.SetRole(RoleType.ClassD);
+                            ev.Player.DisableAllEffects();
+                            KillSCP343(ev.Player);
+                            if (scp343.cfg.scp343_alert) ev.Player.Broadcast(10, scp343.cfg.scp343_alertbackd.Replace("\\n", "\n"));
+                            ev.ReturnMessage = scp343.cfg.scp343_alertbackd.Replace("\\n", "\n");
+                            return;
+                        }
+                        else
+                        {
+                            ev.ReturnMessage = $"Error.....{scp343.cfg.scp343_alertheckerrortime}";
+                        }
                     }
                     else
                     {
-                        Player player = null;
-                        foreach (Player ply in from Player x in Player.List where x.Role == RoleType.Spectator && deadplayers.ContainsKey(x.Id) select x)
-                        {
-                            if (player != null) continue;
-                            bool boo = Vector3.Distance(ev.Player.Position, ply.Position) <= 1f;
-                            //    Log.Info($"Debug - {ply.Nickname} - {Vector3.Distance(ev.Player.Position, ply.Position)} - {boo}");
-                            if (!boo) continue;
-                            player = ply;
-                        }
-                        if (player == null) ev.ReturnMessage = "Рядом с вам никого нет или вам надо близко подойти к трупу";
-                        else
-                        {
-                            player.Role = deadplayers[player.Id].role;
-                            player.ClearInventory();
-                            player.Broadcast(10, "scp343 только что возродил вас");
-                            Timing.CallDelayed(0.6f, () =>
-                            {
-                                player.Position = deadplayers[player.Id].pos;
-                                deadplayers.Remove(player.Id);
-                            });
-                            Badge badge = ev.Player.GetSCPBadge();
-                            badge.revive343--;
-                            badge.SaveBadge343();
-                            ev.ReturnMessage = $"Вы возродили {player.Nickname}";
-                        }
+                        ev.ReturnMessage = $"Error........{scp343.cfg.scp343_alertheckerrornot343}";
                     }
                 }
-                ev.Player.ClearBroadcasts();
-                ev.Player.Broadcast(10, ev.ReturnMessage);
+                else if (ev.Name.ToLower() == "tp343")
+                {
+                    ev.Allowed = false;
+                    if (ev.Player.IsSCP343())
+                    {
+                        List<Player> players = Player.List.Where(e => !e.IsSCP343() && e.Role != RoleType.Spectator && e.Role != RoleType.None).ToList();
+                        Player player = players[RNG.Next(players.Count)];
+                        if (player == null || players.Count < 1)
+                        {
+                            ev.ReturnMessage = $"Не найден живой человек";
+                        }
+                        else
+                        {
+                            ev.Player.Position = player.Position;
+                            ev.ReturnMessage = $"Вы телепортнулись к {player.Nickname} играющего за {player.Role}";
+                        }
+                        ev.Player.ClearBroadcasts();
+                        ev.Player.Broadcast(10, ev.ReturnMessage);
+                    }
+                    else
+                    {
+                        ev.ReturnMessage = $"Error........{scp343.cfg.scp343_alertheckerrornot343}";
+                    }
+
+                }
+                else if (ev.Name.ToLower() == "rt")
+                {
+                    ev.Allowed = false;
+                    ev.ReturnMessage = $"Round Time is {Round.ElapsedTime}";
+                }
+                else if (ev.Name.ToLower() == "heal343")
+                {
+                    ev.Allowed = false;
+                    if (!ev.Player.IsSCP343()) ev.ReturnMessage = $"{scp343.cfg.scp343_alertheckerrornot343}";
+                    else
+                    {
+                        if (ev.Player.GetSCPBadge().canheal)
+                        {
+                            int count = 0;
+                            foreach (var ply in from x in Player.List where x.Role != RoleType.Spectator select x)
+                            {
+                                if (ply.IsSCP343()) continue;
+                                bool boo = Vector3.Distance(ev.Player.Position, ply.Position) <= 5f;
+
+                                //Log.Info($"Debug - {ply.Nickname} - {Vector3.Distance(ev.Player.Position, ply.Position)} - {boo}");
+                                if (boo) ply.HP = ply.MaxHP;
+                                count++;
+                            }
+                            if (count == 0)
+                            {
+                                ev.ReturnMessage = "Рядом с вам никого не было";
+                            }
+                            else
+                            {
+                                Badge badge = ev.Player.GetSCPBadge();
+                                badge.canheal = false;
+                                badge.SaveBadge343();
+                                ev.ReturnMessage = "Вы восстановили игрокам hp";
+                                Timing.CallDelayed(120f, () =>
+                                {
+                                    badge.canheal = true;
+                                    badge.SaveBadge343();
+                                });
+                            }
+                        }
+                        else
+                        {
+                            ev.ReturnMessage = "Ожидайте кулдаун на восстановление игрокам hp";
+                        }
+                        ev.Player.ClearBroadcasts();
+                        ev.Player.Broadcast(10, ev.ReturnMessage);
+                    }
+                }
+                else if (ev.Name.ToLower() == "revive343")
+                {
+                    ev.Allowed = false;
+                    if (!ev.Player.IsSCP343())
+                    {
+                        ev.ReturnMessage = $"{scp343.cfg.scp343_alertheckerrornot343}";
+                        return;
+                    }
+                    else
+                    {
+                        if (ev.Player.GetSCPBadge().revive343 == 0)
+                        {
+                            ev.ReturnMessage = $"Вы больше не можете возродить людей";
+                        }
+                        else
+                        {
+                            Player player = null;
+                            foreach (Player ply in from Player x in Player.List where x.Role == RoleType.Spectator && deadplayers.ContainsKey(x.Id) select x)
+                            {
+                                if (player != null) continue;
+                                bool boo = Vector3.Distance(ev.Player.Position, ply.Position) <= 1f;
+                                //    Log.Info($"Debug - {ply.Nickname} - {Vector3.Distance(ev.Player.Position, ply.Position)} - {boo}");
+                                if (!boo) continue;
+                                player = ply;
+                            }
+                            if (player == null) ev.ReturnMessage = "Рядом с вам никого нет или вам надо близко подойти к трупу";
+                            else
+                            {
+                                player.Role = deadplayers[player.Id].role;
+                                player.ClearInventory();
+                                player.Broadcast(10, "scp343 только что возродил вас");
+                                Timing.CallDelayed(0.6f, () =>
+                                {
+                                    player.Position = deadplayers[player.Id].pos;
+                                    deadplayers.Remove(player.Id);
+                                });
+                                Badge badge = ev.Player.GetSCPBadge();
+                                badge.revive343--;
+                                badge.SaveBadge343();
+                                ev.ReturnMessage = $"Вы возродили {player.Nickname}";
+                            }
+                        }
+                    }
+                    ev.Player.ClearBroadcasts();
+                    ev.Player.Broadcast(10, ev.ReturnMessage);
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex);
             }
         }
 
