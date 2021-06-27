@@ -123,6 +123,9 @@ namespace SCP343
                 PLAYER.Escape += Players.OnEscaping;
                 PLAYER.DroppingItem += Players.OnDropingItem;
                 PLAYER.MedicalUsing += Players.OnMedicalUsing;
+                Scps914.ChangeKnob += Players.SCP914_ChangeKnob;
+                Scps914.UpgradePlayer += Players.OnUpgradePlayer;
+                Scps914.Upgrade += Players.OnUpgrade;
             }
             catch (Exception ex)
             {
@@ -163,6 +166,9 @@ namespace SCP343
             PLAYER.Escape -= Players.OnEscaping;
             PLAYER.DroppingItem -= Players.OnDropingItem;
             PLAYER.MedicalUsing -= Players.OnMedicalUsing;
+            Scps914.ChangeKnob -= Players.SCP914_ChangeKnob;
+            Scps914.UpgradePlayer -= Players.OnUpgradePlayer;
+            Scps914.Upgrade -= Players.OnUpgrade;
             Players = null; ;
         }
         //public override void OnReloaded() { }

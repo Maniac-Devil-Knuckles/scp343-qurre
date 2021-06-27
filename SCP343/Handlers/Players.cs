@@ -69,10 +69,10 @@ namespace SCP343.Handlers
         {
             if (scp343badgelist.Count() > 0)
             {
-                List<Player> mtf = Player.List.Where(p => p.Team == Team.MTF).ToList();
-                List<Player> classd = Player.List.Where(p => p.Role == RoleType.ClassD && !p.IsSCP343()).ToList();
-                List<Player> chaos = Player.List.Where(p => p.Role == RoleType.ChaosInsurgency).ToList();
-                List<Player> scps = Player.List.Where(p => p.Team == Team.SCP).ToList(); ;
+                List<Player> mtf = Player.List.Where(p => p.Team == Team.MTF && !p.Tag.Contains(" scp035")).ToList();
+                List<Player> classd = Player.List.Where(p => p.Role == RoleType.ClassD && !p.IsSCP343() && !p.Tag.Contains(" scp035")).ToList();
+                List<Player> chaos = Player.List.Where(p => p.Role == RoleType.ChaosInsurgency && !p.Tag.Contains(" scp035")).ToList();
+                List<Player> scps = Player.List.Where(p => p.Team == Team.SCP && !p.Tag.Contains(" scp035")).ToList(); ;
                 if (mtf.Count > 0 && classd.Count == 0 && scps.Count == 0 && chaos.Count == 0) ev.RoundEnd = true;
                 else if (mtf.Count == 0 && classd.Count == 0 && scps.Count > 0) ev.RoundEnd = true;
                 else if (mtf.Count > 0 && (classd.Count > 0 || chaos.Count > 0) && scps.Count == 0) ev.RoundEnd = false;
@@ -458,7 +458,7 @@ namespace SCP343.Handlers
             }
         }
 
-            internal void OnEnraging(EnrageEvent ev)
+        internal void OnEnraging(EnrageEvent ev)
         {
             if (scp343badgelist.Count() < 1) return;
             if (ev.Player.Scp096Controller.Targets.Count<=1&& ev.Player.Scp096Controller.Targets.Count==0 ? true: scp343badgelist.Contains(ev.Player.Scp096Controller.Targets))
@@ -469,7 +469,6 @@ namespace SCP343.Handlers
 
         internal void OnAddingTarget(AddTargetEvent ev)
         {
-
             if (scp343badgelist.Count() < 1) return;
             if (ev.Target.IsSCP343())
             {
@@ -480,7 +479,13 @@ namespace SCP343.Handlers
         internal void OnActivating(ActivatingEvent ev)
         {
             if (scp343badgelist.Count() < 1) return;
-            if (ev.Player.IsSCP343()) ev.Allowed = false;
+            if (ev.Player.IsSCP343() && !scp343.cfg.scp343_interact_scp914) ev.Allowed = false;
+        }
+
+        internal void SCP914_ChangeKnob(ChangeKnobEvent ev)
+        {
+            if (scp343badgelist.Count() < 1) return;
+            if (ev.Player.IsSCP343() && !scp343.cfg.scp343_interact_scp914) ev.Allowed = false;
         }
 
         internal void OnEscaping(EscapeEvent ev)
@@ -489,6 +494,20 @@ namespace SCP343.Handlers
             if (ev.Player.IsSCP343())
             {
                 ev.Allowed = scp343.cfg.scp343_canescape;
+            }
+        }
+
+        public void OnUpgradePlayer(UpgradePlayerEvent ev)
+        {
+            if (ev.Player.IsSCP343()) ev.Allowed = false;
+        }
+
+        public void OnUpgrade(UpgradeEvent ev)
+        {
+            if (ev.Players.Any(p => p.IsSCP343()))
+            {
+                ev.Allowed = false;
+                foreach (Player player in ev.Players.Where(p => p.IsSCP343())) player.Broadcast("Вы должны выйти из SCP914", 10, true);
             }
         }
 

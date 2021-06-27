@@ -75,6 +75,8 @@ namespace SCP343
 
         public string scp343_text_show_timer_when_can_open_door { get; internal set; } = "In {343_time_open_door} seconds you can open door";
 
+        public bool scp343_interact_scp914 { get; set; } = false;
+
         private static Config cfg { get => scp343.cfg; }
         internal static void Reload()
         {
@@ -109,6 +111,7 @@ namespace SCP343
             cfg.scp343_turned_for_scp173_andscp096 = conf.GetBool("scp343_turned_for_scp173_andscp096", true);
             cfg.scp343_show_timer_when_can_open_door = conf.GetBool("scp343_show_timer_when_can_open_door", false);
             cfg.scp343_text_show_timer_when_can_open_door = conf.GetString("scp343_text_show_timer_when_can_open_door", cfg.scp343_text_show_timer_when_can_open_door);
+            cfg.scp343_interact_scp914 = conf.GetBool("scp343_interact_scp914", false, "Can scp-343 interact with scp-914");
         }
 
     }
