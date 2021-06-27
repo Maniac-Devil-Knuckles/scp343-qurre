@@ -32,7 +32,7 @@
       <HintPath>..\..\..\Downloads\Exiled\EXILED\Plugins\dependencies\System.ComponentModel.DataAnnotations.dll</HintPath>
     </Reference>
     <Reference Include="Qurre">
-      <HintPath>..\packages\Qurre.1.4.8\lib\net472\Qurre.dll</HintPath>
+      <HintPath>..\packages\Qurre.1.5.0\lib\net472\Qurre.dll</HintPath>
     </Reference>
     <Reference Include="Assembly-CSharp_publicized">
       <HintPath>..\..\Assembly-CSharp_publicized.dll</HintPath>

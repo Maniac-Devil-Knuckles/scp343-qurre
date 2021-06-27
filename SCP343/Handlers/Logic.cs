@@ -101,7 +101,7 @@ namespace SCP343.Handlers
                 {
                     player.GetSCPBadge().canheck = true;
                 }
-                player.HP = 100f;
+                player.Health = 100f;
             });
             if (scp343.cfg.scp343_canopenanydoor)
             {

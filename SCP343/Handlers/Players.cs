@@ -47,7 +47,7 @@ namespace SCP343.Handlers
         {
             if (deadplayers.ContainsKey(ev.Player.Id)) deadplayers.Remove(ev.Player.Id);
             if (scp343badgelist.Count() < 1) return;
-            if (ev.Player?.UserId == null || ev.Player.IsHost || ev.Player.IP == "127.0.0.WAN" || ev.Player.IP == "127.0.0.1") return;
+            if (ev.Player?.UserId == null || ev.Player.IsHost || ev.Player.Ip == "127.0.0.WAN" || ev.Player.Ip == "127.0.0.1") return;
             if (ev.Player.IsSCP343()) KillSCP343(ev.Player);
         }
 
@@ -189,7 +189,7 @@ namespace SCP343.Handlers
                                 bool boo = Vector3.Distance(ev.Player.Position, ply.Position) <= 5f;
 
                                 //Log.Info($"Debug - {ply.Nickname} - {Vector3.Distance(ev.Player.Position, ply.Position)} - {boo}");
-                                if (boo) ply.HP = ply.MaxHP;
+                                if (boo) ply.Health = ply.MaxHealth;
                                 count++;
                             }
                             if (count == 0)
@@ -199,7 +199,7 @@ namespace SCP343.Handlers
                             else
                             {
                                 ev.Player.GetSCPBadge().canheal = false;
-                                ev.ReturnMessage = "Вы восстановили игрокам hp";
+                                ev.ReturnMessage = "Вы восстановили игрокам Health";
                                 Timing.CallDelayed(120f, () =>
                                 {
                                     ev.Player.GetSCPBadge().canheal = true;
@@ -208,7 +208,7 @@ namespace SCP343.Handlers
                         }
                         else
                         {
-                            ev.ReturnMessage = "Ожидайте кулдаун на восстановление игрокам hp";
+                            ev.ReturnMessage = "Ожидайте кулдаун на восстановление игрокам Health";
                         }
                         ev.Player.ClearBroadcasts();
                         ev.Player.Broadcast(10, ev.ReturnMessage);
@@ -335,7 +335,7 @@ namespace SCP343.Handlers
             {
                 if (ev.DamageType == DamageTypes.Decont || ev.DamageType == DamageTypes.Nuke)
                 {
-                    ev.Amount = ev.Target.HP;
+                    ev.Amount = ev.Target.Health;
                     return;
                 }
                 else
@@ -436,7 +436,7 @@ namespace SCP343.Handlers
         {
             if (scp343badgelist.Count() < 1) return;
             if (ev.Player.Id == Server.Host.Id) return;
-            if (ev.Player == null || ev.Player.IP == "127.0.0.WAN" || ev.Player.IP == "127.0.0.1") return;
+            if (ev.Player == null || ev.Player.Ip == "127.0.0.WAN" || ev.Player.Ip == "127.0.0.1") return;
             if (ev.Player.IsSCP343()) KillSCP343(ev.Player);
             if (deadplayers.ContainsKey(ev.Player.Id)) deadplayers.Remove(ev.Player.Id);
         }
@@ -499,7 +499,17 @@ namespace SCP343.Handlers
 
         public void OnUpgradePlayer(UpgradePlayerEvent ev)
         {
-            if (ev.Player.IsSCP343()) ev.Allowed = false;
+            if (ev.Player.IsSCP343()) Timing.RunCoroutine(GetEnumerator343(ev.Player), "scp343-" + ev.Player.Id);
+        }
+
+        IEnumerator<float> GetEnumerator343(Player player)
+        {
+            yield return Timing.WaitForSeconds(1f);
+            for(; Qurre.API.Controllers.Scp914.Working; )
+            {
+                yield return Timing.WaitForSeconds(1f);
+                player.Position = Qurre.API.Controllers.Scp914.Intake.position;
+            }
         }
 
         public void OnUpgrade(UpgradeEvent ev)
@@ -567,7 +577,7 @@ namespace SCP343.Handlers
                         bool boo = Vector3.Distance(ev.Player.Position, ply.Position) <= 5f;
 
                         //Log.Info($"Debug - {ply.Nickname} - {Vector3.Distance(ev.Player.Position, ply.Position)} - {boo}");
-                        if (boo) ply.HP = ply.MaxHP;
+                        if (boo) ply.Health = ply.MaxHealth;
                         count++;
                     }
                     if (count == 0)
@@ -577,13 +587,13 @@ namespace SCP343.Handlers
                     else
                     {
                         ev.Player.GetSCPBadge().canheal = false;
-                        console.ReturnMessage = "Вы восстановили игрокам hp";
+                        console.ReturnMessage = "Вы восстановили игрокам Health";
                         Timing.CallDelayed(120f, () => ev.Player.GetSCPBadge().canheal = true);
                     }
                 }
                 else
                 {
-                    console.ReturnMessage = "Ожидайте кулдаун на восстановление игрокам hp";
+                    console.ReturnMessage = "Ожидайте кулдаун на восстановление игрокам Health";
                 }
                 ev.Player.ClearBroadcasts();
                 ev.Player.Broadcast(10, console.ReturnMessage);
