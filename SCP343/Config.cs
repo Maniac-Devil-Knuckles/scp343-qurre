@@ -56,7 +56,7 @@ namespace SCP343
         [Description("Minimum players for ")]
         public int minplayers { get; internal set; } = 5;
         [Description("What give scp-343 on spawn")]
-        public List<int> scp343_itemsatspawn { get; internal set; } = new List<int> { 22, 33, 15 };
+        public List<int> scp343_itemsatspawn { get; internal set; } = new List<int> { 22, 33, 15, 32, 30 };
         [Description("Moving Speed lift for all players")]
         public float lift_moving_speed { get; internal set; } = 6.5f;
 
@@ -76,6 +76,30 @@ namespace SCP343
         public string scp343_text_show_timer_when_can_open_door { get; internal set; } = "In {343_time_open_door} seconds you can open door";
 
         public bool scp343_interact_scp914 { get; set; } = false;
+
+        public int scp343_min_heal_players { get; set; } = 30;
+
+        public int scp343_max_heal_players { get; set; } = 70;
+
+        public bool scp343_can_use_TranquilizerGun { get; set; } = true;
+
+        public List<int> scp343_itemscannotdrop { get; set; } = new List<int> { 22, 33, 15, 32, 30  };
+
+        public string scp343_notfoundplayer { get; set; } = "Not found players!";
+
+        public string scp343_teleport_to_player { get; set; } = "You teleported to %player% playing as %role%";
+
+        public string scp343_healplayer { get; set; } = "You healed players health";
+
+        public string scp343_cooldown { get; set; } = "Waiting for ending cooldown";
+
+        public string scp343_cannotrevive { get; set; } = "You can not revive players";
+
+        public string scp343_playerwhorevived { get; set; } = "You was revived by SCP-343";
+
+        public string scp343_revive_text { get; set; } = "You revived %user%";
+
+        public string scp343_youmustexit914 { get; set; } = "You must to exit SCP-914";
 
         private static Config cfg { get => scp343.cfg; }
         internal static void Reload()
@@ -112,6 +136,18 @@ namespace SCP343
             cfg.scp343_show_timer_when_can_open_door = conf.GetBool("scp343_show_timer_when_can_open_door", false);
             cfg.scp343_text_show_timer_when_can_open_door = conf.GetString("scp343_text_show_timer_when_can_open_door", cfg.scp343_text_show_timer_when_can_open_door);
             cfg.scp343_interact_scp914 = conf.GetBool("scp343_interact_scp914", false, "Can scp-343 interact with scp-914");
+            cfg.scp343_min_heal_players = conf.GetInt("scp343_min_heal_players", 30);
+            cfg.scp343_max_heal_players = conf.GetInt("scp343_max_heal_players", 70);
+            cfg.scp343_can_use_TranquilizerGun = conf.GetBool("scp343_can_use_TranquilizerGun", true);
+            cfg.scp343_itemscannotdrop = conf.GetIntList("scp343_itemscannotdrop", cfg.scp343_itemscannotdrop);
+            cfg.scp343_notfoundplayer = conf.GetString("scp343_notfoundplayer", cfg.scp343_notfoundplayer);
+            cfg.scp343_teleport_to_player = conf.GetString("scp343_teleport_to_player", cfg.scp343_teleport_to_player);
+            cfg.scp343_healplayer = conf.GetString("scp343_healplayer", cfg.scp343_healplayer);
+            cfg.scp343_cooldown = conf.GetString("scp343_cooldown", cfg.scp343_cooldown);
+            cfg.scp343_cannotrevive = conf.GetString("scp343_cannotrevive", cfg.scp343_cannotrevive);
+            cfg.scp343_playerwhorevived = conf.GetString("scp343_playerwhorevived", cfg.scp343_playerwhorevived);
+            cfg.scp343_revive_text = conf.GetString("scp343_revive_text", cfg.scp343_revive_text);
+            cfg.scp343_youmustexit914 = conf.GetString("scp343_youmustexit914", cfg.scp343_youmustexit914);
         }
 
     }

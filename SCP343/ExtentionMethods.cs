@@ -49,6 +49,12 @@ namespace SCP343
             }
         }
 
+        public static void SetHP(this Player player, int value)
+        {
+            if (value > player.MaxHp) player.Hp = player.MaxHp;
+            else player.Hp = value;
+        }
+
         public static bool IsSCP343(this Player player) => scp343badgelist.Contains(player);
 
         public static Badge GetSCPBadge(this Player player)

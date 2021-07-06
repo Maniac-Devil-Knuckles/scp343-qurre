@@ -18,6 +18,19 @@ namespace SCP343.Handlers
 {
     public partial class Players
     {
+        internal IEnumerator<float> RunTranq(Player player)
+        {
+            player.Invisible = true;
+            player.GodMode = true;
+            Qurre.API.Controllers.Ragdoll ragdoll = Qurre.API.Controllers.Ragdoll.Create(player.Role, player.Position, player.FullRotation, default, new PlayerStats.HitInfo(0, "nn", DamageTypes.None, player.Id), false, player);
+            Vector3 pos = player.Position;
+            player.Position = new Vector3(1, 1, 1);
+            yield return Timing.WaitForSeconds(5f);
+            player.Invisible = false;
+            player.GodMode = false;
+            player.Position = pos;
+            ragdoll.Destroy();
+        }
 
         internal bool adminsor343(Player player)
         {
