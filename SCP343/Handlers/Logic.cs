@@ -18,10 +18,22 @@ namespace SCP343.Handlers
 {
     public partial class Players
     {
+
+        IEnumerator<float> GetEnumerator343(Player player)
+        {
+            yield return Timing.WaitForSeconds(1f);
+            for (; Qurre.API.Controllers.Scp914.Working;)
+            {
+                yield return Timing.WaitForSeconds(1f);
+                player.Position = Qurre.API.Controllers.Scp914.Intake.position;
+            }
+        }
+
         internal IEnumerator<float> RunTranq(Player player)
         {
             player.Invisible = true;
             player.GodMode = true;
+            player.Broadcast(scp343.cfg.scp343_youweretranq, 4);
             Qurre.API.Controllers.Ragdoll ragdoll = Qurre.API.Controllers.Ragdoll.Create(player.Role, player.Position, player.FullRotation, default, new PlayerStats.HitInfo(0, "nn", DamageTypes.None, player.Id), false, player);
             Vector3 pos = player.Position;
             player.Position = new Vector3(1, 1, 1);

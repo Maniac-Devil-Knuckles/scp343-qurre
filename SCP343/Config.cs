@@ -99,7 +99,9 @@ namespace SCP343
 
         public string scp343_revive_text { get; set; } = "You revived %user%";
 
-        public string scp343_youmustexit914 { get; set; } = "You must to exit SCP-914";
+        public string scp343_youmustexit914 { get; set; } = "You must exit SCP-914";
+
+        public string scp343_youweretranq { get; set; } = "You were shooted by SCP-343 using TranquilizerGun";
 
         private static Config cfg { get => scp343.cfg; }
         internal static void Reload()

@@ -509,16 +509,6 @@ namespace SCP343.Handlers
             if (ev.Player.IsSCP343()) Timing.RunCoroutine(GetEnumerator343(ev.Player), "scp343-" + ev.Player.Id);
         }
 
-        IEnumerator<float> GetEnumerator343(Player player)
-        {
-            yield return Timing.WaitForSeconds(1f);
-            for(; Qurre.API.Controllers.Scp914.Working; )
-            {
-                yield return Timing.WaitForSeconds(1f);
-                player.Position = Qurre.API.Controllers.Scp914.Intake.position;
-            }
-        }
-
         public void OnUpgrade(UpgradeEvent ev)
         {
             if (ev.Players.Any(p => p.IsSCP343()))
@@ -652,7 +642,16 @@ namespace SCP343.Handlers
         }
         internal void OnTriggeringTesla(TeslaTriggerEvent ev)
         {
-            if (ev.Player.IsSCP343()) ev.Triggerable = false;
+            if (scp343.cfg.scp343_activating_tesla_in_range)
+            {
+                TeslaGate teslaGate = ev.Tesla.GameObject.GetComponent<TeslaGate>();
+                IEnumerable<Player> players = ReferenceHub.GetAllHubs().Values.Select(h => Player.Get(h)).Where(x=> x.Role != RoleType.Spectator && teslaGate.PlayerInRange(x.ReferenceHub));
+                if (players.Count() > 0)
+                {
+                    if (players.Any(p => p.IsSCP343())) ev.Triggerable = false;
+                }
+            }
+            else if (ev.Player.IsSCP343()) ev.Triggerable = false;
         }
         internal void OnPickingUpItem(PickupItemEvent ev)
         {

@@ -1,11 +1,5 @@
-﻿
-#pragma warning disable SA1313
-#pragma warning disable CS0618
-#pragma warning disable CS0436
-using System;
+﻿using System;
 using System.Collections.Generic;
-
-using Qurre;
 using Qurre.API;
 using Qurre.API.Events;
 using GameCore;
@@ -17,7 +11,6 @@ using Interactables.Interobjects.DoorUtils;
 using NorthwoodLib.Pools;
 
 using UnityEngine;
-using Console = GameCore.Console;
 using Log = Qurre.Log;
 using System.Linq;
 
@@ -72,7 +65,7 @@ namespace SCP343.Patches
                             TeslaGate teslaGate = gameObject3.GetComponent<TeslaGate>();
                             float apDrain = __instance.GetManaFromLabel("Tesla Gate Burst", __instance.abilities);
                             bool isAllowed = apDrain <= __instance.curMana;
-                            TeslaTriggerEvent ev = new TeslaTriggerEvent(player, teslaGate, isAllowed);
+                            TeslaTriggerEvent ev = new TeslaTriggerEvent(player, Extensions.GetTesla(teslaGate), isAllowed);
                             List<ReferenceHub> players = new List<ReferenceHub>();
                             foreach (KeyValuePair<GameObject, ReferenceHub> allHub in ReferenceHub.GetAllHubs())
                             {
@@ -80,10 +73,10 @@ namespace SCP343.Patches
                                     continue;
                                 if (teslaGate.PlayerInRange(allHub.Value)) players.Add(allHub.Value);
                             }
-                            if (players.Count()>0)
+                            if (players.Count() > 0)
                             {
                                 bool allowed = false;
-                              if (players.Any(d=>Player.Get(d).IsSCP343())) allowed =  scp343.cfg.scp343_activating_tesla_in_range;
+                                if (players.Any(x=> Player.Get(x).IsSCP343())) allowed = scp343.cfg.scp343_activating_tesla_in_range; ;
                                 ev.Triggerable = !allowed;
                             }
                             if (!ev.Triggerable)
