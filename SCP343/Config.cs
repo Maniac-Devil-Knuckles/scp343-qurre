@@ -1,14 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using Qurre;
 namespace SCP343
 {
-    using System.Collections.Generic;
-    using System.ComponentModel;
-    using System.IO;
-    using System.Linq;
-    using Qurre;
-    using Qurre.API;
-    using SCP343;
-
     public sealed class Config
     {
         [Description("Indicates whether the plugin is enabled or not")]
@@ -104,6 +99,7 @@ namespace SCP343
         public string scp343_youweretranq { get; set; } = "You were shooted by SCP-343 using TranquilizerGun";
 
         private static Config cfg { get => scp343.cfg; }
+
         internal static void Reload()
         {
             Plugin.Config.Reload();

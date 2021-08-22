@@ -26,7 +26,7 @@ namespace SCP343
         /// <summary>
         /// This spawns <see cref="Player"/> as scp343 and returns <see cref="Badge"/>
         /// </summary>
-        public static Badge Spawn343(Player player) => scp343.Players.spawn343(player);
+        public static Badge Spawn343(Player player, UnityEngine.Vector3 position = default) => scp343.Players.spawn343(player, position: position);
         /// <summary>
         /// This returns List of <see cref="Player"/>
         /// </summary>
@@ -69,12 +69,6 @@ namespace SCP343
         {
             try
             {
-                if (!cfg.IsEnabled)
-                {
-                    Disable();
-                    return;
-                }
-                Instance = this;
                 try
                 {
                     //Config.betaitemsatspawn.ParseInventorySettings();
@@ -87,10 +81,16 @@ namespace SCP343
                     Log.Info("error\n\n\n\n\n\n\n\\n\n");
                     Log.Info(ex);//
                 }
+                SCP343.Config.Reload();
+                if (!cfg.IsEnabled)
+                {
+                    Disable();
+                    return;
+                }
+                Instance = this;
                 OnRegisteringCommands();
                 Players = new Players(this);
                 Log.Info("Enabling SCP343 by Maniac Devil Knuckles");
-                SCP343.Config.Reload();
                 PLAYER.TransmitPlayerData += Players.OnTransmitPlayerData;
                 PLAYER.Shooting += Players.OnShooting;
                 Qurre.Events.Round.WaitingForPlayers += Players.WaitingForPlayers;
