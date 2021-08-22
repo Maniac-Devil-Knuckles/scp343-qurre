@@ -51,7 +51,7 @@ namespace SCP343.Commands
                         response = "This player already scp343";
                         return false;
                     }
-                    player.SetRole(RoleType.ClassD, false, true);
+                    player.SetRole(RoleType.ClassD, false, CharacterClassManager.SpawnReason.ForceClass);
                     Timing.CallDelayed(0.5f, () =>
                     {
                         scp343.Players.spawn343(player);

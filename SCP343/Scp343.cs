@@ -21,16 +21,12 @@ using CommandSystem;
 
 namespace SCP343
 {
-    public class API
+    public static class API
     {
         /// <summary>
         /// This spawns <see cref="Player"/> as scp343 and returns <see cref="Badge"/>
         /// </summary>
-        public static Badge Spawn343(Player player)
-        {
-            Badge s343 = scp343.Players.spawn343(player);
-            return s343;
-        }
+        public static Badge Spawn343(Player player) => scp343.Players.spawn343(player);
         /// <summary>
         /// This returns List of <see cref="Player"/>
         /// </summary>
@@ -123,8 +119,7 @@ namespace SCP343
                 PLAYER.RoleChange += Players.OnChangingRole;
                 PLAYER.Escape += Players.OnEscaping;
                 PLAYER.DroppingItem += Players.OnDropingItem;
-                PLAYER.MedicalUsing += Players.OnMedicalUsing;
-                Scps914.ChangeKnob += Players.SCP914_ChangeKnob;
+                PLAYER.ItemUsing += Players.OnMedicalUsing;
                 Scps914.UpgradePlayer += Players.OnUpgradePlayer;
                 Scps914.Upgrade += Players.OnUpgrade;
             }
@@ -167,8 +162,7 @@ namespace SCP343
             PLAYER.RoleChange -= Players.OnChangingRole;
             PLAYER.Escape -= Players.OnEscaping;
             PLAYER.DroppingItem -= Players.OnDropingItem;
-            PLAYER.MedicalUsing -= Players.OnMedicalUsing;
-            Scps914.ChangeKnob -= Players.SCP914_ChangeKnob;
+            PLAYER.ItemUsing -= Players.OnMedicalUsing;
             Scps914.UpgradePlayer -= Players.OnUpgradePlayer;
             Scps914.Upgrade -= Players.OnUpgrade;
             Players = null; ;

@@ -3,7 +3,7 @@ using Qurre.API;
 using HarmonyLib;
 namespace SCP343.Patches
 {
-    [HarmonyPatch(typeof(CharacterClassManager),nameof(CharacterClassManager.CallCmdRegisterEscape))]
+    [HarmonyPatch(typeof(CharacterClassManager),"UserCode_CmdRegisterEscape")]
     public class EscapePatch
     {
         private static bool Prefix(CharacterClassManager __instance)

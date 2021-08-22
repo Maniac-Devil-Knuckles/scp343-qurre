@@ -56,7 +56,7 @@ namespace SCP343
         [Description("Minimum players for ")]
         public int minplayers { get; internal set; } = 5;
         [Description("What give scp-343 on spawn")]
-        public List<int> scp343_itemsatspawn { get; internal set; } = new List<int> { 22, 33, 15, 32, 30 };
+        public List<int> scp343_itemsatspawn { get; internal set; } = new List<int> { 22, 33, 15, 32, 13 };
         [Description("Moving Speed lift for all players")]
         public float lift_moving_speed { get; internal set; } = 6.5f;
 
@@ -83,7 +83,7 @@ namespace SCP343
 
         public bool scp343_can_use_TranquilizerGun { get; set; } = true;
 
-        public List<int> scp343_itemscannotdrop { get; set; } = new List<int> { 22, 33, 15, 32, 30  };
+        public List<int> scp343_itemscannotdrop { get; set; } = new List<int> { 22, 33, 15, 32, 13  };
 
         public string scp343_notfoundplayer { get; set; } = "Not found players!";
 
