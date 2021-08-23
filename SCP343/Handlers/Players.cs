@@ -615,13 +615,13 @@ namespace SCP343.Handlers
             if (scp343badgelist.Count() < 1) return;
             if (ev.Player.IsSCP343())
             {
-                if (ev.Item.Durabillity == 1337035) ev.Allowed = false;
+                //if (ev.Pickup.Serial == 1337035) ev.Allowed = false;
                 if (!scp343.cfg.scp343_itemconverttoggle)
                 {
                     ev.Allowed = false;
                     return;
                 }
-                int itemid = (int)ev.Item.Type;
+                int itemid = (int)ev.Pickup.Type;
                 if (scp343.cfg.scp343_itemdroplist.IndexOf(itemid) > 0)
                 {
                     ev.Allowed = false;
@@ -639,8 +639,7 @@ namespace SCP343.Handlers
                         if (i >= 0)
                         {
                             ev.Allowed = false;
-                            ev.Item.Destroy();
-                            ev.Item.Despawn();
+                            ev.Pickup.Destroy();
                             ItemType item = (ItemType)i;
                             ev.Player.AddItem(item);
                         }

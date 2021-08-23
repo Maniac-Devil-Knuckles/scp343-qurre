@@ -76,11 +76,11 @@ namespace SCP343.Handlers
             player.ClearInventory();
             Timing.CallDelayed(1f, () =>
             {
-                player.Ammo556x45 = 300;
-                player.Ammo762x39 = 300;
-                player.Ammo9x19 = 300;
-                player.Ammo12gauge = 300;
-                player.Ammo44cal = 300;
+                player.Ammo556 = 300;
+                player.Ammo762 = 300;
+                player.Ammo9 = 300;
+                player.Ammo12Gauge = 300;
+                player.Ammo44Cal = 300;
             });
             if (scp0492)
             {

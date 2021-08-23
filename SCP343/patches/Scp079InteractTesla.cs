@@ -21,7 +21,7 @@ namespace SCP343.Patches
             bool flag = target != null && target.TryGetComponent(out DoorVariant doorVariant);
             List<string> list = GameCore.ConfigFile.ServerConfig.GetStringList("scp079_door_blacklist") ?? new List<string>();
             bool result;
-            switch(command)
+            switch (command)
             {
                 case Command079.Tesla:
                     {
@@ -34,9 +34,9 @@ namespace SCP343.Patches
                         else if (__instance.CurrentRoom != null)
                         {
                             TeslaGate teslaGate = __instance.CurrentRoom.GetComponentInChildren<TeslaGate>();
-                            if (teslaGate!=null)
+                            if (teslaGate != null)
                             {
-                                TeslaTriggerEvent ev = new TeslaTriggerEvent(Player.Get(__instance.gameObject), teslaGate.GetTesla(), API.AllScps343.Any(p=>teslaGate.PlayerInHurtRange(p.GameObject)), scp343.cfg.scp343_activating_tesla_in_range);
+                                TeslaTriggerEvent ev = new TeslaTriggerEvent(Player.Get(__instance.gameObject), teslaGate.GetTesla(), API.AllScps343.Any(p => teslaGate.PlayerInHurtRange(p.GameObject)), scp343.cfg.scp343_activating_tesla_in_range);
                                 if (!ev.InHurtingRange || !ev.Triggerable)
                                 {
                                     ev.Tesla.Trigger(true);
