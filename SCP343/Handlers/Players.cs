@@ -595,7 +595,7 @@ namespace SCP343.Handlers
         internal void OnUnlockingGenerator(InteractGeneratorEvent ev)
         {
             if (scp343badgelist.Count() < 1) return;
-            if (ev.Player.IsSCP343() && ev.Player.GetSCPBadge().canopendoor) ev.Allowed = true;
+            if (ev.Player.IsSCP343() && ev.Player.GetSCPBadge().canopendoor) ev.Generator.Locked = !ev.Generator.Locked;
         }
         internal void OnTriggeringTesla(TeslaTriggerEvent ev)
         {
@@ -610,6 +610,7 @@ namespace SCP343.Handlers
             }
             else if (ev.Player.IsSCP343()) ev.Triggerable = false;
         }
+
         internal void OnPickingUpItem(PickupItemEvent ev)
         {
             if (scp343badgelist.Count() < 1) return;

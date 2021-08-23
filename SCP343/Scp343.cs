@@ -210,8 +210,8 @@ namespace SCP343
                             CommandProcessor.RemoteAdminCommandHandler.RegisterCommand(command);
                         else if (commandType == typeof(GameConsoleCommandHandler))
                             GameCore.Console.singleton.ConsoleCommandHandler.RegisterCommand(command);
-                        else if (commandType == typeof(ClientCommandHandler))
-                            QueryProcessor.DotCommandHandler.RegisterCommand(command);
+                        else if (commandType == typeof(ClientCommandHandler)) continue;
+                        //    QueryProcessor.DotCommandHandler.RegisterCommand(command);
                         Commands[commandType][type] = command;
                     }
                     catch (Exception exception)

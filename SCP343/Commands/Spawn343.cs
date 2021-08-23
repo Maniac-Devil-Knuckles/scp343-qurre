@@ -9,6 +9,7 @@ using UnityEngine;
 namespace SCP343.Commands
 {
     [CommandHandler(typeof(RemoteAdminCommandHandler))]
+    [CommandHandler(typeof(GameConsoleCommandHandler))]
     public class Spawn343 : ParentCommand, IUsageProvider
     {
         public Spawn343() => LoadGeneratedCommands();
