@@ -48,7 +48,7 @@ namespace SCP343
         public List<int> scp343_itemstoconvert { get; internal set; } = new List<int> { 10, 13, 14, 16, 20, 21, 23, 24, 25, 26, 30, 35 };
         [Description("What a item should be converted to.")]
         public List<int> scp343_converteditems { get; internal set; } = new List<int> { 14 };
-        [Description("Minimum players for ")]
+        [Description("Minimum players for spawn SCP-343")]
         public int minplayers { get; internal set; } = 5;
         [Description("What give scp-343 on spawn")]
         public List<int> scp343_itemsatspawn { get; internal set; } = new List<int> { 22, 33, 15, 32, 13 };
@@ -98,6 +98,8 @@ namespace SCP343
 
         public string scp343_youweretranq { get; set; } = "You were shooted by SCP-343 using TranquilizerGun";
 
+        public int scp343_max_revive_count { get; set; } = 3;
+
         private static Config cfg { get => scp343.cfg; }
 
         internal static void Reload()
@@ -146,6 +148,7 @@ namespace SCP343
             cfg.scp343_playerwhorevived = conf.GetString("scp343_playerwhorevived", cfg.scp343_playerwhorevived);
             cfg.scp343_revive_text = conf.GetString("scp343_revive_text", cfg.scp343_revive_text);
             cfg.scp343_youmustexit914 = conf.GetString("scp343_youmustexit914", cfg.scp343_youmustexit914);
+            cfg.scp343_max_revive_count = conf.GetInt("scp343_max_revive_count", 3, "How many SCP-343 can revive players?");
         }
 
     }

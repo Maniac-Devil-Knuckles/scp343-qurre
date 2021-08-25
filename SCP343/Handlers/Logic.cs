@@ -16,7 +16,7 @@ using Qurre.API.Controllers;
 
 namespace SCP343.Handlers
 {
-    public partial class Players
+    public partial class Eventhandlers
     {
 
         IEnumerator<float> GetEnumerator343(Player player)
@@ -88,7 +88,7 @@ namespace SCP343.Handlers
             }
             if (position != default)
             {
-                Timing.CallDelayed(0.3f, () =>
+                Timing.CallDelayed(0.7f, () =>
                 {
                     player.Position = position;
                 });
@@ -132,7 +132,7 @@ namespace SCP343.Handlers
             });
             if (scp343.cfg.scp343_canopenanydoor)
             {
-                Timing.RunCoroutine(WhenOpenDoor(player), "player_scp343_" + player.Id);
+                WhenOpenDoor(player).RunCoroutine("player_scp343_" + player.Id);
             }
             if (scp343.cfg.scp343_heck) Timing.CallDelayed(scp343.cfg.scp343_hecktime, () =>
             {

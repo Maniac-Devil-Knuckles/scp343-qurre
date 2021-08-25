@@ -18,8 +18,6 @@ namespace SCP343.Patches
             if (!__instance.iAm079) return false;
             GameCore.Console.AddDebugLog("SCP079", "Command received from a client: " + command, MessageImportance.LessImportant, false);
             __instance.RefreshCurrentRoom();
-            bool flag = target != null && target.TryGetComponent(out DoorVariant doorVariant);
-            List<string> list = GameCore.ConfigFile.ServerConfig.GetStringList("scp079_door_blacklist") ?? new List<string>();
             bool result;
             switch (command)
             {

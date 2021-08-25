@@ -1,4 +1,4 @@
-using CommandSystem;
+﻿using CommandSystem;
 using MEC;
 using RemoteAdmin;
 using System;
@@ -54,7 +54,7 @@ namespace SCP343.Commands
 
             Timing.CallDelayed(0.5f, () =>
             {
-                scp343.Players.spawn343(player);
+                API.Spawn343(player);
             });
             response = $"Made {player.Nickname} SCP-343";
             return true;
