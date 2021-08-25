@@ -55,7 +55,7 @@ namespace SCP343
     public class scp343 : Plugin
     {
         internal static Eventhandlers Eventhandlers { get; private set; } = null;
-        public override int Priority => int.MaxValue;
+        public override int Priority => 0;
         public override string Name => "SCP-343";
         public override string Developer => "Maniac Devil Knuckles";
         public override Version Version { get; } = new Version(1, 0, 0);

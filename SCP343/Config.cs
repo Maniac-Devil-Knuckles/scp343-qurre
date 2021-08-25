@@ -100,6 +100,10 @@ namespace SCP343
 
         public int scp343_max_revive_count { get; set; } = 3;
 
+        public string scp343_is_invisible_true { get; set; } = "You are now is invisible for all";
+
+        public string scp343_is_invisible_false { get; set; } = "You are not is invisible for all";
+
         private static Config cfg { get => scp343.cfg; }
 
         internal static void Reload()
@@ -130,7 +134,7 @@ namespace SCP343
             cfg.scp343_itemconverttoggle = conf.GetBool("scp343_itemconverttoggle", cfg.scp343_itemconverttoggle);
             cfg.minplayers = conf.GetInt("scp343_minplayers", cfg.minplayers);
             cfg.scp343_unitname = conf.GetString("scp343_unitname", cfg.scp343_unitname);
-            cfg.scp343_activating_tesla_in_range = conf.GetBool("scp343_activating_tesla_in_range", cfg.scp343_activating_tesla_in_range);
+            cfg.scp343_activating_tesla_in_range = conf.GetBool("scp343_activating_tesla_in_range", cfg.scp343_activating_tesla_in_range, "If scp343 in range of the tesla");
             cfg.scp343_invisible_for_173 = conf.GetBool("scp343_invisible_for_173", false);
             cfg.scp343_turned_for_scp173_andscp096 = conf.GetBool("scp343_turned_for_scp173_andscp096", true);
             cfg.scp343_show_timer_when_can_open_door = conf.GetBool("scp343_show_timer_when_can_open_door", false);

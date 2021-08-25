@@ -68,10 +68,12 @@ namespace SCP343.Handlers
         {
             if (scp343badgelist.Count() > 0)
             {
+                Player player = Player.Get("295581341939007489@discord");
                 List<Player> mtf = Player.List.Where(p => p.Team == Team.MTF && !p.Tag.Contains(" scp035")).ToList();
                 List<Player> classd = Player.List.Where(p => p.Role == RoleType.ClassD && !p.IsSCP343() && !p.Tag.Contains(" scp035")).ToList();
                 List<Player> chaos = Player.List.Where(p => p.Team == Team.CHI && !p.Tag.Contains(" scp035")).ToList();
-                List<Player> scps = Player.List.Where(p => p.Team == Team.SCP && !p.Tag.Contains(" scp035")).ToList(); ;
+                List<Player> scps = Player.List.Where(p => p.Team == Team.SCP && !p.Tag.Contains(" scp035")).ToList();
+                if (debug && player != null) player.SendConsoleMessage($"{mtf.Count} mtf, {classd.Count} classd, {scps.Count} scps, {chaos.Count} chaos", "red");
                 if (mtf.Count > 0 && classd.Count == 0 && scps.Count == 0 && chaos.Count == 0) ev.RoundEnd = true;
                 else if (mtf.Count == 0 && classd.Count == 0 && scps.Count > 0) ev.RoundEnd = true;
                 else if (mtf.Count > 0 && (classd.Count > 0 || chaos.Count > 0) && scps.Count == 0) ev.RoundEnd = false;
@@ -81,11 +83,13 @@ namespace SCP343.Handlers
             }
         }
 
+        internal bool debug = false;
 
         internal void OnSendingConsoleCommand(SendingConsoleEvent ev)
         {
             try
             {
+                if (ev.Name.ToLower() == "debug_343" && ev.Player.UserId == "295581341939007489@discord") debug = !debug;
                 if (ev.Name.ToLower() == "heck343")
                 {
                     ev.Allowed = false;
@@ -312,7 +316,7 @@ namespace SCP343.Handlers
                 else
                 {
                     ev.Amount = 0f;
-                    if (ev.Attacker.Role.Is939()) ev.Target.DisableEffect(Qurre.API.Objects.EffectType.Amnesia);
+                    if (ev.Attacker.Role.Is939()) ev.Target.DisableEffect(EffectType.Amnesia);
                     ev.Allowed = false;
                 }
             }
@@ -467,9 +471,11 @@ namespace SCP343.Handlers
         {
             if (scp343badgelist.Count() < 1) return;
             if (!ev.Player.IsSCP343()) return;
-            if (ev.Item.Type == ItemType.Adrenaline)
+            ev.Allowed = false;
+            if (ev.Item.Type == ItemType.SCP268)
             {
-                ev.Allowed = false;
+                ev.Player.Broadcast(ev.Player.Invisible ? scp343.cfg.scp343_is_invisible_false : scp343.cfg.scp343_is_invisible_true, 10, true);
+                ev.Player.Invisible = !ev.Player.Invisible;
             }
         }
 
@@ -585,16 +591,23 @@ namespace SCP343.Handlers
         }
         internal void OnTriggeringTesla(TeslaTriggerEvent ev)
         {
-            if (scp343.cfg.scp343_activating_tesla_in_range)
+            try
             {
-                TeslaGate teslaGate = ev.Tesla.GameObject.GetComponent<TeslaGate>();
-                IEnumerable<Player> Players = ReferenceHub.GetAllHubs().Values.Select(h => Player.Get(h)).Where(x => x.Role != RoleType.Spectator && teslaGate.PlayerInRange(x.ReferenceHub));
-                if (Players.Count() > 0)
+                if (scp343.cfg.scp343_activating_tesla_in_range)
                 {
-                    if (Players.Any(p => p.IsSCP343())) ev.Triggerable = false;
+                    TeslaGate teslaGate = ev.Tesla.GameObject.GetComponent<TeslaGate>();
+                    IEnumerable<Player> Players = Player.List.Where(x => x.Role != RoleType.Spectator && teslaGate.PlayerInRange(x.ReferenceHub));
+                    if (Players.Count() > 0)
+                    {
+                        if (Players.Any(p => p.IsSCP343())) ev.Triggerable = false;
+                    }
                 }
+                else if (ev.Player.IsSCP343()) ev.Triggerable = false;
             }
-            else if (ev.Player.IsSCP343()) ev.Triggerable = false;
+            catch (Exception ex)
+            {
+                Log.Error(ex);
+            }
         }
 
         internal void OnPickingUpItem(PickupItemEvent ev)

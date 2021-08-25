@@ -158,6 +158,7 @@ namespace SCP343.Handlers
             player.RoleColor = player.GetSCPBadge().RoleColor;
             player.RoleName = player.GetSCPBadge().RoleName;
             scp343badgelist.Remove(player);
+            player.Tag = "";
         }
     }
 }
