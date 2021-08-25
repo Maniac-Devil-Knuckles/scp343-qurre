@@ -21,7 +21,7 @@ namespace SCP343
         [Description("Will or will not broadcast")]
         public bool scp343_alert { get; internal set; } = true;
         [Description("What 343 is shown if scp343_broadcast is true.")]
-        public string scp343_consoletext { get; internal set; } = "You are <color=red>scp343</color>:\n\n1. You can open all doors;\n\n2. You can transform weapons to first and kit;\n\n 3. You have a god mode.\n\n4. You can teleport to player by sending console command .tp343 or drop ammo\n\n5.In 1 metre away you , you can heal players by sending command .heal343 or dropping adrenaline\n6. In 1 meter away you, you can revive any dead player sending command .revive343 or dropping flashlight";
+        public string scp343_consoletext { get; internal set; } = "You are <color=red>scp343</color>:\n\n1. You can open all doors;\n\n2. You can transform weapons to first and kit;\n\n 3. You have a god mode.\n\n4. You can teleport to player by sending console command .tp343 or drop coin\n\n5.In 1 metre away you , you can heal players by sending command .heal343 or dropping adrenaline\n6. In 1 meter away you, you can revive any dead player sending command .revive343 or dropping flashlight";
         [Description("What 343 is shown if scp343 will back to usual class d")]
         public string scp343_alertbackd { get; internal set; } = "You stopped being scp-343";
         public string scp343_alertheckerrortime { get; internal set; } = "Time is left.";
@@ -51,7 +51,7 @@ namespace SCP343
         [Description("Minimum players for spawn SCP-343")]
         public int minplayers { get; internal set; } = 5;
         [Description("What give scp-343 on spawn")]
-        public List<int> scp343_itemsatspawn { get; internal set; } = new List<int> { 22, 33, 15, 32, 13 };
+        public List<int> scp343_itemsatspawn { get; internal set; } = new List<int> { 35, 33, 15, 32, 13 };
         [Description("Moving Speed lift for all players")]
         public float lift_moving_speed { get; internal set; } = 6.5f;
 
@@ -78,7 +78,7 @@ namespace SCP343
 
         public bool scp343_can_use_TranquilizerGun { get; set; } = true;
 
-        public List<int> scp343_itemscannotdrop { get; set; } = new List<int> { 22, 33, 15, 32, 13  };
+        public List<int> scp343_itemscannotdrop { get; set; } = new List<int> { 35, 33, 15, 32, 13  };
 
         public string scp343_notfoundplayer { get; set; } = "Not found players!";
 

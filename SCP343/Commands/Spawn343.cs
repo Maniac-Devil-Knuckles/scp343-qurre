@@ -37,7 +37,11 @@ namespace SCP343.Commands
                 response = "Usage command : \"spawn343 PlayerId\"";
                 return false;
             }
-            Player player = Player.Get(string.Join(" ", arguments.Skip(1)));
+
+            Player player = null;
+
+            if (int.TryParse(arguments.At(0), out int id)) player = Player.Get(id);
+            else player = Player.Get(string.Join(" ", arguments.Skip(1)));
 
             if (player == null)
             {
@@ -45,7 +49,7 @@ namespace SCP343.Commands
                 return false;
             }
             if (player.IsSCP343())
-            {
+            { 
                 response = "This player already scp343";
                 return false;
             }

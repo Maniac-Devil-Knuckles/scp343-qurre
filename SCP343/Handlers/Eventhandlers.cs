@@ -485,7 +485,7 @@ namespace SCP343.Handlers
             if (!ev.Player.IsSCP343()) return;
             SendingConsoleEvent console = null;
             if (scp343.cfg.scp343_itemscannotdrop.Contains((int)ev.Item.Type)) ev.Allowed = false;
-            if (ev.Item.Type == ItemType.Ammo556x45)
+            if (ev.Item.Type == ItemType.Coin)
             {
                 //ev.Allowed = false;
                 console = new SendingConsoleEvent(ev.Player, ".tp343", ".tp343", new string[] { });
