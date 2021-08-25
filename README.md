@@ -25,7 +25,7 @@ Put SCP343.dll under the release tab into %appdata%\Qurre\Plugins\ on Windows, o
 | scp343_alertheckerrortime  | String          | Time is left.| What 343 is shown if scp343 will back to usual class d and time is left|
 | scp343_alertheckerrornot343| String          | Wait, you are not SCP-343 |  What 343 is shown if not scp343 trying to back to usual class d |
 | scp343_minplayers                 | Integer         | 3              | Minimum players for spawning scp343 |
-| scp343_itemsatspawn        | Integer List    | 22, 33, 15, 32, 13             | What give scp-343 on spawn |
+| scp343_itemsatspawn        | Integer List    | 35, 33, 15, 32, 13             | What give scp-343 on spawn |
 | scp343_lift_moving_speed          | float           | 6.5            | Moving Speed lift for all players |
 | scp343_unitname             | String    | SCP-343             | UnitName for SCP-343 |
 
