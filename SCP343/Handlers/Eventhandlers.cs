@@ -160,7 +160,7 @@ namespace SCP343.Handlers
                         {
                             int count = 0;
                             int hpset = RNG.Next(scp343.cfg.scp343_min_heal_players, scp343.cfg.scp343_max_heal_players);
-                            foreach (var ply in from x in Player.List where x.Role != RoleType.Spectator select x)
+                            foreach (var ply in Player.List.Where(p=> p.Role!=RoleType.Spectator))
                             {
                                 if (ply.IsSCP343()) continue;
                                 bool boo = Vector3.Distance(ev.Player.Position, ply.Position) <= 5f;
@@ -210,10 +210,10 @@ namespace SCP343.Handlers
                             Player player = null;
                             foreach (Player ply in Player.List.Where(p => deadPlayers.ContainsKey(p.Id) && p.Role == RoleType.Spectator))
                             {
-                                if (player != null) continue;
                                 bool boo = Vector3.Distance(ev.Player.Position, deadPlayers[player.Id].pos) <= 3f;
                                 if (!boo) continue;
                                 player = ply;
+                                break;
                             }
                             if (player == null) ev.ReturnMessage = scp343.cfg.scp343_notfoundplayer;
                             else
@@ -348,7 +348,7 @@ namespace SCP343.Handlers
             int count = Player.List.Count();
             int chance = count < 2 ? 10000 : RNG.Next(1, 100);
             if (chance <= scp343.cfg.scp343_spawnchance) return;
-            if (scp343.cfg.minplayers > count) return;
+            if (scp343.cfg.minplayers < count) return;
             List<Player> ClassDList = Player.List.Where(p => p.Role == RoleType.ClassD).ToList();
             Player player = ClassDList[RNG.Next(ClassDList.Count)];
             ClassDList.Remove(player);
