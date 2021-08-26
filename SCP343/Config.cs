@@ -1,14 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using Qurre;
 namespace SCP343
 {
-    using System.Collections.Generic;
-    using System.ComponentModel;
-    using System.IO;
-    using System.Linq;
-    using Qurre;
-    using Qurre.API;
-    using SCP343;
-
     public sealed class Config
     {
         [Description("Indicates whether the plugin is enabled or not")]
@@ -26,7 +21,7 @@ namespace SCP343
         [Description("Will or will not broadcast")]
         public bool scp343_alert { get; internal set; } = true;
         [Description("What 343 is shown if scp343_broadcast is true.")]
-        public string scp343_consoletext { get; internal set; } = "You are <color=red>scp343</color>:\n\n1. You can open all doors;\n\n2. You can transform weapons to first and kit;\n\n 3. You have a god mode.\n\n4. You can teleport to player by sending console command .tp343 or drop ammo\n\n5.In 1 metre away you , you can heal players by sending command .heal343 or dropping adrenaline\n6. In 1 meter away you, you can revive any dead player sending command .revive343 or dropping flashlight";
+        public string scp343_consoletext { get; internal set; } = "You are <color=red>scp343</color>:\n\n1. You can open all doors;\n\n2. You can transform weapons to first and kit;\n\n 3. You have a god mode.\n\n4. You can teleport to player by sending console command .tp343 or drop coin\n\n5.In 1 metre away you , you can heal players by sending command .heal343 or dropping adrenaline\n6. In 1 meter away you, you can revive any dead player sending command .revive343 or dropping flashlight";
         [Description("What 343 is shown if scp343 will back to usual class d")]
         public string scp343_alertbackd { get; internal set; } = "You stopped being scp-343";
         public string scp343_alertheckerrortime { get; internal set; } = "Time is left.";
@@ -53,10 +48,10 @@ namespace SCP343
         public List<int> scp343_itemstoconvert { get; internal set; } = new List<int> { 10, 13, 14, 16, 20, 21, 23, 24, 25, 26, 30, 35 };
         [Description("What a item should be converted to.")]
         public List<int> scp343_converteditems { get; internal set; } = new List<int> { 14 };
-        [Description("Minimum players for ")]
+        [Description("Minimum players for spawn SCP-343")]
         public int minplayers { get; internal set; } = 5;
         [Description("What give scp-343 on spawn")]
-        public List<int> scp343_itemsatspawn { get; internal set; } = new List<int> { 22, 33, 15, 32, 30 };
+        public List<int> scp343_itemsatspawn { get; internal set; } = new List<int> { 35, 33, 15, 32, 13 };
         [Description("Moving Speed lift for all players")]
         public float lift_moving_speed { get; internal set; } = 6.5f;
 
@@ -83,7 +78,7 @@ namespace SCP343
 
         public bool scp343_can_use_TranquilizerGun { get; set; } = true;
 
-        public List<int> scp343_itemscannotdrop { get; set; } = new List<int> { 22, 33, 15, 32, 30  };
+        public List<int> scp343_itemscannotdrop { get; set; } = new List<int> { 35, 33, 15, 32, 13  };
 
         public string scp343_notfoundplayer { get; set; } = "Not found players!";
 
@@ -103,7 +98,14 @@ namespace SCP343
 
         public string scp343_youweretranq { get; set; } = "You were shooted by SCP-343 using TranquilizerGun";
 
+        public int scp343_max_revive_count { get; set; } = 3;
+
+        public string scp343_is_invisible_true { get; set; } = "You are now is invisible for all";
+
+        public string scp343_is_invisible_false { get; set; } = "You are not is invisible for all";
+
         private static Config cfg { get => scp343.cfg; }
+
         internal static void Reload()
         {
             Plugin.Config.Reload();
@@ -132,7 +134,7 @@ namespace SCP343
             cfg.scp343_itemconverttoggle = conf.GetBool("scp343_itemconverttoggle", cfg.scp343_itemconverttoggle);
             cfg.minplayers = conf.GetInt("scp343_minplayers", cfg.minplayers);
             cfg.scp343_unitname = conf.GetString("scp343_unitname", cfg.scp343_unitname);
-            cfg.scp343_activating_tesla_in_range = conf.GetBool("scp343_activating_tesla_in_range", cfg.scp343_activating_tesla_in_range);
+            cfg.scp343_activating_tesla_in_range = conf.GetBool("scp343_activating_tesla_in_range", cfg.scp343_activating_tesla_in_range, "If scp343 in range of the tesla");
             cfg.scp343_invisible_for_173 = conf.GetBool("scp343_invisible_for_173", false);
             cfg.scp343_turned_for_scp173_andscp096 = conf.GetBool("scp343_turned_for_scp173_andscp096", true);
             cfg.scp343_show_timer_when_can_open_door = conf.GetBool("scp343_show_timer_when_can_open_door", false);
@@ -150,6 +152,7 @@ namespace SCP343
             cfg.scp343_playerwhorevived = conf.GetString("scp343_playerwhorevived", cfg.scp343_playerwhorevived);
             cfg.scp343_revive_text = conf.GetString("scp343_revive_text", cfg.scp343_revive_text);
             cfg.scp343_youmustexit914 = conf.GetString("scp343_youmustexit914", cfg.scp343_youmustexit914);
+            cfg.scp343_max_revive_count = conf.GetInt("scp343_max_revive_count", 3, "How many SCP-343 can revive players?");
         }
 
     }

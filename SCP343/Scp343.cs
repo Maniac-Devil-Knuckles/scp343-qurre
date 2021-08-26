@@ -21,16 +21,12 @@ using CommandSystem;
 
 namespace SCP343
 {
-    public class API
+    public static class API
     {
         /// <summary>
         /// This spawns <see cref="Player"/> as scp343 and returns <see cref="Badge"/>
         /// </summary>
-        public static Badge Spawn343(Player player)
-        {
-            Badge s343 = scp343.Players.spawn343(player);
-            return s343;
-        }
+        public static Badge Spawn343(Player player, UnityEngine.Vector3 position = default) => scp343.Eventhandlers.spawn343(player, position: position);
         /// <summary>
         /// This returns List of <see cref="Player"/>
         /// </summary>
@@ -38,8 +34,8 @@ namespace SCP343
         {
             get
             {
-                IEnumerable<Player> players = scp343badgelist.List;
-                return players;
+                IEnumerable<Player> Eventhandlers = scp343badgelist.List;
+                return Eventhandlers;
             }
         }
         public static IEnumerable<Badge> AllScp343Badges
@@ -53,17 +49,17 @@ namespace SCP343
         /// <summary>
         /// This kills scp343
         /// </summary>
-        public static void Kill343(Player player) => scp343.Players.KillSCP343(player);
+        public static void Kill343(Player player) => scp343.Eventhandlers.KillSCP343(player);
     }
 
     public class scp343 : Plugin
     {
-        public static Players Players { get; private set; } = null;
-        public override int Priority => int.MaxValue;
+        internal static Eventhandlers Eventhandlers { get; private set; } = null;
+        public override int Priority => 0;
         public override string Name => "SCP-343";
         public override string Developer => "Maniac Devil Knuckles";
-        public override Version Version { get; } = new Version(1, 0, 0);
-        public override Version NeededQurreVersion => new Version(1, 5, 0);
+        public override Version Version { get; } = new Version(1, 2, 3);
+        public override Version NeededQurreVersion => new Version(1, 8, 4);
         internal static scp343 Instance { get; set; } = null;
         public Harmony harmony { get; set; } = null;
         internal int i { get; set; } = 0;
@@ -73,12 +69,6 @@ namespace SCP343
         {
             try
             {
-                if (!cfg.IsEnabled)
-                {
-                    Disable();
-                    return;
-                }
-                Instance = this;
                 try
                 {
                     //Config.betaitemsatspawn.ParseInventorySettings();
@@ -91,42 +81,47 @@ namespace SCP343
                     Log.Info("error\n\n\n\n\n\n\n\\n\n");
                     Log.Info(ex);//
                 }
-                OnRegisteringCommands();
-                Players = new Players(this);
-                Log.Info("Enabling SCP343 by Maniac Devil Knuckles");
                 SCP343.Config.Reload();
-                PLAYER.TransmitPlayerData += Players.OnTransmitPlayerData;
-                PLAYER.Shooting += Players.OnShooting;
-                Qurre.Events.Round.WaitingForPlayers += Players.WaitingForPlayers;
-                Qurre.Events.Round.Check += Players.OnRoundEnding;
-                PLAYER.TeslaTrigger += Players.OnTriggeringTesla;
-                Qurre.Events.Round.Start += Players.OnRoundStarted;
-                SERVER.SendingConsole += Players.OnSendingConsoleCommand;
-                PLAYER.InteractDoor += Players.OnInteractingDoor;
-                PLAYER.InteractLift += Players.OnInteractingElevator;
-                Qurre.Events.Round.Restart += Players.OnRestartingRound;
-                PLAYER.Leave += Players.OnPlayerLeft;
-                SCP106.Contain += Players.OnContaining;
-                SCP096.Enrage += Players.OnEnraging;
-                SCP096.AddTarget += Players.OnAddingTarget;
-                Scps914.Activating += Players.OnActivating;
-                PLAYER.InteractLocker += Players.OnInteractingLocker;
-                PLAYER.PickupItem += Players.OnPickingUpItem;
-                WARHEAD.Starting += Players.OnStarting;
-                WARHEAD.Stopping += Players.OnStopping;
-                WARHEAD.EnablePanel += Players.OnActivatingWarheadPanel;
-                SCP106.PocketDimensionEnter += Players.OnEnteringPocketDimension;
-                Qurre.Events.Map.NewBlood += Players.OnPlacingBlood;
-                PLAYER.Cuff += Players.OnHandcuffing;
-                PLAYER.Damage += Players.OnHurting;
-                PLAYER.Dies += Players.OnDied;
-                PLAYER.RoleChange += Players.OnChangingRole;
-                PLAYER.Escape += Players.OnEscaping;
-                PLAYER.DroppingItem += Players.OnDropingItem;
-                PLAYER.MedicalUsing += Players.OnMedicalUsing;
-                Scps914.ChangeKnob += Players.SCP914_ChangeKnob;
-                Scps914.UpgradePlayer += Players.OnUpgradePlayer;
-                Scps914.Upgrade += Players.OnUpgrade;
+                if (!cfg.IsEnabled)
+                {
+                    Disable();
+                    return;
+                }
+                Instance = this;
+                OnRegisteringCommands();
+                Eventhandlers = new Eventhandlers(this);
+                Log.Info("Enabling SCP343 by Maniac Devil Knuckles");
+                PLAYER.TransmitPlayerData += Eventhandlers.OnTransmitPlayerData;
+                PLAYER.Shooting += Eventhandlers.OnShooting;
+                Qurre.Events.Round.WaitingForPlayers += Eventhandlers.WaitingForPlayers;
+                Qurre.Events.Round.Check += Eventhandlers.OnRoundEnding;
+                PLAYER.TeslaTrigger += Eventhandlers.OnTriggeringTesla;
+                Qurre.Events.Round.Start += Eventhandlers.OnRoundStarted;
+                SERVER.SendingConsole += Eventhandlers.OnSendingConsoleCommand;
+                PLAYER.InteractDoor += Eventhandlers.OnInteractingDoor;
+                PLAYER.InteractLift += Eventhandlers.OnInteractingElevator;
+                Qurre.Events.Round.Restart += Eventhandlers.OnRestartingRound;
+                PLAYER.Leave += Eventhandlers.OnPlayerLeft;
+                SCP106.Contain += Eventhandlers.OnContaining;
+                SCP096.Enrage += Eventhandlers.OnEnraging;
+                SCP096.AddTarget += Eventhandlers.OnAddingTarget;
+                Scps914.Activating += Eventhandlers.OnActivating;
+                PLAYER.InteractLocker += Eventhandlers.OnInteractingLocker;
+                PLAYER.PickupItem += Eventhandlers.OnPickingUpItem;
+                WARHEAD.Starting += Eventhandlers.OnStarting;
+                WARHEAD.Stopping += Eventhandlers.OnStopping;
+                WARHEAD.EnablePanel += Eventhandlers.OnActivatingWarheadPanel;
+                SCP106.PocketDimensionEnter += Eventhandlers.OnEnteringPocketDimension;
+                Qurre.Events.Map.NewBlood += Eventhandlers.OnPlacingBlood;
+                PLAYER.Cuff += Eventhandlers.OnHandcuffing;
+                PLAYER.Damage += Eventhandlers.OnHurting;
+                PLAYER.Dies += Eventhandlers.OnDied;
+                PLAYER.RoleChange += Eventhandlers.OnChangingRole;
+                PLAYER.Escape += Eventhandlers.OnEscaping;
+                PLAYER.DroppingItem += Eventhandlers.OnDropingItem;
+                PLAYER.ItemUsing += Eventhandlers.OnMedicalUsing;
+                Scps914.UpgradePlayer += Eventhandlers.OnUpgradePlayer;
+                Scps914.Upgrade += Eventhandlers.OnUpgrade;
             }
             catch (Exception ex)
             {
@@ -139,47 +134,40 @@ namespace SCP343
             Log.Info("Disabling SCP343 by Maniac Devil Knuckles");
             harmony.UnpatchAll(harmony.Id);
             harmony = null;
-            PLAYER.Shooting -= Players.OnShooting;
-            PLAYER.TransmitPlayerData -= Players.OnTransmitPlayerData;
-            Qurre.Events.Round.WaitingForPlayers -= Players.WaitingForPlayers;
-            Qurre.Events.Round.Check -= Players.OnRoundEnding;
-            PLAYER.TeslaTrigger -= Players.OnTriggeringTesla;
-            Qurre.Events.Round.Start -= Players.OnRoundStarted;
-            SERVER.SendingConsole -= Players.OnSendingConsoleCommand;
-            PLAYER.InteractDoor -= Players.OnInteractingDoor;
-            PLAYER.InteractLift -= Players.OnInteractingElevator;
-            Qurre.Events.Round.Restart -= Players.OnRestartingRound;
-            PLAYER.Leave -= Players.OnPlayerLeft;
-            SCP106.Contain -= Players.OnContaining;
-            SCP096.Enrage -= Players.OnEnraging;
-            SCP096.AddTarget -= Players.OnAddingTarget;
-            Scps914.Activating -= Players.OnActivating;
-            PLAYER.InteractLocker -= Players.OnInteractingLocker;
-            PLAYER.PickupItem -= Players.OnPickingUpItem;
-            WARHEAD.Starting -= Players.OnStarting;
-            WARHEAD.Stopping -= Players.OnStopping;
-            WARHEAD.EnablePanel -= Players.OnActivatingWarheadPanel;
-            SCP106.PocketDimensionEnter -= Players.OnEnteringPocketDimension;
-            Qurre.Events.Map.NewBlood -= Players.OnPlacingBlood;
-            PLAYER.Cuff -= Players.OnHandcuffing;
-            PLAYER.Damage -= Players.OnHurting;
-            PLAYER.Dies -= Players.OnDied;
-            PLAYER.RoleChange -= Players.OnChangingRole;
-            PLAYER.Escape -= Players.OnEscaping;
-            PLAYER.DroppingItem -= Players.OnDropingItem;
-            PLAYER.MedicalUsing -= Players.OnMedicalUsing;
-            Scps914.ChangeKnob -= Players.SCP914_ChangeKnob;
-            Scps914.UpgradePlayer -= Players.OnUpgradePlayer;
-            Scps914.Upgrade -= Players.OnUpgrade;
-            Players = null; ;
+            PLAYER.Shooting -= Eventhandlers.OnShooting;
+            PLAYER.TransmitPlayerData -= Eventhandlers.OnTransmitPlayerData;
+            Qurre.Events.Round.WaitingForPlayers -= Eventhandlers.WaitingForPlayers;
+            Qurre.Events.Round.Check -= Eventhandlers.OnRoundEnding;
+            PLAYER.TeslaTrigger -= Eventhandlers.OnTriggeringTesla;
+            Qurre.Events.Round.Start -= Eventhandlers.OnRoundStarted;
+            SERVER.SendingConsole -= Eventhandlers.OnSendingConsoleCommand;
+            PLAYER.InteractDoor -= Eventhandlers.OnInteractingDoor;
+            PLAYER.InteractLift -= Eventhandlers.OnInteractingElevator;
+            Qurre.Events.Round.Restart -= Eventhandlers.OnRestartingRound;
+            PLAYER.Leave -= Eventhandlers.OnPlayerLeft;
+            SCP106.Contain -= Eventhandlers.OnContaining;
+            SCP096.Enrage -= Eventhandlers.OnEnraging;
+            SCP096.AddTarget -= Eventhandlers.OnAddingTarget;
+            Scps914.Activating -= Eventhandlers.OnActivating;
+            PLAYER.InteractLocker -= Eventhandlers.OnInteractingLocker;
+            PLAYER.PickupItem -= Eventhandlers.OnPickingUpItem;
+            WARHEAD.Starting -= Eventhandlers.OnStarting;
+            WARHEAD.Stopping -= Eventhandlers.OnStopping;
+            WARHEAD.EnablePanel -= Eventhandlers.OnActivatingWarheadPanel;
+            SCP106.PocketDimensionEnter -= Eventhandlers.OnEnteringPocketDimension;
+            Qurre.Events.Map.NewBlood -= Eventhandlers.OnPlacingBlood;
+            PLAYER.Cuff -= Eventhandlers.OnHandcuffing;
+            PLAYER.Damage -= Eventhandlers.OnHurting;
+            PLAYER.Dies -= Eventhandlers.OnDied;
+            PLAYER.RoleChange -= Eventhandlers.OnChangingRole;
+            PLAYER.Escape -= Eventhandlers.OnEscaping;
+            PLAYER.DroppingItem -= Eventhandlers.OnDropingItem;
+            PLAYER.ItemUsing -= Eventhandlers.OnMedicalUsing;
+            Scps914.UpgradePlayer -= Eventhandlers.OnUpgradePlayer;
+            Scps914.Upgrade -= Eventhandlers.OnUpgrade;
+            Eventhandlers = null;
         }
-        //public override void OnReloaded() { }
-        internal void RemoveGodMode()
-        {
-            if (Instance == null) return;
-            foreach (Player player in Player.List) if (player.GodMode && player.Role != RoleType.Tutorial && player.Role != RoleType.Spectator) player.GodMode = false;
-            Timing.CallDelayed(10f, () => RemoveGodMode());
-        }
+
         public Dictionary<Type, Dictionary<Type, ICommand>> Commands { get; } = new Dictionary<Type, Dictionary<Type, ICommand>>()
         {
             { typeof(RemoteAdminCommandHandler), new Dictionary<Type, ICommand>() },
@@ -216,8 +204,8 @@ namespace SCP343
                             CommandProcessor.RemoteAdminCommandHandler.RegisterCommand(command);
                         else if (commandType == typeof(GameConsoleCommandHandler))
                             GameCore.Console.singleton.ConsoleCommandHandler.RegisterCommand(command);
-                        else if (commandType == typeof(ClientCommandHandler))
-                            QueryProcessor.DotCommandHandler.RegisterCommand(command);
+                        //else if (commandType == typeof(ClientCommandHandler))
+                            //QueryProcessor.DotCommandHandler.RegisterCommand(command);
                         Commands[commandType][type] = command;
                     }
                     catch (Exception exception)

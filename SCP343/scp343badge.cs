@@ -1,11 +1,10 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using Qurre.API;
 using MEC;
 using UnityEngine;
 using System.Collections;
-
 namespace SCP343
 {
     public class Badge
@@ -79,36 +78,23 @@ namespace SCP343
         public bool canheck { get; internal set; } = false;
         public GameObject GameObject => Player.GameObject;
         public bool IsSCP343 { get; } = false;
-        public string SCPName { get; set; } = "";
-        public int revive343 { get;  internal set; } = 0;
+        public string SCPName { get; internal set; } = "";
+        public int revive343 { get; internal set; } = 0;
         public RoleType role { get; } = RoleType.None;
         public Vector3 pos { get; } = Vector3.zero;
         public bool canheal { get; internal set; } = false;
 
     }
-    public class scp343badgelist
+    public static class scp343badgelist
     {
         private static Dictionary<int, Badge> badges { get; } = new Dictionary<int, Badge>();
-        public Badge this[int key]
-        {
-            get
-            {
-                if (badges.ContainsKey(key)) return badges[key];
-                else return null;
-            }
-            internal set
-            {
-                if (!badges.ContainsKey(key)) return;
-                badges[key] = value;
-            }
-        }
-
+        private static Config cfg => scp343.cfg;
         internal static IEnumerable<Player> List
         {
             get
             {
-                IEnumerable<Player> players = ListBadges.Select(p => p.Player);
-                return players;
+                IEnumerable<Player> Players = ListBadges.Select(p => p.Player);
+                return Players;
             }
         }
 
@@ -124,18 +110,20 @@ namespace SCP343
         internal static void Add(Badge scp343)
         {
             if (badges.ContainsKey(scp343.Id)) return;
-            scp343.revive343 = 3;
+            scp343.revive343 = cfg.scp343_max_revive_count;
             scp343.canheal = true;
+            scp343.Player.Tag = " scp343-knuckles";
             badges.Add(scp343.Id, scp343);
         }
 
         internal static void Add(params Badge[] Badges)
         {
-            foreach(Badge scp343 in Badges)
+            foreach (Badge scp343 in Badges)
             {
                 if (badges.ContainsKey(scp343.Id)) continue;
-                scp343.revive343 = 3;
+                scp343.revive343 = cfg.scp343_max_revive_count;
                 scp343.canheal = true;
+                scp343.Player.Tag = " scp343-knuckles";
                 badges.Add(scp343.Id, scp343);
             }
         }
@@ -147,13 +135,9 @@ namespace SCP343
         /// </summary>
         public static bool Contains(Player player) => badges.ContainsKey(player.Id);
         /// <summary>
-        /// This returns if someone <see cref="Player"/> is scp343 or isn`t
+        /// This returns if someone or all <see cref="Player"/> is scp343 or isn`t
         /// </summary>
-        public static bool Contains(List<Player> players)
-        {
-            foreach (Player player in players) if (badges.ContainsKey(player.Id)) return true;
-            return false;
-        }
+        public static bool Contains(bool allcontains = false, params Player[] players) => allcontains ? players.All(p => p.IsSCP343()) : players.Any(p => p.IsSCP343());
 
         /// <summary>
         /// This returns if <see cref="Player.Id"/> is scp343 or isn`t
@@ -162,7 +146,7 @@ namespace SCP343
         /// <summary>
         /// Count of <see cref="scp343"/>
         /// </summary>
-        public static int Count() => badges.Count(e => e.Value.Player.IsSCP343());
+        public static int Count() => badges.Count(e => e.Value.IsSCP343);
 
         /// <summary>
         /// Count of <see cref="scp343"/>
@@ -172,7 +156,7 @@ namespace SCP343
         /// <summary>
         /// Count of <see cref="scp343"/>l
         /// </summary>
-        public static int Count(Func<KeyValuePair<int,Badge>, bool> predicate) => badges.Count(predicate);
+        public static int Count(Func<KeyValuePair<int, Badge>, bool> predicate) => badges.Count(predicate);
 
         /// <summary>
         /// Get Badge by <see cref="Player"/>

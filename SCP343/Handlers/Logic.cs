@@ -16,7 +16,7 @@ using Qurre.API.Controllers;
 
 namespace SCP343.Handlers
 {
-    public partial class Players
+    public partial class Eventhandlers
     {
 
         IEnumerator<float> GetEnumerator343(Player player)
@@ -34,7 +34,7 @@ namespace SCP343.Handlers
             player.Invisible = true;
             player.GodMode = true;
             player.Broadcast(scp343.cfg.scp343_youweretranq, 4);
-            Qurre.API.Controllers.Ragdoll ragdoll = Qurre.API.Controllers.Ragdoll.Create(player.Role, player.Position, player.FullRotation, default, new PlayerStats.HitInfo(0, "nn", DamageTypes.None, player.Id), false, player);
+            Qurre.API.Controllers.Ragdoll ragdoll = Qurre.API.Controllers.Ragdoll.Create(player.Role, player.Position, player.FullRotation, default, new PlayerStats.HitInfo(0, "SCP-343", DamageTypes.None, player.Id, true), false, player);
             Vector3 pos = player.Position;
             player.Position = new Vector3(1, 1, 1);
             yield return Timing.WaitForSeconds(5f);
@@ -56,10 +56,10 @@ namespace SCP343.Handlers
         {
             int _time = scp343.cfg.scp343_opendoortime;
             yield return Timing.WaitForSeconds(1f);
-            for(; ; )
+            for (; ; )
             {
                 if (!player.IsSCP343()) break;
-                if (_time<=0)
+                if (_time <= 0)
                 {
                     player.GetSCPBadge().canopendoor = true;
                     Log.Info(player.GetSCPBadge().canopendoor);
@@ -76,9 +76,11 @@ namespace SCP343.Handlers
             player.ClearInventory();
             Timing.CallDelayed(1f, () =>
             {
-                player.Ammo[0] = 300;
-                player.Ammo[1] = 300;
-                player.Ammo[2] = 300;
+                player.Ammo556 = 300;
+                player.Ammo762 = 300;
+                player.Ammo9 = 300;
+                player.Ammo12Gauge = 300;
+                player.Ammo44Cal = 300;
             });
             if (scp0492)
             {
@@ -86,7 +88,7 @@ namespace SCP343.Handlers
             }
             if (position != default)
             {
-                Timing.CallDelayed(0.3f, () =>
+                Timing.CallDelayed(0.7f, () =>
                 {
                     player.Position = position;
                 });
@@ -130,14 +132,14 @@ namespace SCP343.Handlers
             });
             if (scp343.cfg.scp343_canopenanydoor)
             {
-                Timing.RunCoroutine(WhenOpenDoor(player), "player_scp343_" + player.Id);
+                WhenOpenDoor(player).RunCoroutine("player_scp343_" + player.Id);
             }
             if (scp343.cfg.scp343_heck) Timing.CallDelayed(scp343.cfg.scp343_hecktime, () =>
             {
                 if (!player.IsSCP343()) return;
                 player.GetSCPBadge().canheck = false;
             });
-            if(!string.IsNullOrEmpty(scp343.cfg.scp343_unitname))
+            if (!string.IsNullOrEmpty(scp343.cfg.scp343_unitname))
             {
                 player.UnitName = scp343.cfg.scp343_unitname;
             }
@@ -152,11 +154,11 @@ namespace SCP343.Handlers
                 if (pl.Scp173Controller.IgnoredPlayers.Contains(player)) pl.Scp173Controller.IgnoredPlayers.Remove(player);
             }
             player.UnitName = "";
-            //if (Patches.GhostMode.TurnedPlayers.Contains(player)) Patches.GhostMode.TurnedPlayers.Remove(player);
             foreach (Player pl in Player.List) if (pl.Scp173Controller.IgnoredPlayers.Contains(player)) pl.Scp173Controller.IgnoredPlayers.Remove(player);
             player.RoleColor = player.GetSCPBadge().RoleColor;
             player.RoleName = player.GetSCPBadge().RoleName;
             scp343badgelist.Remove(player);
+            player.Tag = "";
         }
     }
 }
