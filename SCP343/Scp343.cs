@@ -69,6 +69,12 @@ namespace SCP343
         {
             try
             {
+                SCP343.Config.Reload();
+                if (!cfg.IsEnabled)
+                {
+                    Disable();
+                    return;
+                }
                 try
                 {
                     //Config.betaitemsatspawn.ParseInventorySettings();
@@ -80,12 +86,6 @@ namespace SCP343
                 {
                     Log.Info("error\n\n\n\n\n\n\n\\n\n");
                     Log.Info(ex);//
-                }
-                SCP343.Config.Reload();
-                if (!cfg.IsEnabled)
-                {
-                    Disable();
-                    return;
                 }
                 Instance = this;
                 OnRegisteringCommands();
@@ -174,7 +174,7 @@ namespace SCP343
             { typeof(GameConsoleCommandHandler), new Dictionary<Type, ICommand>() },
             { typeof(ClientCommandHandler), new Dictionary<Type, ICommand>() },
         };
-        Assembly Assembly => Instance.GetType().Assembly;
+        Assembly Assembly => GetType().Assembly;
         public void OnRegisteringCommands()
         {
             foreach (Type type in Assembly.GetTypes())

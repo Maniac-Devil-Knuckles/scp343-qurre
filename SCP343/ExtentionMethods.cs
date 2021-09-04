@@ -52,7 +52,7 @@ namespace SCP343
         public static void SetHP(this Player player, int value)
         {
             if (value > player.MaxHp) player.Hp = player.MaxHp;
-            else player.Hp = value;
+            else player.Hp += value;
         }
 
         public static bool IsSCP343(this Player player) => scp343badgelist.Contains(player);
@@ -63,5 +63,15 @@ namespace SCP343
             if (player.IsSCP343()) badge = API.AllScp343Badges.FirstOrDefault(x => x.Player.Id == player.Id);
             return badge;
         }
+
+        public static string GetBlobalBadge(this Player player)
+        {
+            string result = player.ServerRoles.NetworkGlobalBadge;
+            if (!player.HasGlobalBadge()) return string.Empty;
+            result = result.Split(new string[] { "Badge text: [" }, StringSplitOptions.None)[1].Split(']')[0];
+            return result;
+        }
+
+        public static bool HasGlobalBadge(this Player player) => !string.IsNullOrEmpty(player.ServerRoles.NetworkGlobalBadge);
     }
 }

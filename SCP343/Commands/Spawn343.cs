@@ -32,6 +32,7 @@ namespace SCP343.Commands
             {
                 return false;
             }
+            
             if (arguments.Count < 1)
             {
                 response = "Usage command : \"spawn343 PlayerId\"";

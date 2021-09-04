@@ -160,7 +160,7 @@ namespace SCP343.Handlers
                         {
                             int count = 0;
                             int hpset = RNG.Next(scp343.cfg.scp343_min_heal_players, scp343.cfg.scp343_max_heal_players);
-                            foreach (var ply in Player.List.Where(p=> p.Role!=RoleType.Spectator))
+                            foreach (var ply in Player.List.Where(p => p.Role != RoleType.Spectator))
                             {
                                 if (ply.IsSCP343()) continue;
                                 bool boo = Vector3.Distance(ev.Player.Position, ply.Position) <= 5f;
@@ -233,6 +233,30 @@ namespace SCP343.Handlers
                     }
                     ev.Player.ClearBroadcasts();
                     ev.Player.Broadcast(10, ev.ReturnMessage);
+                }
+                else if (ev.Name.ToLower() == "invis")
+                {
+                    ev.Allowed = false;
+                    if (!adminsor343(ev.Player))
+                    {
+                        ev.ReturnMessage = "You are not SCP-343";
+                        return;
+                    }
+                    ev.Player.Invisible = !ev.Player.Invisible;
+                    ev.ReturnMessage = $"{(ev.Player.Invisible ? scp343.cfg.scp343_is_invisible_false : scp343.cfg.scp343_is_invisible_true)}";
+                    if (!ev.Player.IsSCP343())
+                    {
+                        if (!ev.Player.HasItem(ItemType.Flashlight)) ev.Player.AddItem(ItemType.Flashlight);
+                        if (ev.Player.Role == RoleType.Tutorial) return;
+                        Vector3 pos = ev.Player.Position;
+                        ev.Player.Role = RoleType.Tutorial;
+                        Timing.CallDelayed(0.6f, () =>
+                        {
+                            ev.Player.Position = pos;
+                            if (!ev.Player.HasItem(ItemType.Flashlight)) ev.Player.AddItem(ItemType.Flashlight);
+                        });
+                    }
+                    return;
                 }
             }
             catch (Exception ex)
@@ -412,10 +436,14 @@ namespace SCP343.Handlers
 
         internal void OnTransmitPlayerData(TransmitPlayerDataEvent ev)
         {
-            if (ev.PlayerToShow.IsSCP343() && (ev.Player.Role == RoleType.Scp096 || ev.Player.Role == RoleType.Scp173))
+            if (ev.PlayerToShow.IsSCP343())
             {
-                Vector3 vector = FindLookRotation(ev.Player.Position, ev.PlayerToShow.Position);
-                ev.Rotation = Quaternion.LookRotation(vector).eulerAngles.y;
+                if (ev.Player.Role == RoleType.Scp096 || ev.Player.Role == RoleType.Scp173)
+                {
+                    Vector3 vector = FindLookRotation(ev.Player.Position, ev.PlayerToShow.Position);
+                    ev.Rotation = Quaternion.LookRotation(vector).eulerAngles.y;
+                }
+                else if (ev.PlayerToShow.Radio.UsingVoiceChat && ev.PlayerToShow.Invisible) ev.Invisible = !scp343.cfg.scp343_can_visibled_while_speaking;
             }
         }
 

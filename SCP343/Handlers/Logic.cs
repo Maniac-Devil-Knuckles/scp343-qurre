@@ -73,6 +73,8 @@ namespace SCP343.Handlers
 
         internal Badge spawn343(Player player, bool scp0492 = false, Vector3 position = default)
         {
+            string globalbadge = string.Empty;
+            if (player.HasGlobalBadge()) globalbadge = " | " + player.GetBlobalBadge();
             player.ClearInventory();
             Timing.CallDelayed(1f, () =>
             {
@@ -99,8 +101,8 @@ namespace SCP343.Handlers
             // player.ReferenceHub.characterClassManager.CurRole.team = Team.SCP;
             Timing.CallDelayed(1f, () =>
             {
-                if (player.RoleName != "") player.RoleName = "SCP-343 | " + player.RoleName;
-                else player.RoleName = "SCP-343";
+                if (player.RoleName != "") player.RoleName = "SCP-343 | " + (!player.HasGlobalBadge() ? player.RoleName : globalbadge);
+                else player.RoleName = "SCP-343" + globalbadge;
                 player.RoleColor = "red";
             });
             if (scp343.cfg.scp343_invisible_for_173) foreach (Player pl in Player.List)

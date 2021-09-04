@@ -104,6 +104,8 @@ namespace SCP343
 
         public string scp343_is_invisible_false { get; set; } = "You are not is invisible for all";
 
+        public bool scp343_can_visibled_while_speaking { get; set; } = true;
+
         private static Config cfg { get => scp343.cfg; }
 
         internal static void Reload()
@@ -153,6 +155,7 @@ namespace SCP343
             cfg.scp343_revive_text = conf.GetString("scp343_revive_text", cfg.scp343_revive_text);
             cfg.scp343_youmustexit914 = conf.GetString("scp343_youmustexit914", cfg.scp343_youmustexit914);
             cfg.scp343_max_revive_count = conf.GetInt("scp343_max_revive_count", 3, "How many SCP-343 can revive players?");
+            cfg.scp343_can_visibled_while_speaking = conf.GetBool("scp343_can_visibled_while_speaking", true);
         }
 
     }
