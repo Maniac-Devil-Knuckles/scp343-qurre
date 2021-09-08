@@ -21,7 +21,7 @@ namespace SCP343
         [Description("Will or will not broadcast")]
         public bool scp343_alert { get; internal set; } = true;
         [Description("What 343 is shown if scp343_broadcast is true.")]
-        public string scp343_consoletext { get; internal set; } = "You are <color=red>scp343</color>:\n\n1. You can open all doors;\n\n2. You can transform weapons to first and kit;\n\n 3. You have a god mode.\n\n4. You can teleport to player by sending console command .tp343 or drop coin\n\n5.In 1 metre away you , you can heal players by sending command .heal343 or dropping adrenaline\n6. In 1 meter away you, you can revive any dead player sending command .revive343 or dropping flashlight";
+        public string scp343_consoletext { get; internal set; } = "You are <color=red>scp343</color>:\n\n1. You can open all doors;\n\n2. You can transform weapons to first and kit;\n\n 3. You have a god mode.\n\n4. You can teleport to player by sending console command .tp343 or drop coin\n\n5.In 1 metre away you , you can heal players by sending command .heal343 or dropping adrenaline\n6. In 1 meter away you, you can revive any dead player sending command .revive343 or dropping flashlight\n7. You can be invisible sending command .invis\nOr you can use items dropping instead of sending commands";
         [Description("What 343 is shown if scp343 will back to usual class d")]
         public string scp343_alertbackd { get; internal set; } = "You stopped being scp-343";
         public string scp343_alertheckerrortime { get; internal set; } = "Time is left.";
@@ -86,7 +86,7 @@ namespace SCP343
 
         public string scp343_healplayer { get; set; } = "You healed players health";
 
-        public string scp343_cooldown { get; set; } = "Waiting for ending cooldown";
+        public string scp343_cooldown { get; set; } = "Please wait %seconds% seconds for healing another players";
 
         public string scp343_cannotrevive { get; set; } = "You can not revive players";
 
@@ -105,6 +105,10 @@ namespace SCP343
         public string scp343_is_invisible_false { get; set; } = "You are not is invisible for all";
 
         public bool scp343_can_visibled_while_speaking { get; set; } = true;
+
+        public int scp343_HealCooldown { get; set; } = 120;
+
+        public string scp343_end_cooldown { get; set; } = "You can now heal another players!";
 
         private static Config cfg { get => scp343.cfg; }
 
@@ -156,6 +160,8 @@ namespace SCP343
             cfg.scp343_youmustexit914 = conf.GetString("scp343_youmustexit914", cfg.scp343_youmustexit914);
             cfg.scp343_max_revive_count = conf.GetInt("scp343_max_revive_count", 3, "How many SCP-343 can revive players?");
             cfg.scp343_can_visibled_while_speaking = conf.GetBool("scp343_can_visibled_while_speaking", true);
+            cfg.scp343_HealCooldown = conf.GetInt("scp343_heal_cooldown", 120, "Cooldown after healing players");
+            cfg.scp343_end_cooldown = conf.GetString("scp343_end_cooldown", cfg.scp343_end_cooldown);
         }
 
     }

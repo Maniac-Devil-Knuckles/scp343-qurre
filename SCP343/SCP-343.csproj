@@ -32,7 +32,7 @@
       <HintPath>..\..\..\Downloads\Exiled\EXILED\Plugins\dependencies\System.ComponentModel.DataAnnotations.dll</HintPath>
     </Reference>
     <Reference Include="Qurre">
-      <HintPath>..\packages\Qurre.1.8.6\lib\net472\Qurre.dll</HintPath>
+      <HintPath>..\packages\Qurre.1.8.7\lib\net472\Qurre.dll</HintPath>
     </Reference>
     <Reference Include="NorthwoodLib">
       <HintPath>..\..\Managed\NorthwoodLib.dll</HintPath>
@@ -76,6 +76,7 @@
     <Compile Include="patches\EscapePatch.cs" />
     <Compile Include="patches\Scp079InteractTesla.cs" />
     <Compile Include="Handlers\Eventhandlers.cs" />
+    <Compile Include="patches\PatchAmmo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="qurre_ol.ico" />

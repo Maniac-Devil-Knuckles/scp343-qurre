@@ -1,25 +1,47 @@
 ﻿using System;
 using System.Collections.Generic;
 using Qurre.API;
-using Qurre.API.Events;
 using UnityEngine;
-//using static SCP343.scp343;
 using MEC;
-using System.Linq;
-using Random = System.Random;
-using Interactables.Interobjects.DoorUtils;
-using Respawning.NamingRules;
-using Respawning;
 using Qurre;
-using System.Text.RegularExpressions;
-using Qurre.API.Controllers;
+using System.Linq;
 
 namespace SCP343.Handlers
 {
     public partial class Eventhandlers
     {
+        private IEnumerator<float> HealingCooldown(Player player)
+        {
+            yield return Timing.WaitForSeconds(1f);
+            bool IsShowed = false;
+            for (; player.IsSCP343();)
+            {
+                yield return Timing.WaitForSeconds(1f);
+                if (player.GetSCPBadge().HealCooldown > 0)
+                {
+                    player.GetSCPBadge().HealCooldown--;
+                    IsShowed = false;
+                }
+                else if (!IsShowed)
+                {
+                    IsShowed = true;
+                    player.Broadcast(scp343.cfg.scp343_end_cooldown, 5, true);
+                }
+            }
+        }
 
-        IEnumerator<float> GetEnumerator343(Player player)
+        private IEnumerator<float> ShowHealingCooldown(Player player)
+        {
+            yield return Timing.WaitForSeconds(1f);
+            for (int i = 0; i <= 5; i++)
+            {
+                yield return Timing.WaitForSeconds(1f);
+                int cooldown = player.GetSCPBadge().HealCooldown;
+                if (cooldown > 0) player.Broadcast(scp343.cfg.scp343_cooldown.Replace("%seconds%", cooldown.ToString()), 1, true);
+            }
+        }
+
+        private IEnumerator<float> TeleportScp914(Player player)
         {
             yield return Timing.WaitForSeconds(1f);
             for (; Qurre.API.Controllers.Scp914.Working;)
@@ -97,11 +119,10 @@ namespace SCP343.Handlers
             }
             if (player.IsSCP343()) return player.GetSCPBadge();
             Badge badge = new Badge(player,true);
-            Log.Info(badge.Player.Nickname + " | " + badge.IsSCP343);
-            // player.ReferenceHub.characterClassManager.CurRole.team = Team.SCP;
+            //Log.Debug(badge.Player.Nickname + " | " + badge.IsSCP343);
             Timing.CallDelayed(1f, () =>
             {
-                if (player.RoleName != "") player.RoleName = "SCP-343 | " + (!player.HasGlobalBadge() ? player.RoleName : globalbadge);
+                if (player.RoleName != "") player.RoleName = "SCP-343" + (!player.HasGlobalBadge() ?  " | " + player.RoleName : globalbadge);
                 else player.RoleName = "SCP-343" + globalbadge;
                 player.RoleColor = "red";
             });
@@ -112,7 +133,7 @@ namespace SCP343.Handlers
             if (scp343.cfg.scp343_alert && !scp0492)
             {
                 player.ClearBroadcasts();
-                player.Broadcast(15, scp343.cfg.scp343_alerttext.Replace("\\n","\n"));
+                player.Broadcast(15, scp343.cfg.scp343_alerttext);
             }
             if (scp343.cfg.scp343_console && !scp0492) player.SendConsoleMessage("\n----------------------------------------------------------- \n" + scp343.cfg.scp343_consoletext.Replace("343DOORTIME", scp343.cfg.scp343_opendoortime.ToString()).Replace("343HECKTIME", scp343.cfg.scp343_hecktime.ToString()).Replace("\\n", "\n") + "\n-----------------------------------------------------------", "green");
 
@@ -123,8 +144,8 @@ namespace SCP343.Handlers
                 player.ClearInventory();
                 if (!scp0492)
                 {
-                    Log.Debug(scp343.cfg.scp343_itemsatspawn.Count);
-                    foreach (int item in scp343.cfg.scp343_itemsatspawn) player.AddItem((ItemType)item);
+                    List<ItemType> items = scp343.cfg.scp343_itemsatspawn.Select(x => (ItemType)x).ToList();
+                    player.AddItem(items);
                 }
                 if (scp343.cfg.scp343_heck)
                 {
@@ -145,13 +166,16 @@ namespace SCP343.Handlers
             {
                 player.UnitName = scp343.cfg.scp343_unitname;
             }
+            HealingCooldown(player).RunCoroutine("healcd" + player.UserId);
+            player.UseStamina = false;
             return badge;
         }
 
         internal void KillSCP343(Player player)
         {
             if (!player.IsSCP343()) return;
-            if(scp343.cfg.scp343_invisible_for_173) foreach(Player pl in Player.List)
+            player.UseStamina = true;
+            if (scp343.cfg.scp343_invisible_for_173) foreach(Player pl in Player.List)
             {
                 if (pl.Scp173Controller.IgnoredPlayers.Contains(player)) pl.Scp173Controller.IgnoredPlayers.Remove(player);
             }

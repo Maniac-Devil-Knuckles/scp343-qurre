@@ -51,7 +51,7 @@ namespace SCP343
 
         public static void SetHP(this Player player, int value)
         {
-            if (value > player.MaxHp) player.Hp = player.MaxHp;
+            if (value + player.Hp > player.MaxHp) player.Hp = player.MaxHp;
             else player.Hp += value;
         }
 
@@ -66,8 +66,8 @@ namespace SCP343
 
         public static string GetBlobalBadge(this Player player)
         {
-            string result = player.ServerRoles.NetworkGlobalBadge;
             if (!player.HasGlobalBadge()) return string.Empty;
+            string result = player.ServerRoles.NetworkGlobalBadge;
             result = result.Split(new string[] { "Badge text: [" }, StringSplitOptions.None)[1].Split(']')[0];
             return result;
         }

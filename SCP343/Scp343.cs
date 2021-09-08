@@ -58,8 +58,8 @@ namespace SCP343
         public override int Priority => 0;
         public override string Name => "SCP-343";
         public override string Developer => "Maniac Devil Knuckles";
-        public override Version Version { get; } = new Version(1, 2, 3);
-        public override Version NeededQurreVersion => new Version(1, 8, 4);
+        public override Version Version { get; } = new Version(2, 0, 0);
+        public override Version NeededQurreVersion => new Version(1, 8, 7);
         internal static scp343 Instance { get; set; } = null;
         public Harmony harmony { get; set; } = null;
         internal int i { get; set; } = 0;
@@ -106,7 +106,6 @@ namespace SCP343
                 SCP096.Enrage += Eventhandlers.OnEnraging;
                 SCP096.AddTarget += Eventhandlers.OnAddingTarget;
                 Scps914.Activating += Eventhandlers.OnActivating;
-                PLAYER.InteractLocker += Eventhandlers.OnInteractingLocker;
                 PLAYER.PickupItem += Eventhandlers.OnPickingUpItem;
                 WARHEAD.Starting += Eventhandlers.OnStarting;
                 WARHEAD.Stopping += Eventhandlers.OnStopping;
@@ -122,6 +121,8 @@ namespace SCP343
                 PLAYER.ItemUsing += Eventhandlers.OnMedicalUsing;
                 Scps914.UpgradePlayer += Eventhandlers.OnUpgradePlayer;
                 Scps914.Upgrade += Eventhandlers.OnUpgrade;
+                PLAYER.InteractGenerator += Eventhandlers.OnUnlockingGenerator;
+                PLAYER.InteractLocker += Eventhandlers.OnInteractLocker;
             }
             catch (Exception ex)
             {
@@ -149,7 +150,6 @@ namespace SCP343
             SCP096.Enrage -= Eventhandlers.OnEnraging;
             SCP096.AddTarget -= Eventhandlers.OnAddingTarget;
             Scps914.Activating -= Eventhandlers.OnActivating;
-            PLAYER.InteractLocker -= Eventhandlers.OnInteractingLocker;
             PLAYER.PickupItem -= Eventhandlers.OnPickingUpItem;
             WARHEAD.Starting -= Eventhandlers.OnStarting;
             WARHEAD.Stopping -= Eventhandlers.OnStopping;
@@ -165,6 +165,8 @@ namespace SCP343
             PLAYER.ItemUsing -= Eventhandlers.OnMedicalUsing;
             Scps914.UpgradePlayer -= Eventhandlers.OnUpgradePlayer;
             Scps914.Upgrade -= Eventhandlers.OnUpgrade;
+            PLAYER.InteractGenerator -= Eventhandlers.OnUnlockingGenerator;
+            PLAYER.InteractLocker -= Eventhandlers.OnInteractLocker;
             Eventhandlers = null;
         }
 

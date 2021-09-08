@@ -33,10 +33,10 @@ namespace SCP343
         public Badge(Player player, RoleType role, Vector3 pos)
         {
             Player = player;
-            this.role = role;
+            this.Role = role;
             RoleColor = player.RoleColor;
             RoleName = player.RoleName;
-            this.pos = pos;
+            this.Pos = pos;
         }
 
         internal Badge(int PlayerId, bool scp343 = false, string SCPName = "")
@@ -79,12 +79,13 @@ namespace SCP343
         public GameObject GameObject => Player.GameObject;
         public bool IsSCP343 { get; } = false;
         public string SCPName { get; internal set; } = "";
-        public int revive343 { get; internal set; } = 0;
-        public RoleType role { get; } = RoleType.None;
-        public Vector3 pos { get; } = Vector3.zero;
-        public bool canheal { get; internal set; } = false;
-
+        public int Revive343 { get; internal set; } = 0;
+        public RoleType Role { get; } = RoleType.None;
+        public Vector3 Pos { get; } = Vector3.zero;
+        public bool CanHeal => HealCooldown <= 0;
+        public int HealCooldown { get; internal set; } = 120;
     }
+
     public static class scp343badgelist
     {
         private static Dictionary<int, Badge> badges { get; } = new Dictionary<int, Badge>();
@@ -110,22 +111,15 @@ namespace SCP343
         internal static void Add(Badge scp343)
         {
             if (badges.ContainsKey(scp343.Id)) return;
-            scp343.revive343 = cfg.scp343_max_revive_count;
-            scp343.canheal = true;
+            scp343.Revive343 = cfg.scp343_max_revive_count;
+            scp343.HealCooldown = 20;
             scp343.Player.Tag = " scp343-knuckles";
             badges.Add(scp343.Id, scp343);
         }
 
         internal static void Add(params Badge[] Badges)
         {
-            foreach (Badge scp343 in Badges)
-            {
-                if (badges.ContainsKey(scp343.Id)) continue;
-                scp343.revive343 = cfg.scp343_max_revive_count;
-                scp343.canheal = true;
-                scp343.Player.Tag = " scp343-knuckles";
-                badges.Add(scp343.Id, scp343);
-            }
+            foreach (Badge scp343 in Badges.Where(b=> badges.ContainsKey(b.Id))) Add(scp343);
         }
         internal static bool Remove(Player player) => badges.Remove(player.Id);
         internal static bool Remove(int PlayerId) => badges.Remove(PlayerId);
@@ -146,7 +140,7 @@ namespace SCP343
         /// <summary>
         /// Count of <see cref="scp343"/>
         /// </summary>
-        public static int Count() => badges.Count(e => e.Value.IsSCP343);
+        public static int Count() => Count(b => b.IsSCP343);
 
         /// <summary>
         /// Count of <see cref="scp343"/>
