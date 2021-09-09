@@ -100,7 +100,7 @@ namespace SCP343
 
         public int scp343_max_revive_count { get; set; } = 3;
 
-        public string scp343_is_invisible_true { get; set; } = "You are now is invisible for all";
+        public string   scp343_is_invisible_true { get; set; } = "You are now is invisible for all";
 
         public string scp343_is_invisible_false { get; set; } = "You are not is invisible for all";
 

@@ -174,6 +174,7 @@ namespace SCP343.Handlers
                             else
                             {
                                 ev.ReturnMessage = scp343.cfg.scp343_healplayer;
+                                ev.Player.GetSCPBadge().HealCooldown = scp343.cfg.scp343_HealCooldown;
                             }
                         }
                         else
@@ -551,6 +552,7 @@ namespace SCP343.Handlers
                     else
                     {
                         console.ReturnMessage = scp343.cfg.scp343_healplayer;
+                        ev.Player.GetSCPBadge().HealCooldown = scp343.cfg.scp343_HealCooldown;
                     }
                 }
                 else
@@ -599,7 +601,7 @@ namespace SCP343.Handlers
             }
             else if (ev.Item.Type == ItemType.SCP268)
             {
-                ev.Player.Broadcast(ev.Player.Invisible ? scp343.cfg.scp343_is_invisible_false : scp343.cfg.scp343_is_invisible_true, 10, true);
+                ev.Player.Broadcast(ev.Player.Invisible ? scp343.cfg.scp343_is_invisible_true : scp343.cfg.scp343_is_invisible_false, 10, true);
                 ev.Player.Invisible = !ev.Player.Invisible;
             }
         }
