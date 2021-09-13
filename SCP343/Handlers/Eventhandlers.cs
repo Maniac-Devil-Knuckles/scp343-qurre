@@ -100,7 +100,7 @@ namespace SCP343.Handlers
                             ev.ReturnMessage = scp343.cfg.scp343_heckerrordisable;
                             return;
                         }
-                        bool allowed = ev.Player.GetSCPBadge().canheck;
+                        bool allowed = ev.Player.GetSCPBadge().CanHeck;
                         if (allowed)
                         {
                             ev.Player.SetRole(RoleType.ClassD);
@@ -374,7 +374,7 @@ namespace SCP343.Handlers
         internal void OnInteractingDoor(InteractDoorEvent ev)
         {
             if (scp343badgelist.Count() < 1) return;
-            if (ev.Player.IsSCP343() && ev.Player.GetSCPBadge().canopendoor)
+            if (ev.Player.IsSCP343() && ev.Player.GetSCPBadge().CanOpenDoor)
             {
                 ev.Allowed = true;
             }
@@ -609,12 +609,12 @@ namespace SCP343.Handlers
         internal void OnUnlockingGenerator(InteractGeneratorEvent ev)
         {
             if (scp343badgelist.Count() < 1) return;
-            if (ev.Player.IsSCP343() && ev.Player.GetSCPBadge().canopendoor && ev.Status == GeneratorStatus.Unlocked) ev.Allowed = true;
+            if (ev.Player.IsSCP343() && ev.Player.GetSCPBadge().CanOpenDoor && ev.Status == GeneratorStatus.Unlocked) ev.Allowed = true;
         }
 
         internal void OnInteractLocker(InteractLockerEvent ev)
         {
-            if (ev.Player.IsSCP343() && ev.Player.GetSCPBadge().canopendoor) ev.Allowed = true;
+            if (ev.Player.IsSCP343() && ev.Player.GetSCPBadge().CanOpenDoor) ev.Allowed = true;
         }
 
         internal void OnTriggeringTesla(TeslaTriggerEvent ev)

@@ -10,7 +10,7 @@ namespace SCP343.Handlers
 {
     public partial class Eventhandlers
     {
-        private IEnumerator<float> HealingCooldown(Player player)
+        private static IEnumerator<float> HealingCooldown(Player player)
         {
             yield return Timing.WaitForSeconds(1f);
             bool IsShowed = false;
@@ -30,7 +30,7 @@ namespace SCP343.Handlers
             }
         }
 
-        private IEnumerator<float> ShowHealingCooldown(Player player)
+        private static IEnumerator<float> ShowHealingCooldown(Player player)
         {
             yield return Timing.WaitForSeconds(1f);
             for (int i = 0; i <= 5; i++)
@@ -41,7 +41,7 @@ namespace SCP343.Handlers
             }
         }
 
-        private IEnumerator<float> TeleportScp914(Player player)
+        private static IEnumerator<float> TeleportScp914(Player player)
         {
             yield return Timing.WaitForSeconds(1f);
             for (; Qurre.API.Controllers.Scp914.Working;)
@@ -66,7 +66,7 @@ namespace SCP343.Handlers
             ragdoll.Destroy();
         }
 
-        internal bool adminsor343(Player player)
+        internal static bool adminsor343(Player player)
         {
             bool flag = false;
             if (player.IsSCP343()) flag = true;
@@ -74,7 +74,7 @@ namespace SCP343.Handlers
             return flag;
         }
 
-        internal IEnumerator<float> WhenOpenDoor(Player player)
+        internal static IEnumerator<float> WhenOpenDoor(Player player)
         {
             int _time = scp343.cfg.scp343_opendoortime;
             yield return Timing.WaitForSeconds(1f);
@@ -83,8 +83,8 @@ namespace SCP343.Handlers
                 if (!player.IsSCP343()) break;
                 if (_time <= 0)
                 {
-                    player.GetSCPBadge().canopendoor = true;
-                    Log.Info(player.GetSCPBadge().canopendoor);
+                    player.GetSCPBadge().CanOpenDoor = true;
+                    Log.Info(player.GetSCPBadge().CanOpenDoor);
                     break;
                 }
                 player.ShowHint(scp343.cfg.scp343_text_show_timer_when_can_open_door.Replace("{343_time_open_door}", _time.ToString()));
@@ -93,10 +93,10 @@ namespace SCP343.Handlers
             }
         }
 
-        internal Badge spawn343(Player player, bool scp0492 = false, Vector3 position = default)
+        internal static Badge spawn343(Player player, bool scp0492 = false, Vector3 position = default)
         {
             string globalbadge = string.Empty;
-            if (player.HasGlobalBadge()) globalbadge = " | " + player.GetBlobalBadge();
+            if (player.HasGlobalBadge()) globalbadge = " | " + player.GlobalBadge;
             player.ClearInventory();
             Timing.CallDelayed(1f, () =>
             {
@@ -149,7 +149,7 @@ namespace SCP343.Handlers
                 }
                 if (scp343.cfg.scp343_heck)
                 {
-                    player.GetSCPBadge().canheck = true;
+                    player.GetSCPBadge().CanHeck = true;
                 }
                 player.Hp = 100f;
             });
@@ -160,7 +160,7 @@ namespace SCP343.Handlers
             if (scp343.cfg.scp343_heck) Timing.CallDelayed(scp343.cfg.scp343_hecktime, () =>
             {
                 if (!player.IsSCP343()) return;
-                player.GetSCPBadge().canheck = false;
+                player.GetSCPBadge().CanHeck = false;
             });
             if (!string.IsNullOrEmpty(scp343.cfg.scp343_unitname))
             {
@@ -171,7 +171,7 @@ namespace SCP343.Handlers
             return badge;
         }
 
-        internal void KillSCP343(Player player)
+        internal static void KillSCP343(Player player)
         {
             if (!player.IsSCP343()) return;
             player.UseStamina = true;

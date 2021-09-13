@@ -1,0 +1,110 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Qurre</name>
+    </assembly>
+    <members>
+        <member name="M:Qurre.API.Audio.Play(System.IO.Stream,System.Single)">
+            <summary>
+            <para>Plays music from the stream.</para>
+            <para>format - WaveFormat(48000, 1) /*(.ogg)*/</para>
+            <para>Example:</para>
+             <example>
+             <code>
+             Play(new MemoryStream(audio), 1);
+             </code>
+             </example>
+            </summary>
+        </member>
+        <member name="M:Qurre.API.Audio.PlayFromFile(System.String,System.Single)">
+            <summary>
+            <para>Plays music from a file.</para>
+            <para>format - WaveFormat(48000, 1) /*(.ogg)*/</para>
+            <para>Example:</para>
+             <example>
+             <code>
+             PlayFromFile($"{PluginManager.PluginsDirectory}/audio/OmegaWarhead.raw", 1);
+             </code>
+             </example>
+            </summary>
+        </member>
+        <member name="M:Qurre.API.Audio.PlayFromUrl(System.String,System.Single)">
+            <summary>
+            <para>Plays music from a link.</para>
+            <para>format - WaveFormat(48000, 1) /*(.ogg)*/</para>
+            <para>Example:</para>
+             <example>
+             <code>
+             PlayFromUrl("https://cdn.scpsl.store/qurre/audio/OmegaWarhead.raw", 1);
+             </code>
+             </example>
+            </summary>
+        </member>
+        <member name="F:Qurre.API.Objects.AmmoType.Ammo556">
+            <summary>
+            Used by <see cref="F:ItemType.GunE11SR"/>
+            </summary>
+        </member>
+        <member name="F:Qurre.API.Objects.AmmoType.Ammo762">
+            <summary>
+            Used by and <see cref="F:ItemType.GunLogicer"/>
+            </summary>
+        </member>
+        <member name="F:Qurre.API.Objects.AmmoType.Ammo9">
+            <summary>
+            Used by <see cref="F:ItemType.GunCOM15"/>
+            </summary>
+        </member>
+        <member name="F:Qurre.API.Objects.AmmoType.Ammo12Gauge">
+            <summary>
+            Used by <see cref="F:ItemType.GunShotgun"/>
+            </summary>
+        </member>
+        <member name="F:Qurre.API.Objects.AmmoType.Ammo44Cal">
+            <summary>
+            44 caliber.
+            </summary>
+        </member>
+        <member name="F:Qurre.API.Objects.KeycardPermissions.ContainmentLevelOne">
+            <summary>
+            Safe SCP.
+            </summary>
+        </member>
+        <member name="F:Qurre.API.Objects.KeycardPermissions.ContainmentLevelTwo">
+            <summary>
+            <see cref="F:Qurre.API.Objects.KeycardPermissions.ContainmentLevelOne"/>, <see cref="F:Qurre.API.Objects.KeycardPermissions.Checkpoints"/>.
+            </summary>
+        </member>
+        <member name="F:Qurre.API.Objects.KeycardPermissions.ContainmentLevelThree">
+            <summary>
+            <see cref="F:Qurre.API.Objects.KeycardPermissions.ContainmentLevelTwo"/>, <see cref="F:Qurre.API.Objects.KeycardPermissions.Intercom"/>, <see cref="F:Qurre.API.Objects.KeycardPermissions.AlphaWarhead"/>.
+            </summary>
+        </member>
+        <member name="F:Qurre.API.Objects.KeycardPermissions.ArmoryLevelOne">
+            <summary>
+            <see cref="F:Qurre.API.Objects.KeycardPermissions.Checkpoints"/>, Opens Light Containment armory.
+            </summary>
+        </member>
+        <member name="F:Qurre.API.Objects.KeycardPermissions.ArmoryLevelTwo">
+            <summary>
+            <see cref="F:Qurre.API.Objects.KeycardPermissions.ArmoryLevelOne"/>, <see cref="F:Qurre.API.Objects.KeycardPermissions.ExitGates"/>, Opens Heavy Containment armories.
+            </summary>
+        </member>
+        <member name="F:Qurre.API.Objects.KeycardPermissions.ArmoryLevelThree">
+            <summary>
+            <see cref="F:Qurre.API.Objects.KeycardPermissions.ArmoryLevelTwo"/>, <see cref="F:Qurre.API.Objects.KeycardPermissions.Intercom"/>, Opens MicroHID room.
+            </summary>
+        </member>
+        <member name="F:Qurre.API.Objects.KeycardPermissions.ScpOverride">
+            <summary>
+            <see cref="F:Qurre.API.Objects.KeycardPermissions.Checkpoints"/>.
+            </summary>
+        </member>
+        <member name="P:Qurre.Plugin.Priority">
+            <summary>
+            <para>Plugin load priority.</para>
+            <para>The higher the number, the earlier the plugin will load.</para>
+            </summary>
+        </member>
+    </members>
+</doc>

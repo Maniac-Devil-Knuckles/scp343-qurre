@@ -30,13 +30,13 @@ namespace SCP343
             this.SCPName = SCPName;
         }
 
-        public Badge(Player player, RoleType role, Vector3 pos)
+        public Badge(Player player, RoleType Role, Vector3 Pos)
         {
             Player = player;
-            this.Role = role;
+            this.Role = Role;
             RoleColor = player.RoleColor;
             RoleName = player.RoleName;
-            this.Pos = pos;
+            this.Pos = Pos;
         }
 
         internal Badge(int PlayerId, bool scp343 = false, string SCPName = "")
@@ -59,6 +59,7 @@ namespace SCP343
             if (scp343) scp343badgelist.Add(this);
             else this.SCPName = SCPName;
         }
+
         internal Badge(GameObject GameObject, bool scp343 = false, string SCPName = "")
         {
             Player = Player.Get(GameObject);
@@ -69,14 +70,16 @@ namespace SCP343
             if (scp343) scp343badgelist.Add(this);
             else this.SCPName = SCPName;
         }
+
         public string RoleColor { get; } = "";
         public string RoleName { get; } = "";
         public Player Player { get; } = null;
         public int Id { get; } = 0;
         public string UserId => Player.UserId;
-        public bool canopendoor { get; internal set; } = false;
-        public bool canheck { get; internal set; } = false;
+        public bool CanOpenDoor { get; internal set; } = false;
+        public bool CanHeck { get; internal set; } = false;
         public GameObject GameObject => Player.GameObject;
+        public ReferenceHub ReferenceHub => Player.ReferenceHub;
         public bool IsSCP343 { get; } = false;
         public string SCPName { get; internal set; } = "";
         public int Revive343 { get; internal set; } = 0;
@@ -88,46 +91,36 @@ namespace SCP343
 
     public static class scp343badgelist
     {
-        private static Dictionary<int, Badge> badges { get; } = new Dictionary<int, Badge>();
-        private static Config cfg => scp343.cfg;
-        internal static IEnumerable<Player> List
-        {
-            get
-            {
-                IEnumerable<Player> Players = ListBadges.Select(p => p.Player);
-                return Players;
-            }
-        }
+        private static HashSet<Badge> badges { get; } = new HashSet<Badge>();
 
-        internal static IEnumerable<Badge> ListBadges
-        {
-            get
-            {
-                IEnumerable<Badge> badge = badges.Values;
-                return badge;
-            }
-        }
+        private static Config cfg => scp343.cfg;
+
+        internal static IEnumerable<Player> List => ListBadges.Select(b => b.Player);
+
+        internal static IEnumerable<Badge> ListBadges => badges;
 
         internal static void Add(Badge scp343)
         {
-            if (badges.ContainsKey(scp343.Id)) return;
+            if (Contains(scp343.Id)) return;
             scp343.Revive343 = cfg.scp343_max_revive_count;
             scp343.HealCooldown = 20;
             scp343.Player.Tag = " scp343-knuckles";
-            badges.Add(scp343.Id, scp343);
+            badges.Add(scp343);
         }
 
         internal static void Add(params Badge[] Badges)
         {
-            foreach (Badge scp343 in Badges.Where(b=> badges.ContainsKey(b.Id))) Add(scp343);
+            foreach (Badge scp343 in Badges.Where(b => !Contains(b.Id))) Add(scp343);
         }
-        internal static bool Remove(Player player) => badges.Remove(player.Id);
-        internal static bool Remove(int PlayerId) => badges.Remove(PlayerId);
+        internal static bool Remove(Player player) => badges.RemoveWhere(b => b.Id == player.Id) > 0;
+
+        internal static bool Remove(int PlayerId) => badges.RemoveWhere(b => b.Id == PlayerId) > 0;
+
         internal static void Clear() => badges.Clear();
         /// <summary>
         /// This returns if <see cref="Player"/> is scp343 or isn`t
         /// </summary>
-        public static bool Contains(Player player) => badges.ContainsKey(player.Id);
+        public static bool Contains(Player player) => badges.Any(b => b.Id == player.Id);
         /// <summary>
         /// This returns if someone or all <see cref="Player"/> is scp343 or isn`t
         /// </summary>
@@ -136,7 +129,7 @@ namespace SCP343
         /// <summary>
         /// This returns if <see cref="Player.Id"/> is scp343 or isn`t
         /// </summary>
-        public static bool Contains(int PlayerId) => badges.ContainsKey(PlayerId);
+        public static bool Contains(int PlayerId) => badges.Any(b => b.Id == PlayerId);
         /// <summary>
         /// Count of <see cref="scp343"/>
         /// </summary>
@@ -148,34 +141,33 @@ namespace SCP343
         public static int Count(Func<Badge, bool> predicate) => ListBadges.Count(predicate);
 
         /// <summary>
-        /// Count of <see cref="scp343"/>l
-        /// </summary>
-        public static int Count(Func<KeyValuePair<int, Badge>, bool> predicate) => badges.Count(predicate);
-
-        /// <summary>
         /// Get Badge by <see cref="Player"/>
         /// </summary>
         /// <returns><seealso cref="Badge"/></returns>
-        public static Badge Get(Player player) => ListBadges.FirstOrDefault(e => e.Id == player.Id);
+        public static Badge Get(Player player) => ListBadges.FirstOrDefault(b => b.Id == player.Id);
 
         /// <summary>
-        /// Get Badge by <see cref="Player.Id"/> and returns <seealso cref="Badge"/>
+        /// Get Badge by <see cref="Player.Id"/> 
         /// </summary>
-        public static Badge Get(int PlayerId) => ListBadges.FirstOrDefault(e => e.Id == PlayerId);
+        /// <returns><seealso cref="Badge"/></returns>
+        public static Badge Get(int PlayerId) => ListBadges.FirstOrDefault(b => b.Id == PlayerId);
 
         /// <summary>
-        /// Get Badge by <see cref="GameObject"/> and returns <seealso cref="Badge"/>
+        /// Get Badge by <see cref="GameObject"/>
         /// </summary>
-        public static Badge Get(GameObject GameObject) => ListBadges.FirstOrDefault(e => e.GameObject == GameObject);
+        /// <returns><seealso cref="Badge"/></returns>
+        public static Badge Get(GameObject GameObject) => ListBadges.FirstOrDefault(b => b.GameObject == GameObject);
 
         /// <summary>
-        /// Get Badge by <see cref="ReferenceHub"/> and returns <seealso cref="Badge"/>
+        /// Get Badge by <see cref="ReferenceHub"/>
         /// </summary>
-        public static Badge Get(ReferenceHub ReferenceHub) => ListBadges.FirstOrDefault(e => e.Player.ReferenceHub == ReferenceHub);
+        /// <returns><seealso cref="Badge"/></returns>
+        public static Badge Get(ReferenceHub ReferenceHub) => ListBadges.FirstOrDefault(b => b.ReferenceHub == ReferenceHub);
 
         /// <summary>
-        /// Get Badge by prediacte and returns <seealso cref="Badge"/>
+        /// Get Badge by predicate
         /// </summary>
+        /// <returns><seealso cref="Badge"/></returns>
         public static Badge Get(Func<Badge, bool> predicate) => ListBadges.FirstOrDefault(predicate);
     }
 }

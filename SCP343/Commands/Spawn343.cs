@@ -42,7 +42,7 @@ namespace SCP343.Commands
             Player player = null;
 
             if (int.TryParse(arguments.At(0), out int id)) player = Player.Get(id);
-            else player = Player.Get(string.Join(" ", arguments.Skip(1)));
+            else player = Player.Get(string.Join(" ", arguments));
 
             if (player == null)
             {

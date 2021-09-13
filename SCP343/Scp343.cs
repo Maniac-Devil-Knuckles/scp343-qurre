@@ -24,9 +24,10 @@ namespace SCP343
     public static class API
     {
         /// <summary>
-        /// This spawns <see cref="Player"/> as scp343 and returns <see cref="Badge"/>
+        /// This spawns <see cref="Player"/> as scp343
         /// </summary>
-        public static Badge Spawn343(Player player, UnityEngine.Vector3 position = default) => scp343.Eventhandlers.spawn343(player, position: position);
+        /// <returns><see cref="Badge"/></returns>
+        public static Badge Spawn343(Player player, UnityEngine.Vector3 position = default) => Eventhandlers.spawn343(player, position: position);
         /// <summary>
         /// This returns List of <see cref="Player"/>
         /// </summary>
@@ -49,27 +50,27 @@ namespace SCP343
         /// <summary>
         /// This kills scp343
         /// </summary>
-        public static void Kill343(Player player) => scp343.Eventhandlers.KillSCP343(player);
+        public static void Kill343(Player player) => Eventhandlers.KillSCP343(player);
     }
 
     public class scp343 : Plugin
     {
         internal static Eventhandlers Eventhandlers { get; private set; } = null;
-        public override int Priority => 0;
+        public override int Priority => 10;
         public override string Name => "SCP-343";
         public override string Developer => "Maniac Devil Knuckles";
-        public override Version Version { get; } = new Version(2, 0, 0);
-        public override Version NeededQurreVersion => new Version(1, 8, 7);
+        public override Version Version { get; } = new Version(2, 7, 1);
+        public override Version NeededQurreVersion => new Version(1, 8, 8);
         internal static scp343 Instance { get; set; } = null;
-        public Harmony harmony { get; set; } = null;
+        public Harmony harmony { get; internal set; } = null;
         internal int i { get; set; } = 0;
-        public scp343() { }
+
         internal static Config cfg { get; } = new Config();
         public override void Enable()
         {
             try
             {
-                SCP343.Config.Reload();
+                cfg.Reload();
                 if (!cfg.IsEnabled)
                 {
                     Disable();

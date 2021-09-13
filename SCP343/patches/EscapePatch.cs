@@ -1,4 +1,4 @@
-﻿using System;
+﻿using UnityEngine;
 using Qurre.API;
 using HarmonyLib;
 namespace SCP343.Patches
