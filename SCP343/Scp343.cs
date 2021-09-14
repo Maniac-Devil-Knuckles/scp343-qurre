@@ -24,54 +24,39 @@ namespace SCP343
     public static class API
     {
         /// <summary>
-        /// This spawns <see cref="Player"/> as scp343
+        /// <para>This spawns <see cref="Player"/> as scp343</para>
         /// </summary>
         /// <returns><see cref="Badge"/></returns>
         public static Badge Spawn343(Player player, UnityEngine.Vector3 position = default) => Eventhandlers.spawn343(player, position: position);
         /// <summary>
-        /// This returns List of <see cref="Player"/>
+        /// <para>Just a list</para>
         /// </summary>
-        public static IEnumerable<Player> AllScps343
-        {
-            get
-            {
-                IEnumerable<Player> Eventhandlers = scp343badgelist.List;
-                return Eventhandlers;
-            }
-        }
-        public static IEnumerable<Badge> AllScp343Badges
-        {
-            get
-            {
-                IEnumerable<Badge> badges = scp343badgelist.ListBadges;
-                return badges;
-            }
-        }
+        public static IEnumerable<Player> AllScps343 => scp343badgelist.List;
+        public static IEnumerable<Badge> AllScp343Badges => scp343badgelist.ListBadges;
         /// <summary>
-        /// This kills scp343
+        /// <para>This kills scp343</para>
         /// </summary>
         public static void Kill343(Player player) => Eventhandlers.KillSCP343(player);
     }
 
-    public class scp343 : Plugin
+    public class Scp343 : Plugin
     {
         internal static Eventhandlers Eventhandlers { get; private set; } = null;
         public override int Priority => 10;
         public override string Name => "SCP-343";
         public override string Developer => "Maniac Devil Knuckles";
-        public override Version Version { get; } = new Version(2, 7, 1);
+        public override Version Version => new Version(2, 7, 1);
         public override Version NeededQurreVersion => new Version(1, 8, 8);
-        internal static scp343 Instance { get; set; } = null;
+        internal static Scp343 Instance { get; set; } = null;
         public Harmony harmony { get; internal set; } = null;
         internal int i { get; set; } = 0;
 
-        internal static Config cfg { get; } = new Config();
         public override void Enable()
         {
             try
             {
-                cfg.Reload();
-                if (!cfg.IsEnabled)
+                Cfg.Reload();
+                if (!Cfg.IsEnabled)
                 {
                     Disable();
                     return;
@@ -124,6 +109,7 @@ namespace SCP343
                 Scps914.Upgrade += Eventhandlers.OnUpgrade;
                 PLAYER.InteractGenerator += Eventhandlers.OnUnlockingGenerator;
                 PLAYER.InteractLocker += Eventhandlers.OnInteractLocker;
+                PLAYER.ScpAttack += Eventhandlers.OnScpAttack;
             }
             catch (Exception ex)
             {

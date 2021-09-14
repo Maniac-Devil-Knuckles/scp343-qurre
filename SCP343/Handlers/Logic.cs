@@ -25,7 +25,7 @@ namespace SCP343.Handlers
                 else if (!IsShowed)
                 {
                     IsShowed = true;
-                    player.Broadcast(scp343.cfg.scp343_end_cooldown, 5, true);
+                    player.Broadcast(Cfg.scp343_end_cooldown, 5, true);
                 }
             }
         }
@@ -37,7 +37,7 @@ namespace SCP343.Handlers
             {
                 yield return Timing.WaitForSeconds(1f);
                 int cooldown = player.GetSCPBadge().HealCooldown;
-                if (cooldown > 0) player.Broadcast(scp343.cfg.scp343_cooldown.Replace("%seconds%", cooldown.ToString()), 1, true);
+                if (cooldown > 0) player.Broadcast(Cfg.scp343_cooldown.Replace("%seconds%", cooldown.ToString()), 1, true);
             }
         }
 
@@ -55,7 +55,7 @@ namespace SCP343.Handlers
         {
             player.Invisible = true;
             player.GodMode = true;
-            player.Broadcast(scp343.cfg.scp343_youweretranq, 4);
+            player.Broadcast(Cfg.scp343_youweretranq, 4);
             Qurre.API.Controllers.Ragdoll ragdoll = Qurre.API.Controllers.Ragdoll.Create(player.Role, player.Position, player.FullRotation, default, new PlayerStats.HitInfo(0, "SCP-343", DamageTypes.None, player.Id, true), false, player);
             Vector3 pos = player.Position;
             player.Position = new Vector3(1, 1, 1);
@@ -76,7 +76,7 @@ namespace SCP343.Handlers
 
         internal static IEnumerator<float> WhenOpenDoor(Player player)
         {
-            int _time = scp343.cfg.scp343_opendoortime;
+            int _time = Cfg.scp343_opendoortime;
             yield return Timing.WaitForSeconds(1f);
             for (; ; )
             {
@@ -87,7 +87,7 @@ namespace SCP343.Handlers
                     Log.Info(player.GetSCPBadge().CanOpenDoor);
                     break;
                 }
-                player.ShowHint(scp343.cfg.scp343_text_show_timer_when_can_open_door.Replace("{343_time_open_door}", _time.ToString()));
+                player.ShowHint(Cfg.scp343_text_show_timer_when_can_open_door.Replace("{343_time_open_door}", _time.ToString()));
                 _time--;
                 yield return Timing.WaitForSeconds(1f);
             }
@@ -126,16 +126,16 @@ namespace SCP343.Handlers
                 else player.RoleName = "SCP-343" + globalbadge;
                 player.RoleColor = "red";
             });
-            if (scp343.cfg.scp343_invisible_for_173) foreach (Player pl in Player.List)
+            if (Cfg.scp343_invisible_for_173) foreach (Player pl in Player.List)
             {
                 if (!pl.Scp173Controller.IgnoredPlayers.Contains(player)) pl.Scp173Controller.IgnoredPlayers.Add(player);
             }
-            if (scp343.cfg.scp343_alert && !scp0492)
+            if (Cfg.scp343_alert && !scp0492)
             {
                 player.ClearBroadcasts();
-                player.Broadcast(15, scp343.cfg.scp343_alerttext);
+                player.Broadcast(15, Cfg.scp343_alerttext);
             }
-            if (scp343.cfg.scp343_console && !scp0492) player.SendConsoleMessage("\n----------------------------------------------------------- \n" + scp343.cfg.scp343_consoletext.Replace("343DOORTIME", scp343.cfg.scp343_opendoortime.ToString()).Replace("343HECKTIME", scp343.cfg.scp343_hecktime.ToString()).Replace("\\n", "\n") + "\n-----------------------------------------------------------", "green");
+            if (Cfg.scp343_console && !scp0492) player.SendConsoleMessage("\n----------------------------------------------------------- \n" + Cfg.scp343_consoletext.Replace("343DOORTIME", Cfg.scp343_opendoortime.ToString()).Replace("343HECKTIME", Cfg.scp343_hecktime.ToString()).Replace("\\n", "\n") + "\n-----------------------------------------------------------", "green");
 
             Timing.CallDelayed(0.5f, () =>
             {
@@ -144,27 +144,27 @@ namespace SCP343.Handlers
                 player.ClearInventory();
                 if (!scp0492)
                 {
-                    List<ItemType> items = scp343.cfg.scp343_itemsatspawn.Select(x => (ItemType)x).ToList();
+                    List<ItemType> items = Cfg.scp343_itemsatspawn.Select(x => (ItemType)x).ToList();
                     player.AddItem(items);
                 }
-                if (scp343.cfg.scp343_heck)
+                if (Cfg.scp343_heck)
                 {
                     player.GetSCPBadge().CanHeck = true;
                 }
                 player.Hp = 100f;
             });
-            if (scp343.cfg.scp343_canopenanydoor)
+            if (Cfg.scp343_canopenanydoor)
             {
                 WhenOpenDoor(player).RunCoroutine("player_scp343_" + player.Id);
             }
-            if (scp343.cfg.scp343_heck) Timing.CallDelayed(scp343.cfg.scp343_hecktime, () =>
+            if (Cfg.scp343_heck) Timing.CallDelayed(Cfg.scp343_hecktime, () =>
             {
                 if (!player.IsSCP343()) return;
                 player.GetSCPBadge().CanHeck = false;
             });
-            if (!string.IsNullOrEmpty(scp343.cfg.scp343_unitname))
+            if (!string.IsNullOrEmpty(Cfg.scp343_unitname))
             {
-                player.UnitName = scp343.cfg.scp343_unitname;
+                player.UnitName = Cfg.scp343_unitname;
             }
             HealingCooldown(player).RunCoroutine("healcd" + player.UserId);
             player.UseStamina = false;
@@ -175,12 +175,11 @@ namespace SCP343.Handlers
         {
             if (!player.IsSCP343()) return;
             player.UseStamina = true;
-            if (scp343.cfg.scp343_invisible_for_173) foreach(Player pl in Player.List)
+            if (Cfg.scp343_invisible_for_173) foreach(Player pl in Player.List)
             {
                 if (pl.Scp173Controller.IgnoredPlayers.Contains(player)) pl.Scp173Controller.IgnoredPlayers.Remove(player);
             }
             player.UnitName = "";
-            foreach (Player pl in Player.List) if (pl.Scp173Controller.IgnoredPlayers.Contains(player)) pl.Scp173Controller.IgnoredPlayers.Remove(player);
             player.RoleColor = player.GetSCPBadge().RoleColor;
             player.RoleName = player.GetSCPBadge().RoleName;
             scp343badgelist.Remove(player);

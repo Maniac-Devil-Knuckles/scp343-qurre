@@ -34,7 +34,7 @@ namespace SCP343.Patches
                             TeslaGate teslaGate = __instance.CurrentRoom.GetComponentInChildren<TeslaGate>();
                             if (teslaGate != null)
                             {
-                                TeslaTriggerEvent ev = new TeslaTriggerEvent(Player.Get(__instance.gameObject), teslaGate.GetTesla(), API.AllScps343.Any(p => teslaGate.PlayerInHurtRange(p.GameObject)), scp343.cfg.scp343_activating_tesla_in_range);
+                                TeslaTriggerEvent ev = new TeslaTriggerEvent(Player.Get(__instance.gameObject), teslaGate.GetTesla(), API.AllScps343.Any(p => teslaGate.PlayerInHurtRange(p.GameObject)), Cfg.scp343_activating_tesla_in_range);
                                 if (!ev.InHurtingRange || !ev.Triggerable)
                                 {
                                     ev.Tesla.Trigger(true);

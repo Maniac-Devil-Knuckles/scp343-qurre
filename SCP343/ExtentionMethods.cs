@@ -6,7 +6,7 @@ using UnityEngine;
 using Mirror;
 using System.Reflection;
 using System.Linq;
-using scp = SCP343.scp343;
+using scp = SCP343.Scp343;
 using SCP343.Handlers;
 using Qurre;
 
