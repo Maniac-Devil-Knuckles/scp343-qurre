@@ -5,6 +5,7 @@ using UnityEngine;
 using MEC;
 using Qurre;
 using System.Linq;
+using Assets._Scripts.Dissonance;
 
 namespace SCP343.Handlers
 {
@@ -96,7 +97,7 @@ namespace SCP343.Handlers
         internal static Badge spawn343(Player player, bool scp0492 = false, Vector3 position = default)
         {
             string globalbadge = string.Empty;
-            if (player.HasGlobalBadge()) globalbadge = " | " + player.GlobalBadge;
+            if (!string.IsNullOrEmpty(player.GlobalBadge)) globalbadge = " | " + player.GlobalBadge;
             player.ClearInventory();
             Timing.CallDelayed(1f, () =>
             {
@@ -118,18 +119,18 @@ namespace SCP343.Handlers
                 });
             }
             if (player.IsSCP343()) return player.GetSCPBadge();
-            Badge badge = new Badge(player,true);
+            Badge badge = new Badge(player, true);
             //Log.Debug(badge.Player.Nickname + " | " + badge.IsSCP343);
             Timing.CallDelayed(1f, () =>
             {
-                if (player.RoleName != "") player.RoleName = "SCP-343" + (!player.HasGlobalBadge() ?  " | " + player.RoleName : globalbadge);
+                if (player.RoleName != "") player.RoleName = "SCP-343" + (string.IsNullOrEmpty(globalbadge) ? " | " + player.RoleName : globalbadge);
                 else player.RoleName = "SCP-343" + globalbadge;
                 player.RoleColor = "red";
             });
             if (Cfg.scp343_invisible_for_173) foreach (Player pl in Player.List)
-            {
-                if (!pl.Scp173Controller.IgnoredPlayers.Contains(player)) pl.Scp173Controller.IgnoredPlayers.Add(player);
-            }
+                {
+                    if (!pl.Scp173Controller.IgnoredPlayers.Contains(player)) pl.Scp173Controller.IgnoredPlayers.Add(player);
+                }
             if (Cfg.scp343_alert && !scp0492)
             {
                 player.ClearBroadcasts();

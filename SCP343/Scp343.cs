@@ -100,7 +100,7 @@ namespace SCP343
                 Qurre.Events.Map.NewBlood += Eventhandlers.OnPlacingBlood;
                 PLAYER.Cuff += Eventhandlers.OnHandcuffing;
                 PLAYER.Damage += Eventhandlers.OnHurting;
-                PLAYER.Dies += Eventhandlers.OnDied;
+                PLAYER.Dead += Eventhandlers.OnDied;
                 PLAYER.RoleChange += Eventhandlers.OnChangingRole;
                 PLAYER.Escape += Eventhandlers.OnEscaping;
                 PLAYER.DroppingItem += Eventhandlers.OnDropingItem;
@@ -145,7 +145,7 @@ namespace SCP343
             Qurre.Events.Map.NewBlood -= Eventhandlers.OnPlacingBlood;
             PLAYER.Cuff -= Eventhandlers.OnHandcuffing;
             PLAYER.Damage -= Eventhandlers.OnHurting;
-            PLAYER.Dies -= Eventhandlers.OnDied;
+            PLAYER.Dead -= Eventhandlers.OnDied;
             PLAYER.RoleChange -= Eventhandlers.OnChangingRole;
             PLAYER.Escape -= Eventhandlers.OnEscaping;
             PLAYER.DroppingItem -= Eventhandlers.OnDropingItem;
@@ -193,8 +193,6 @@ namespace SCP343
                             CommandProcessor.RemoteAdminCommandHandler.RegisterCommand(command);
                         else if (commandType == typeof(GameConsoleCommandHandler))
                             GameCore.Console.singleton.ConsoleCommandHandler.RegisterCommand(command);
-                        //else if (commandType == typeof(ClientCommandHandler))
-                            //QueryProcessor.DotCommandHandler.RegisterCommand(command);
                         Commands[commandType][type] = command;
                     }
                     catch (Exception exception)

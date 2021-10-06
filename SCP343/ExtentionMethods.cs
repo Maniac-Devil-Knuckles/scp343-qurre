@@ -1,55 +1,32 @@
 using System;
 using Qurre.API;
-using MEC;
 using System.Collections.Generic;
-using UnityEngine;
-using Mirror;
-using System.Reflection;
 using System.Linq;
-using scp = SCP343.Scp343;
-using SCP343.Handlers;
 using Qurre;
 
 namespace SCP343
 {
     public static class ExtentionMethods
     {
-        internal static List<int> GetIntList(this Qurre.API.Config config, string key,List<int> def, string comment = "")
+        internal static List<int> GetIntList(this Config config, string key,List<int> def, string comment = "")
         {   
             try
             {
-                string _def = "";
-                foreach (string str in def.Select(d => d.ToString())) _def += $"{str},";
-                _def = _def.Substring(0, _def.Length - 1);
+                string _def = string.Join(",", def.Select(d => d.ToString()));
                 Log.Info(_def);
                 string _result = config.GetString(key, _def, comment);
-                List<int> result = new List<int>();
-                string[] vs = _result.Split(',');
-                if (vs.Length > 0)
-                {
-                    foreach(string str in vs)
-                    {
-                        if (int.TryParse(str, out int i)) result.Add(i);
-                    }
-                    if (result.Count == 0)
-                    {
-                        Log.Error("Not found list of int in " + key);
-                        return def;
-                    }
-                    else return result;
-                }
-                else return result;
+                List<int> result = _result.Split(',').Where(s => int.TryParse(s, out var res)).Select(s => int.Parse(s)).ToList();
+                return result;
             }
             catch (Exception ex)
             {
-                
                 Log.Info(key);
                 Log.Error(ex);
                 return def;
             }
         }
 
-        public static void SetHP(this Player player, int value)
+        public static void SetHP(this Player player, float value)
         {
             if (value + player.Hp >= player.MaxHp) player.Hp = player.MaxHp;
             else player.Hp += value;
@@ -60,10 +37,15 @@ namespace SCP343
         public static Badge GetSCPBadge(this Player player)
         {
             Badge badge = null;
-            if (player.IsSCP343()) badge = API.AllScp343Badges.FirstOrDefault(x => x.Player.Id == player.Id);
+            if (player.IsSCP343()) badge = scp343badgelist.Get(player);
             return badge;
         }
 
-        public static bool HasGlobalBadge(this Player player) => !string.IsNullOrEmpty(player.ServerRoles.NetworkGlobalBadge);
+        internal static int IndexOf(this List<int> list, ItemType en)
+        {
+            int num = (int)en;
+            return list.IndexOf(num);
+        }
+
     }
 }

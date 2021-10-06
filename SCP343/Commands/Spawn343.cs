@@ -35,7 +35,7 @@ namespace SCP343.Commands
             
             if (arguments.Count < 1)
             {
-                response = "Usage command : \"spawn343 PlayerId\"";
+                response = "Usage command : \"spawn343 PlayerName/PlayerId\"";
                 return false;
             }
 
@@ -43,8 +43,7 @@ namespace SCP343.Commands
 
             if (int.TryParse(arguments.At(0), out int id)) player = Player.Get(id);
             else player = Player.Get(string.Join(" ", arguments));
-
-            if (player == null)
+            if (player == null || player.Id == Server.Host.Id)
             {
                 response = "Incorrect PlayerId";
                 return false;

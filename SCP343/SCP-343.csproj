@@ -32,7 +32,7 @@
       <HintPath>..\..\..\Downloads\Exiled\EXILED\Plugins\dependencies\System.ComponentModel.DataAnnotations.dll</HintPath>
     </Reference>
     <Reference Include="Qurre">
-      <HintPath>packages\Qurre.1.8.8\lib\net472\Qurre.dll</HintPath>
+      <HintPath>packages\Qurre.1.8.16\lib\net472\Qurre.dll</HintPath>
     </Reference>
     <Reference Include="NorthwoodLib">
       <HintPath>..\..\Managed\NorthwoodLib.dll</HintPath>
@@ -55,14 +55,14 @@
     <Reference Include="YamlDotNet">
       <HintPath>..\..\Downloads\Qurre\Qurre\Plugins\dependencies\YamlDotNet.dll</HintPath>
     </Reference>
-    <Reference Include="Assembly-CSharp_publicized_11">
-      <HintPath>..\..\Assembly-CSharp_publicized_11.dll</HintPath>
-    </Reference>
     <Reference Include="CommandSystem.Core11">
       <HintPath>..\..\Downloads\CommandSystem.Core11.dll</HintPath>
     </Reference>
     <Reference Include="DissonanceVoip">
       <HintPath>..\..\obt\Managed\DissonanceVoip.dll</HintPath>
+    </Reference>
+    <Reference Include="Assembly-CSharp_publicized_11">
+      <HintPath>..\..\Assembly-CSharp_publicized_11.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

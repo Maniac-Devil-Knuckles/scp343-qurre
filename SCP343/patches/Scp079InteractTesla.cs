@@ -17,7 +17,6 @@ namespace SCP343.Patches
             if (__instance._interactRateLimit.CanExecute(true)) return false;
             if (!__instance.iAm079) return false;
             GameCore.Console.AddDebugLog("SCP079", "Command received from a client: " + command, MessageImportance.LessImportant, false);
-            __instance.RefreshCurrentRoom();
             bool result;
             switch (command)
             {

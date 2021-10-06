@@ -139,7 +139,7 @@ namespace SCP343.Handlers
                         else
                         {
                             ev.Player.Position = player.Position;
-                            ev.ReturnMessage = Cfg.scp343_teleport_to_player.Replace("%user%", player.Nickname).Replace("%role%", player.Role.ToString());
+                            ev.ReturnMessage = Cfg.scp343_teleport_to_player.Replace("%player%", player.Nickname).Replace("%role%", player.Role.ToString());
                         }
                         ev.Player.ClearBroadcasts();
                         ev.Player.Broadcast(10, ev.ReturnMessage);
@@ -241,8 +241,8 @@ namespace SCP343.Handlers
                         ev.ReturnMessage = "You are not SCP-343";
                         return;
                     }
-                    ev.ReturnMessage = ev.Player.Invisible ? Cfg.scp343_is_invisible_true : Cfg.scp343_is_invisible_false;
                     ev.Player.Invisible = !ev.Player.Invisible;
+                    ev.ReturnMessage = ev.Player.Invisible ? Cfg.scp343_is_invisible_true : Cfg.scp343_is_invisible_false;
                     if (!ev.Player.IsSCP343())
                     {
                         if (!ev.Player.HasItem(ItemType.Flashlight)) ev.Player.AddItem(ItemType.Flashlight);
@@ -300,7 +300,7 @@ namespace SCP343.Handlers
             if (ev.Target.IsSCP343() || ev.Cuffer.IsSCP343()) ev.Allowed = false;
         }
 
-        internal void OnDied(DiesEvent ev)
+        internal void OnDied(DeadEvent ev)
         {
             if (deadPlayers.ContainsKey(ev.Target.Id)) deadPlayers.Remove(ev.Target.Id);
             deadPlayers.Add(ev.Target.Id, new Badge(ev.Target, ev.Target.Role, ev.Target.Position));
@@ -388,7 +388,7 @@ namespace SCP343.Handlers
         internal void OnChangingRole(RoleChangeEvent ev)
         {
             if (scp343badgelist.Count() < 1) return;
-            IReadOnlyCollection<Item> itemss = ev.Player.AllItems;
+            List<Item> items = ev.Player.AllItems.ToList();
             if (ev.Player.IsSCP343() && ev.NewRole != RoleType.Scp0492)
             {
                 KillSCP343(ev.Player);
@@ -400,12 +400,8 @@ namespace SCP343.Handlers
                 Timing.CallDelayed(0.3f, () => { spawn343(ev.Player, true); });
                 Timing.CallDelayed(1.1f, () =>
                 {
-                    Player player = Player.Get(ev.Player.Id);
-                    player.Position = pos;
-                    foreach (var item in itemss)
-                    {
-                        player.AddItem(item);
-                    }
+                    ev.Player.Position = pos;
+                    ev.Player.AddItem(items);
                 });
             }
         }
@@ -505,39 +501,34 @@ namespace SCP343.Handlers
         {
             if (scp343badgelist.Count() < 0) return;
             if (!ev.Player.IsSCP343()) return;
-            SendingConsoleEvent console = null;
             if (Cfg.scp343_itemscannotdrop.Contains((int)ev.Item.Type)) ev.Allowed = false;
             if (ev.Item.Type == ItemType.Coin)
             {
-                //ev.Allowed = false;
-                console = new SendingConsoleEvent(ev.Player, ".tp343", ".tp343", new string[] { });
-                IEnumerable<Player> Players = Player.List.Where(e => !e.IsSCP343() && e.Role != RoleType.Spectator && e.Role != RoleType.None);
-                //Log.Error("hello");
+                string text = string.Empty;
+                IEnumerable <Player> Players = Player.List.Where(e => !e.IsSCP343() && e.Role != RoleType.Spectator && e.Role != RoleType.None);
                 if (Players.Count() < 1)
                 {
-                    console.ReturnMessage = Cfg.scp343_notfoundplayer;
+                    text = Cfg.scp343_notfoundplayer;
                 }
                 else
                 {
                     Player player = Players.ToList()[RNG.Next(Players.Count())];
                     if (player == null)
                     {
-                        console.ReturnMessage = Cfg.scp343_notfoundplayer;
+                        text = Cfg.scp343_notfoundplayer;
                     }
                     else
                     {
                         ev.Player.Position = player.Position;
-                        console.ReturnMessage = Cfg.scp343_teleport_to_player.Replace("%user%", player.Nickname).Replace("%role%", player.Role.ToString());
+                        text = Cfg.scp343_teleport_to_player.Replace("%player%", player.Nickname).Replace("%role%", player.Role.ToString());
                     }
                 }
                 ev.Player.ClearBroadcasts();
-                ev.Player.Broadcast(10, console.ReturnMessage);
-                //ev.Player.ExecuteCommand(".tp343", false);
+                ev.Player.Broadcast(10, text);
             }
             else if (ev.Item.Type == ItemType.Adrenaline)
             {
-                //ev.Allowed = false;
-                console = new SendingConsoleEvent(ev.Player, ".heal343", ".heal343", new string[] { });
+                string text = string.Empty;
                 if (ev.Player.GetSCPBadge().CanHeal)
                 {
                     int count = 0;
@@ -552,11 +543,11 @@ namespace SCP343.Handlers
                     }
                     if (count == 0)
                     {
-                        console.ReturnMessage = Cfg.scp343_notfoundplayer;
+                        text = Cfg.scp343_notfoundplayer;
                     }
                     else
                     {
-                        console.ReturnMessage = Cfg.scp343_healplayer;
+                        text = Cfg.scp343_healplayer;
                         ev.Player.GetSCPBadge().HealCooldown = Cfg.scp343_HealCooldown;
                     }
                 }
@@ -566,15 +557,14 @@ namespace SCP343.Handlers
                     return;
                 }
                 ev.Player.ClearBroadcasts();
-                ev.Player.Broadcast(10, console.ReturnMessage);
+                ev.Player.Broadcast(10, text);
             }
             else if (ev.Item.Type == ItemType.Flashlight)
             {
-                //ev.Allowed = false;
-                console = new SendingConsoleEvent(ev.Player, ".revive343", ".revive343", new string[] { });
+                string text = string.Empty;
                 if (ev.Player.GetSCPBadge().Revive343 == 0)
                 {
-                    console.ReturnMessage = Cfg.scp343_cannotrevive;
+                    text = Cfg.scp343_cannotrevive;
                 }
                 else
                 {
@@ -586,7 +576,7 @@ namespace SCP343.Handlers
                         player = ply;
                         break;
                     }
-                    if (player == null) console.ReturnMessage = Cfg.scp343_notfoundplayer;
+                    if (player == null) text = Cfg.scp343_notfoundplayer;
                     else
                     {
                         player.Role = deadPlayers[player.Id].Role;
@@ -597,17 +587,17 @@ namespace SCP343.Handlers
                             player.Position = deadPlayers[player.Id].Pos;
                             deadPlayers.Remove(player.Id);
                         }); ;
-                        console.ReturnMessage = Cfg.scp343_revive_text.Replace("%user%", player.Nickname);
+                        text = Cfg.scp343_revive_text.Replace("%user%", player.Nickname);
                         ev.Player.GetSCPBadge().Revive343--;
                     }
                 }
                 ev.Player.ClearBroadcasts();
-                ev.Player.Broadcast(10, console.ReturnMessage);
+                ev.Player.Broadcast(10, text);
             }
             else if (ev.Item.Type == ItemType.SCP268)
             {
-                ev.Player.Broadcast(ev.Player.Invisible ? Cfg.scp343_is_invisible_true : Cfg.scp343_is_invisible_false, 10, true);
                 ev.Player.Invisible = !ev.Player.Invisible;
+                ev.Player.Broadcast(ev.Player.Invisible ? Cfg.scp343_is_invisible_true : Cfg.scp343_is_invisible_false, 10, true);
             }
         }
 
@@ -648,18 +638,16 @@ namespace SCP343.Handlers
             if (scp343badgelist.Count() < 1) return;
             if (ev.Player.IsSCP343())
             {
-                //if (ev.Pickup.Serial == 1337035) ev.Allowed = false;
                 if (!Cfg.scp343_itemconverttoggle)
                 {
                     ev.Allowed = false;
                     return;
                 }
-                int itemid = (int)ev.Pickup.Type;
-                if (Cfg.scp343_itemdroplist.IndexOf(itemid) > 0)
+                if (Cfg.scp343_itemdroplist.IndexOf(ev.Pickup.Type) > 0)
                 {
                     ev.Allowed = false;
                 }
-                else if (Cfg.scp343_itemstoconvert.IndexOf(itemid) > 0)
+                else if (Cfg.scp343_itemstoconvert.IndexOf(ev.Pickup.Type) > 0)
                 {
                     if (!Cfg.scp343_itemconverttoggle)
                     {

@@ -49,6 +49,7 @@ namespace SCP343
             if (scp343) scp343badgelist.Add(this);
             else this.SCPName = SCPName;
         }
+
         internal Badge(string args, bool scp343 = false, string SCPName = "")
         {
             Player = Player.Get(args);
