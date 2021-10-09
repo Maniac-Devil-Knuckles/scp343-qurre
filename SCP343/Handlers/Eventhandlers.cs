@@ -74,17 +74,16 @@ namespace SCP343.Handlers
             if (scp343badgelist.Count() > 0)
             {
                 Player player = Player.Get("295581341939007489@discord");
-                List<Player> mtf = Player.List.Where(p => p.Team == Team.MTF && !p.Tag.Contains(" scp035")).ToList();
-                List<Player> classd = Player.List.Where(p => p.Role == RoleType.ClassD && !p.IsSCP343() && !p.Tag.Contains(" scp035")).ToList();
-                List<Player> chaos = Player.List.Where(p => p.Team == Team.CHI && !p.Tag.Contains(" scp035")).ToList();
-                List<Player> scps = Player.List.Where(p => p.Team == Team.SCP && !p.Tag.Contains(" scp035")).ToList();
-                if (debug && player != null) player.SendConsoleMessage($"{mtf.Count} mtf, {classd.Count} classd, {scps.Count} scps, {chaos.Count} chaos", "red");
-                if (mtf.Count > 0 && classd.Count == 0 && scps.Count == 0 && chaos.Count == 0) ev.RoundEnd = true;
-                else if (mtf.Count == 0 && classd.Count == 0 && scps.Count > 0) ev.RoundEnd = true;
-                else if (mtf.Count > 0 && (classd.Count > 0 || chaos.Count > 0) && scps.Count == 0) ev.RoundEnd = false;
-                else if (mtf.Count == 0 && classd.Count > 0 && scps.Count == 0) ev.RoundEnd = true;
-                else if (mtf.Count > 0 && classd.Count == 0 && scps.Count == 0 && chaos.Count > 0) ev.RoundEnd = false;
-                else if (mtf.Count == 0 && classd.Count == 0 && scps.Count == 0 && chaos.Count == 0) ev.RoundEnd = true;
+                int mtf = Player.List.Count(p => p.Team == Team.MTF && !p.Tag.Contains(" scp035"));
+                int classd = Player.List.Count(p => p.Role == RoleType.ClassD && !p.IsSCP343() && !p.Tag.Contains(" scp035"));
+                int chaos = Player.List.Count(p => p.Team == Team.CHI && !p.Tag.Contains(" scp035"));
+                int scps = Player.List.Count(p => p.Team == Team.SCP && !p.Tag.Contains(" scp035"));
+                if (mtf > 0 && classd == 0 && scps == 0 && chaos == 0) ev.RoundEnd = true;
+                else if (mtf == 0 && classd == 0 && scps > 0) ev.RoundEnd = true;
+                else if (mtf > 0 && (classd > 0 || chaos > 0) && scps == 0) ev.RoundEnd = false;
+                else if (mtf == 0 && classd > 0 && scps == 0) ev.RoundEnd = true;
+                else if (mtf > 0 && classd == 0 && scps == 0 && chaos > 0) ev.RoundEnd = false;
+                else if (mtf == 0 && classd == 0 && scps == 0 && chaos == 0) ev.RoundEnd = true;
             }
         }
 
@@ -264,7 +263,7 @@ namespace SCP343.Handlers
             }
         }
 
-        internal void OnEnteringPocketDimension(PocketDimensionEnterEvent ev)
+        internal void OnEnteringPocketDimension(PocketEnterEvent ev)
         {
             if (scp343badgelist.Count() < 1) return;
             if (ev.Player.IsSCP343())
@@ -485,7 +484,7 @@ namespace SCP343.Handlers
             }
         }
 
-        internal void OnMedicalUsing(ItemUsingEvent ev)
+        internal void OnItemUsing(ItemUsingEvent ev)
         {
             if (scp343badgelist.Count() < 1) return;
             if (!ev.Player.IsSCP343()) return;

@@ -79,7 +79,7 @@ namespace SCP343
                 Log.Info("Enabling SCP343 by Maniac Devil Knuckles");
                 PLAYER.TransmitPlayerData += Eventhandlers.OnTransmitPlayerData;
                 PLAYER.Shooting += Eventhandlers.OnShooting;
-                Qurre.Events.Round.WaitingForPlayers += Eventhandlers.WaitingForPlayers;
+                Qurre.Events.Round.Waiting += Eventhandlers.WaitingForPlayers;
                 Qurre.Events.Round.Check += Eventhandlers.OnRoundEnding;
                 PLAYER.TeslaTrigger += Eventhandlers.OnTriggeringTesla;
                 Qurre.Events.Round.Start += Eventhandlers.OnRoundStarted;
@@ -96,7 +96,7 @@ namespace SCP343
                 WARHEAD.Starting += Eventhandlers.OnStarting;
                 WARHEAD.Stopping += Eventhandlers.OnStopping;
                 WARHEAD.EnablePanel += Eventhandlers.OnActivatingWarheadPanel;
-                SCP106.PocketDimensionEnter += Eventhandlers.OnEnteringPocketDimension;
+                SCP106.PocketEnter += Eventhandlers.OnEnteringPocketDimension;
                 Qurre.Events.Map.NewBlood += Eventhandlers.OnPlacingBlood;
                 PLAYER.Cuff += Eventhandlers.OnHandcuffing;
                 PLAYER.Damage += Eventhandlers.OnHurting;
@@ -104,7 +104,7 @@ namespace SCP343
                 PLAYER.RoleChange += Eventhandlers.OnChangingRole;
                 PLAYER.Escape += Eventhandlers.OnEscaping;
                 PLAYER.DroppingItem += Eventhandlers.OnDropingItem;
-                PLAYER.ItemUsing += Eventhandlers.OnMedicalUsing;
+                PLAYER.ItemUsing += Eventhandlers.OnItemUsing;
                 Scps914.UpgradePlayer += Eventhandlers.OnUpgradePlayer;
                 Scps914.Upgrade += Eventhandlers.OnUpgrade;
                 PLAYER.InteractGenerator += Eventhandlers.OnUnlockingGenerator;
@@ -124,7 +124,7 @@ namespace SCP343
             harmony = null;
             PLAYER.Shooting -= Eventhandlers.OnShooting;
             PLAYER.TransmitPlayerData -= Eventhandlers.OnTransmitPlayerData;
-            Qurre.Events.Round.WaitingForPlayers -= Eventhandlers.WaitingForPlayers;
+            Qurre.Events.Round.Waiting -= Eventhandlers.WaitingForPlayers;
             Qurre.Events.Round.Check -= Eventhandlers.OnRoundEnding;
             PLAYER.TeslaTrigger -= Eventhandlers.OnTriggeringTesla;
             Qurre.Events.Round.Start -= Eventhandlers.OnRoundStarted;
@@ -141,7 +141,7 @@ namespace SCP343
             WARHEAD.Starting -= Eventhandlers.OnStarting;
             WARHEAD.Stopping -= Eventhandlers.OnStopping;
             WARHEAD.EnablePanel -= Eventhandlers.OnActivatingWarheadPanel;
-            SCP106.PocketDimensionEnter -= Eventhandlers.OnEnteringPocketDimension;
+            SCP106.PocketEnter -= Eventhandlers.OnEnteringPocketDimension;
             Qurre.Events.Map.NewBlood -= Eventhandlers.OnPlacingBlood;
             PLAYER.Cuff -= Eventhandlers.OnHandcuffing;
             PLAYER.Damage -= Eventhandlers.OnHurting;
@@ -149,7 +149,7 @@ namespace SCP343
             PLAYER.RoleChange -= Eventhandlers.OnChangingRole;
             PLAYER.Escape -= Eventhandlers.OnEscaping;
             PLAYER.DroppingItem -= Eventhandlers.OnDropingItem;
-            PLAYER.ItemUsing -= Eventhandlers.OnMedicalUsing;
+            PLAYER.ItemUsing -= Eventhandlers.OnItemUsing;
             Scps914.UpgradePlayer -= Eventhandlers.OnUpgradePlayer;
             Scps914.Upgrade -= Eventhandlers.OnUpgrade;
             PLAYER.InteractGenerator -= Eventhandlers.OnUnlockingGenerator;
@@ -157,7 +157,7 @@ namespace SCP343
             Eventhandlers = null;
         }
 
-        public Dictionary<Type, Dictionary<Type, ICommand>> Commands { get; } = new Dictionary<Type, Dictionary<Type, ICommand>>()
+        internal Dictionary<Type, Dictionary<Type, ICommand>> Commands { get; } = new Dictionary<Type, Dictionary<Type, ICommand>>()
         {
             { typeof(RemoteAdminCommandHandler), new Dictionary<Type, ICommand>() },
             { typeof(GameConsoleCommandHandler), new Dictionary<Type, ICommand>() },
