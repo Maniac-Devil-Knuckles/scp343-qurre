@@ -16,8 +16,7 @@ namespace SCP343
             RoleName = player.RoleName;
             Id = player.Id;
             IsSCP343 = scp343;
-            if (scp343) scp343badgelist.Add(this);
-            else this.SCPName = SCPName;
+            this.SCPName = SCPName;
         }
 
         public Badge(Player player, string SCPName = "")
@@ -46,8 +45,7 @@ namespace SCP343
             RoleName = Player.RoleName;
             Id = Player.Id;
             IsSCP343 = scp343;
-            if (scp343) scp343badgelist.Add(this);
-            else this.SCPName = SCPName;
+            this.SCPName = SCPName;
         }
 
         internal Badge(string args, bool scp343 = false, string SCPName = "")
@@ -57,8 +55,7 @@ namespace SCP343
             RoleName = Player.RoleName;
             Id = Player.Id;
             IsSCP343 = scp343;
-            if (scp343) scp343badgelist.Add(this);
-            else this.SCPName = SCPName;
+            this.SCPName = SCPName;
         }
 
         internal Badge(GameObject GameObject, bool scp343 = false, string SCPName = "")
@@ -68,8 +65,7 @@ namespace SCP343
             RoleName = Player.RoleName;
             Id = Player.Id;
             IsSCP343 = scp343;
-            if (scp343) scp343badgelist.Add(this);
-            else this.SCPName = SCPName;
+            this.SCPName = SCPName;
         }
 
         public string RoleColor { get; } = "";
@@ -88,6 +84,11 @@ namespace SCP343
         public Vector3 Pos { get; } = Vector3.zero;
         public bool CanHeal => HealCooldown <= 0;
         public int HealCooldown { get; internal set; } = 120;
+
+        ~Badge()
+        {
+            if (IsSCP343) scp343badgelist.Add(this);
+        }
     }
 
     public static class scp343badgelist

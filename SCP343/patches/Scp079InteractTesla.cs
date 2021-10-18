@@ -18,6 +18,7 @@ namespace SCP343.Patches
             if (!__instance.iAm079) return false;
             GameCore.Console.AddDebugLog("SCP079", "Command received from a client: " + command, MessageImportance.LessImportant, false);
             bool result;
+            __instance.RefreshCurrentRoom();
             switch (command)
             {
                 case Command079.Tesla:

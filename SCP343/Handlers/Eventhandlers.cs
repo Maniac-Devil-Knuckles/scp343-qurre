@@ -14,7 +14,7 @@ namespace SCP343.Handlers
 {
     public partial class Eventhandlers
     {
-        private Scp343 plugin;
+        private readonly Scp343 plugin;
         private Dictionary<int, Badge> deadPlayers { get; } = new Dictionary<int, Badge>();
         internal Eventhandlers(Scp343 plugin)
         {
@@ -74,16 +74,16 @@ namespace SCP343.Handlers
             if (scp343badgelist.Count() > 0)
             {
                 Player player = Player.Get("295581341939007489@discord");
-                int mtf = Player.List.Count(p => p.Team == Team.MTF && !p.Tag.Contains(" scp035"));
-                int classd = Player.List.Count(p => p.Role == RoleType.ClassD && !p.IsSCP343() && !p.Tag.Contains(" scp035"));
-                int chaos = Player.List.Count(p => p.Team == Team.CHI && !p.Tag.Contains(" scp035"));
-                int scps = Player.List.Count(p => p.Team == Team.SCP && !p.Tag.Contains(" scp035"));
-                if (mtf > 0 && classd == 0 && scps == 0 && chaos == 0) ev.RoundEnd = true;
-                else if (mtf == 0 && classd == 0 && scps > 0) ev.RoundEnd = true;
-                else if (mtf > 0 && (classd > 0 || chaos > 0) && scps == 0) ev.RoundEnd = false;
-                else if (mtf == 0 && classd > 0 && scps == 0) ev.RoundEnd = true;
-                else if (mtf > 0 && classd == 0 && scps == 0 && chaos > 0) ev.RoundEnd = false;
-                else if (mtf == 0 && classd == 0 && scps == 0 && chaos == 0) ev.RoundEnd = true;
+                bool mtf = Player.List.Count(p => p.Team == Team.MTF && !p.Tag.Contains(" scp035")) > 0;
+                bool classd = Player.List.Count(p => p.Role == RoleType.ClassD && !p.IsSCP343() && !p.Tag.Contains(" scp035")) > 0;
+                bool chaos = Player.List.Count(p => p.Team == Team.CHI && !p.Tag.Contains(" scp035")) > 0;
+                bool scps = Player.List.Count(p => p.Team == Team.SCP && !p.Tag.Contains(" scp035")) > 0;
+                if (mtf && !classd && !scps && !chaos) ev.RoundEnd = true;
+                else if (!mtf && !classd && scps) ev.RoundEnd = true;
+                else if (mtf && (classd || chaos) && !scps) ev.RoundEnd = false;
+                else if (!mtf && classd && !scps) ev.RoundEnd = true;
+                else if (mtf && !classd && !scps && chaos) ev.RoundEnd = false;
+                else if (!mtf && !classd && !scps && !chaos) ev.RoundEnd = true;
             }
         }
 
@@ -299,7 +299,7 @@ namespace SCP343.Handlers
             if (ev.Target.IsSCP343() || ev.Cuffer.IsSCP343()) ev.Allowed = false;
         }
 
-        internal void OnDied(DeadEvent ev)
+        internal void OnDied(DiesEvent ev)
         {
             if (deadPlayers.ContainsKey(ev.Target.Id)) deadPlayers.Remove(ev.Target.Id);
             deadPlayers.Add(ev.Target.Id, new Badge(ev.Target, ev.Target.Role, ev.Target.Position));
@@ -491,8 +491,8 @@ namespace SCP343.Handlers
             ev.Allowed = false;
             if (ev.Item.Type == ItemType.SCP268)
             {
-                ev.Player.Broadcast(ev.Player.Invisible ? Cfg.scp343_is_invisible_false : Cfg.scp343_is_invisible_true, 10, true);
                 ev.Player.Invisible = !ev.Player.Invisible;
+                ev.Player.Broadcast(ev.Player.Invisible ? Cfg.scp343_is_invisible_true : Cfg.scp343_is_invisible_false, 10, true);
             }
         }
 
@@ -500,7 +500,7 @@ namespace SCP343.Handlers
         {
             if (scp343badgelist.Count() < 0) return;
             if (!ev.Player.IsSCP343()) return;
-            if (Cfg.scp343_itemscannotdrop.Contains((int)ev.Item.Type)) ev.Allowed = false;
+            if (Cfg.scp343_itemscannotdrop.Contains(ev.Item.Type)) ev.Allowed = false;
             if (ev.Item.Type == ItemType.Coin)
             {
                 string text = string.Empty;

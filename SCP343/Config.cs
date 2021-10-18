@@ -43,15 +43,15 @@ namespace SCP343
         [Description("Percent chance for SPC-343 to spawn at the start of the round.")]
         public static float scp343_spawnchance { get; internal set; } = 30f;
         [Description("What items SCP-343 drops instead of picking up.")]
-        public static List<int> scp343_itemdroplist { get; internal set; } = new List<int> { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 15, 19, 12, 19, 22, 27, 28, 29, 32, 33 };
+        public static List<ItemType> scp343_itemdroplist { get; internal set; } = new List<ItemType> { ItemType.KeycardJanitor, ItemType.KeycardScientist, ItemType.KeycardResearchCoordinator, ItemType.KeycardZoneManager, ItemType.KeycardGuard, ItemType.KeycardNTFOfficer, ItemType.KeycardContainmentEngineer, ItemType.KeycardNTFLieutenant, ItemType.KeycardNTFCommander, ItemType.KeycardFacilityManager, ItemType.KeycardChaosInsurgency , ItemType.KeycardO5, ItemType.Flashlight, ItemType.Radio, ItemType.Ammo556x45, ItemType.Ammo44cal, ItemType.Ammo762x39, ItemType.Ammo9x19, ItemType.SCP268, ItemType.Adrenaline };
         [Description("What items SCP-343 converts.")]
-        public static List<int> scp343_itemstoconvert { get; internal set; } = new List<int> { 10, 13, 14, 16, 20, 21, 23, 24, 25, 26, 30, 35 };
+        public static List<ItemType> scp343_itemstoconvert { get; internal set; } = new List<ItemType> { ItemType.GunCOM15, ItemType.Medkit, ItemType.MicroHID, ItemType.GunE11SR, ItemType.GunCrossvec, ItemType.GunFSP9, ItemType.GunLogicer, ItemType.GrenadeHE, ItemType.GrenadeFlash, ItemType.GunCOM18, ItemType.Coin };
         [Description("What a item should be converted to.")]
-        public static List<int> scp343_converteditems { get; internal set; } = new List<int> { 14 };
+        public static List<ItemType> scp343_converteditems { get; internal set; } = new List<ItemType> { ItemType.Medkit };
         [Description("Minimum players for spawn SCP-343")]
         public static int minplayers { get; internal set; } = 5;
         [Description("What give scp-343 on spawn")]
-        public static List<int> scp343_itemsatspawn { get; internal set; } = new List<int> { 35, 33, 15, 32, 13 };
+        public static List<ItemType> scp343_itemsatspawn { get; internal set; } = new List<ItemType> { ItemType.Coin, ItemType.Adrenaline, ItemType.Flashlight, ItemType.SCP268, ItemType.GunCOM15 };
         [Description("Moving Speed lift for all players")]
         public static float lift_moving_speed { get; internal set; } = 6.5f;
 
@@ -78,7 +78,7 @@ namespace SCP343
 
         public static bool scp343_can_use_TranquilizerGun { get; internal set; } = true;
 
-        public static List<int> scp343_itemscannotdrop { get; internal set; } = new List<int> { 35, 33, 15, 32, 13  };
+        public static List<ItemType> scp343_itemscannotdrop { get; internal set; } = new List<ItemType> { ItemType.Coin, ItemType.Adrenaline, ItemType.Flashlight, ItemType.SCP268, ItemType.GunCOM15 };
 
         public static string scp343_notfoundplayer { get; internal set; } = "Not found players!";
 
@@ -112,6 +112,7 @@ namespace SCP343
 
         internal static void Reload()
         {
+            Log.Info("Loading configs.....");
             Plugin.Config.Reload();
             var conf = Plugin.Config;
             IsEnabled = conf.GetBool("scp343_IsEnabled", true, "IsEnabled?");
@@ -124,11 +125,11 @@ namespace SCP343
             scp343_hecktime = conf.GetInt("scp343_hecktime", scp343_hecktime);
             scp343_nuke_interact = conf.GetBool("scp343_nuke_interact", scp343_nuke_interact);
             scp343_spawnchance = conf.GetFloat("scp343_spawnchance", scp343_spawnchance);
-            scp343_itemdroplist = conf.GetIntList("scp343_itemdroplist",scp343_itemdroplist);
+            scp343_itemdroplist = conf.GetListEnum("scp343_itemdroplist",scp343_itemdroplist);
             scp343_opendoortime = conf.GetInt("scp343_opendoortime", scp343_opendoortime);
-            scp343_itemstoconvert = conf.GetIntList("scp343_itemstoconvert", scp343_itemstoconvert);
-            scp343_converteditems = conf.GetIntList("scp343_converteditems", scp343_converteditems);
-            scp343_itemsatspawn = conf.GetIntList("scp343_itemsatspawn", scp343_itemsatspawn);
+            scp343_itemstoconvert = conf.GetListEnum("scp343_itemstoconvert", scp343_itemstoconvert);
+            scp343_converteditems = conf.GetListEnum("scp343_converteditems", scp343_converteditems);
+            scp343_itemsatspawn = conf.GetListEnum("scp343_itemsatspawn", scp343_itemsatspawn);
             lift_moving_speed = conf.GetFloat("scp343_lift_moving_speed", lift_moving_speed);
             scp343_canopenanydoor = conf.GetBool("scp343_canopenanydoor", scp343_canopenanydoor);
             scp343_alert = conf.GetBool("scp343_alert", true);
@@ -147,7 +148,7 @@ namespace SCP343
             scp343_min_heal_players = conf.GetInt("scp343_min_heal_players", 30);
             scp343_max_heal_players = conf.GetInt("scp343_max_heal_players", 70);
             scp343_can_use_TranquilizerGun = conf.GetBool("scp343_can_use_TranquilizerGun", true);
-            scp343_itemscannotdrop = conf.GetIntList("scp343_itemscannotdrop", scp343_itemscannotdrop);
+            scp343_itemscannotdrop = conf.GetListEnum("scp343_itemscannotdrop", scp343_itemscannotdrop);
             scp343_notfoundplayer = conf.GetString("scp343_notfoundplayer", scp343_notfoundplayer);
             scp343_teleport_to_player = conf.GetString("scp343_teleport_to_player", scp343_teleport_to_player);
             scp343_healplayer = conf.GetString("scp343_healplayer", scp343_healplayer);

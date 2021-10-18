@@ -18,7 +18,7 @@ namespace SCP343.Handlers
             for (; player.IsSCP343();)
             {
                 yield return Timing.WaitForSeconds(1f);
-                if (player.GetSCPBadge().HealCooldown > 0)
+                if (!player.GetSCPBadge().CanHeal)
                 {
                     player.GetSCPBadge().HealCooldown--;
                     IsShowed = false;
@@ -120,7 +120,6 @@ namespace SCP343.Handlers
             }
             if (player.IsSCP343()) return player.GetSCPBadge();
             Badge badge = new Badge(player, true);
-            //Log.Debug(badge.Player.Nickname + " | " + badge.IsSCP343);
             Timing.CallDelayed(1f, () =>
             {
                 if (player.RoleName != "") player.RoleName = "SCP-343" + (string.IsNullOrEmpty(globalbadge) ? " | " + player.RoleName : globalbadge);
@@ -145,8 +144,7 @@ namespace SCP343.Handlers
                 player.ClearInventory();
                 if (!scp0492)
                 {
-                    List<ItemType> items = Cfg.scp343_itemsatspawn.Select(x => (ItemType)x).ToList();
-                    player.AddItem(items);
+                    player.AddItem(Cfg.scp343_itemsatspawn);
                 }
                 if (Cfg.scp343_heck)
                 {

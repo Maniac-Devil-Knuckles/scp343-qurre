@@ -46,7 +46,7 @@ namespace SCP343
         public override string Name => "SCP-343";
         public override string Developer => "Maniac Devil Knuckles";
         public override Version Version => new Version(2, 7, 1);
-        public override Version NeededQurreVersion => new Version(1, 8, 8);
+        public override Version NeededQurreVersion => new Version(1, 9, 1);
         internal static Scp343 Instance { get; set; } = null;
         public Harmony harmony { get; internal set; } = null;
         internal int i { get; set; } = 0;
@@ -100,7 +100,7 @@ namespace SCP343
                 Qurre.Events.Map.NewBlood += Eventhandlers.OnPlacingBlood;
                 PLAYER.Cuff += Eventhandlers.OnHandcuffing;
                 PLAYER.Damage += Eventhandlers.OnHurting;
-                PLAYER.Dead += Eventhandlers.OnDied;
+                PLAYER.Dies += Eventhandlers.OnDied;
                 PLAYER.RoleChange += Eventhandlers.OnChangingRole;
                 PLAYER.Escape += Eventhandlers.OnEscaping;
                 PLAYER.DroppingItem += Eventhandlers.OnDropingItem;
@@ -145,7 +145,7 @@ namespace SCP343
             Qurre.Events.Map.NewBlood -= Eventhandlers.OnPlacingBlood;
             PLAYER.Cuff -= Eventhandlers.OnHandcuffing;
             PLAYER.Damage -= Eventhandlers.OnHurting;
-            PLAYER.Dead -= Eventhandlers.OnDied;
+            PLAYER.Dies -= Eventhandlers.OnDied;
             PLAYER.RoleChange -= Eventhandlers.OnChangingRole;
             PLAYER.Escape -= Eventhandlers.OnEscaping;
             PLAYER.DroppingItem -= Eventhandlers.OnDropingItem;
@@ -163,7 +163,9 @@ namespace SCP343
             { typeof(GameConsoleCommandHandler), new Dictionary<Type, ICommand>() },
             { typeof(ClientCommandHandler), new Dictionary<Type, ICommand>() },
         };
+
         Assembly Assembly => GetType().Assembly;
+
         public void OnRegisteringCommands()
         {
             foreach (Type type in Assembly.GetTypes())

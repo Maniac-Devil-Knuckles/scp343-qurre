@@ -8,24 +8,6 @@ namespace SCP343
 {
     public static class ExtentionMethods
     {
-        internal static List<int> GetIntList(this Config config, string key,List<int> def, string comment = "")
-        {   
-            try
-            {
-                string _def = string.Join(",", def.Select(d => d.ToString()));
-                Log.Info(_def);
-                string _result = config.GetString(key, _def, comment);
-                List<int> result = _result.Split(',').Where(s => int.TryParse(s, out var res)).Select(s => int.Parse(s)).ToList();
-                return result;
-            }
-            catch (Exception ex)
-            {
-                Log.Info(key);
-                Log.Error(ex);
-                return def;
-            }
-        }
-
         public static void SetHP(this Player player, float value)
         {
             if (value + player.Hp >= player.MaxHp) player.Hp = player.MaxHp;
@@ -41,10 +23,27 @@ namespace SCP343
             return badge;
         }
 
-        internal static int IndexOf(this List<int> list, ItemType en)
+        public static List<T> GetListEnum<T>(this Config config, string key, List<T> def, string comment = "") where T: struct
         {
-            int num = (int)en;
-            return list.IndexOf(num);
+            try
+            {
+                string _def = string.Join(",", def.Select(d => Convert.ToInt32(d).ToString()));
+                Log.Info(_def);
+                string _result = config.GetString(key, _def, comment);
+                List<T> result = _result.Split(',').Select(r =>
+                {
+                    if (Enum.TryParse(r, out T t)) return t;
+                    Enum.TryParse("-1", out t);
+                    return t;
+                }).ToList();
+                return result;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(key);
+                Log.Error(ex);
+                return def;
+            }
         }
 
     }
