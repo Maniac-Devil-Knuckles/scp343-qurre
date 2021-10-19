@@ -77,7 +77,18 @@ namespace SCP343
         public bool CanHeck { get; internal set; } = false;
         public GameObject GameObject => Player.GameObject;
         public ReferenceHub ReferenceHub => Player.ReferenceHub;
-        public bool IsSCP343 { get; } = false;
+        public bool IsSCP343 
+        {
+            get => _IsScp343;
+            private set
+            {
+                _IsScp343 = value;
+				if (value)
+				{
+					scp343badgelist.Add(this);
+				}
+            }
+        }
         public string SCPName { get; internal set; } = "";
         public int Revive343 { get; internal set; } = 0;
         public RoleType Role { get; } = RoleType.None;
@@ -85,10 +96,7 @@ namespace SCP343
         public bool CanHeal => HealCooldown <= 0;
         public int HealCooldown { get; internal set; } = 120;
 
-        ~Badge()
-        {
-            if (IsSCP343) scp343badgelist.Add(this);
-        }
+        private bool _IsScp343;
     }
 
     public static class scp343badgelist
