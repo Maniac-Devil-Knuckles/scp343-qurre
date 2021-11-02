@@ -56,7 +56,7 @@ namespace SCP343.Commands
 
             player.SetRole(RoleType.ClassD, false, CharacterClassManager.SpawnReason.ForceClass);
 
-            Timing.CallDelayed(0.5f, () =>
+            Timing.CallDelayed(0.7f, () =>
             {
                 API.Spawn343(player);
             });

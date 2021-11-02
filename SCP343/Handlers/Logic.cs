@@ -57,7 +57,7 @@ namespace SCP343.Handlers
             player.Invisible = true;
             player.GodMode = true;
             player.Broadcast(Cfg.scp343_youweretranq, 4);
-            Qurre.API.Controllers.Ragdoll ragdoll = Qurre.API.Controllers.Ragdoll.Create(player.Role, player.Position, player.FullRotation, default, new PlayerStats.HitInfo(0, "SCP-343", DamageTypes.None, player.Id, true), false, player);
+            Qurre.API.Controllers.Ragdoll ragdoll = Qurre.API.Controllers.Ragdoll.Create(player.Role, player.Position, player.CameraTransform.rotation, default, new PlayerStats.HitInfo(0, "SCP-343", DamageTypes.None, player.Id, true), false, player);
             Vector3 pos = player.Position;
             player.Position = new Vector3(1, 1, 1);
             yield return Timing.WaitForSeconds(5f);

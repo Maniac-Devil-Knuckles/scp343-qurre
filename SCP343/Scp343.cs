@@ -48,8 +48,9 @@ namespace SCP343
         public override Version Version => new Version(2, 7, 1);
         public override Version NeededQurreVersion => new Version(1, 9, 1);
         internal static Scp343 Instance { get; set; } = null;
-        public Harmony harmony { get; internal set; } = null;
-        internal int i { get; set; } = 0;
+        internal Harmony Harmony { get; set; } = null;
+        
+        internal int i = 0;
 
         public override void Enable()
         {
@@ -64,8 +65,8 @@ namespace SCP343
                 try
                 {
                     //Config.betaitemsatspawn.ParseInventorySettings();
-                    harmony = new Harmony("knuckles.scp343\nVersion " + i++);
-                    harmony.PatchAll();
+                    Harmony = new Harmony("knuckles.scp343\nVersion " + i++);
+                    Harmony.PatchAll();
                     Log.Info("cool");
                 }
                 catch (Exception ex)
@@ -120,8 +121,8 @@ namespace SCP343
         public override void Disable()
         {
             Log.Info("Disabling SCP343 by Maniac Devil Knuckles");
-            harmony.UnpatchAll(harmony.Id);
-            harmony = null;
+            Harmony.UnpatchAll(Harmony.Id);
+            Harmony = null;
             PLAYER.Shooting -= Eventhandlers.OnShooting;
             PLAYER.TransmitPlayerData -= Eventhandlers.OnTransmitPlayerData;
             Qurre.Events.Round.Waiting -= Eventhandlers.WaitingForPlayers;

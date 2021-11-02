@@ -97,6 +97,7 @@ namespace SCP343
         public int HealCooldown { get; internal set; } = 120;
 
         private bool _IsScp343;
+
     }
 
     public static class scp343badgelist
@@ -113,6 +114,7 @@ namespace SCP343
             scp343.Revive343 = Cfg.scp343_max_revive_count;
             scp343.HealCooldown = 20;
             scp343.Player.Tag = " scp343-knuckles";
+            scp343.Player.BlockSpawnTeleport = true;
             badges.Add(scp343);
         }
 
@@ -123,17 +125,21 @@ namespace SCP343
 
         internal static bool Remove(Player player) => Remove(player.Id);
 
-        internal static bool Remove(int PlayerId) => badges.RemoveWhere(b => b.Id == PlayerId) > 0;
+        internal static bool Remove(int PlayerId)
+        {
+            Get(PlayerId).Player.BlockSpawnTeleport = false;
+            return badges.RemoveWhere(b => b.Id == PlayerId) > 0;
+        }
 
         internal static void Clear() => badges.Clear();
         /// <summary>
         /// This returns if <see cref="Player"/> is scp343 or isn`t
         /// </summary>
-        public static bool Contains(Player player) => badges.Any(b => b.Id == player.Id);
+        public static bool Contains(Player player) => Contains(player.Id);
         /// <summary>
         /// This returns if someone or all <see cref="Player"/> is scp343 or isn`t
         /// </summary>
-        public static bool Contains(bool allcontains = false, params Player[] players) => allcontains ? players.All(p => p.IsSCP343()) : players.Any(p => p.IsSCP343());
+        public static bool Contains(bool allcontains = false, params Player[] players) => allcontains ? players.All(ExtentionMethods.IsSCP343) : players.Any(ExtentionMethods.IsSCP343);
 
         /// <summary>
         /// This returns if <see cref="Player.Id"/> is scp343 or isn`t
@@ -153,7 +159,7 @@ namespace SCP343
         /// Get Badge by <see cref="Player"/>
         /// </summary>
         /// <returns><seealso cref="Badge"/></returns>
-        public static Badge Get(Player player) => Get(b => b.Id == player.Id);
+        public static Badge Get(Player player) => Get(player.Id);
 
         /// <summary>
         /// Get Badge by <see cref="Player.Id"/> 
