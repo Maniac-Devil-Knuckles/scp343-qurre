@@ -1,12 +1,8 @@
-﻿using System;
-using Qurre.API;
+﻿using Qurre.API;
 using Qurre.API.Events;
 using HarmonyLib;
 using UnityEngine;
-using Interactables.Interobjects.DoorUtils;
-using System.Collections.Generic;
 using System.Linq;
-
 namespace SCP343.Patches
 {
     [HarmonyPatch(typeof(Scp079PlayerScript), "UserCode_CmdInteract")]

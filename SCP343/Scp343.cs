@@ -8,12 +8,9 @@ using Scps914 = Qurre.Events.Scp914;
 using SCP106 = Qurre.Events.Scp106;
 using WARHEAD = Qurre.Events.Alpha;
 using SCP096 = Qurre.Events.Scp096;
+using Voice = Qurre.Events.Voice;
 using HarmonyLib;
 using System.Collections.Generic;
-using cmd = SCP343.Commands;
-using System.Linq;
-using System.ComponentModel;
-using MEC;
 using Qurre;
 using RemoteAdmin;
 using System.Reflection;
@@ -41,15 +38,14 @@ namespace SCP343
 
     public class Scp343 : Plugin
     {
-        internal static Eventhandlers Eventhandlers { get; private set; } = null;
+        private static Eventhandlers Eventhandlers { get; set; } = null;
         public override int Priority => 10;
         public override string Name => "SCP-343";
         public override string Developer => "Maniac Devil Knuckles";
-        public override Version Version => new Version(2, 7, 1);
-        public override Version NeededQurreVersion => new Version(1, 9, 1);
+        public override Version Version => new Version(2, 7, 2);
+        public override Version NeededQurreVersion => new Version(1, 9, 7);
         internal static Scp343 Instance { get; set; } = null;
-        internal Harmony Harmony { get; set; } = null;
-        
+        public Harmony harmony { get; internal set; } = null;
         internal int i = 0;
 
         public override void Enable()
@@ -65,8 +61,8 @@ namespace SCP343
                 try
                 {
                     //Config.betaitemsatspawn.ParseInventorySettings();
-                    Harmony = new Harmony("knuckles.scp343\nVersion " + i++);
-                    Harmony.PatchAll();
+                    harmony = new Harmony("knuckles.scp343\nVersion " + i++);
+                    harmony.PatchAll();
                     Log.Info("cool");
                 }
                 catch (Exception ex)
@@ -111,6 +107,8 @@ namespace SCP343
                 PLAYER.InteractGenerator += Eventhandlers.OnUnlockingGenerator;
                 PLAYER.InteractLocker += Eventhandlers.OnInteractLocker;
                 PLAYER.ScpAttack += Eventhandlers.OnScpAttack;
+                Voice.PressPrimaryChat += Eventhandlers.OnVoiceSpeak;
+                Voice.PressAltChat += Eventhandlers.OnAltVoiceSpeak;
             }
             catch (Exception ex)
             {
@@ -121,8 +119,8 @@ namespace SCP343
         public override void Disable()
         {
             Log.Info("Disabling SCP343 by Maniac Devil Knuckles");
-            Harmony.UnpatchAll(Harmony.Id);
-            Harmony = null;
+            harmony.UnpatchAll(harmony.Id);
+            harmony = null;
             PLAYER.Shooting -= Eventhandlers.OnShooting;
             PLAYER.TransmitPlayerData -= Eventhandlers.OnTransmitPlayerData;
             Qurre.Events.Round.Waiting -= Eventhandlers.WaitingForPlayers;
@@ -167,7 +165,7 @@ namespace SCP343
 
         Assembly Assembly => GetType().Assembly;
 
-        public void OnRegisteringCommands()
+        private void OnRegisteringCommands()
         {
             foreach (Type type in Assembly.GetTypes())
             {

@@ -2,9 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Qurre.API;
-using MEC;
 using UnityEngine;
-using System.Collections;
 namespace SCP343
 {
     public class Badge
@@ -77,16 +75,13 @@ namespace SCP343
         public bool CanHeck { get; internal set; } = false;
         public GameObject GameObject => Player.GameObject;
         public ReferenceHub ReferenceHub => Player.ReferenceHub;
-        public bool IsSCP343 
+        public bool IsSCP343
         {
             get => _IsScp343;
             private set
             {
                 _IsScp343 = value;
-				if (value)
-				{
-					scp343badgelist.Add(this);
-				}
+                if (value) scp343badgelist.Add(this);
             }
         }
         public string SCPName { get; internal set; } = "";
@@ -96,8 +91,7 @@ namespace SCP343
         public bool CanHeal => HealCooldown <= 0;
         public int HealCooldown { get; internal set; } = 120;
 
-        private bool _IsScp343;
-
+        private bool _IsScp343 = false;
     }
 
     public static class scp343badgelist
@@ -114,22 +108,12 @@ namespace SCP343
             scp343.Revive343 = Cfg.scp343_max_revive_count;
             scp343.HealCooldown = 20;
             scp343.Player.Tag = " scp343-knuckles";
-            scp343.Player.BlockSpawnTeleport = true;
             badges.Add(scp343);
-        }
-
-        internal static void Add(params Badge[] Badges)
-        {
-            foreach (Badge scp343 in Badges.Where(b => !Contains(b.Id))) Add(scp343);
         }
 
         internal static bool Remove(Player player) => Remove(player.Id);
 
-        internal static bool Remove(int PlayerId)
-        {
-            Get(PlayerId).Player.BlockSpawnTeleport = false;
-            return badges.RemoveWhere(b => b.Id == PlayerId) > 0;
-        }
+        internal static bool Remove(int PlayerId) => badges.RemoveWhere(b => b.Id == PlayerId) > 0;
 
         internal static void Clear() => badges.Clear();
         /// <summary>
@@ -139,7 +123,7 @@ namespace SCP343
         /// <summary>
         /// This returns if someone or all <see cref="Player"/> is scp343 or isn`t
         /// </summary>
-        public static bool Contains(bool allcontains = false, params Player[] players) => allcontains ? players.All(ExtentionMethods.IsSCP343) : players.Any(ExtentionMethods.IsSCP343);
+        public static bool Contains(bool allcontains = false, params Player[] players) => allcontains ? players.All(Contains) : players.Any(Contains);
 
         /// <summary>
         /// This returns if <see cref="Player.Id"/> is scp343 or isn`t
@@ -159,7 +143,7 @@ namespace SCP343
         /// Get Badge by <see cref="Player"/>
         /// </summary>
         /// <returns><seealso cref="Badge"/></returns>
-        public static Badge Get(Player player) => Get(player.Id);
+        public static Badge Get(Player player) => Get(b => b.Id == player.Id);
 
         /// <summary>
         /// Get Badge by <see cref="Player.Id"/> 

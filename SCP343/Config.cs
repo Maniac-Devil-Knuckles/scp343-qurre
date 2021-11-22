@@ -33,7 +33,7 @@ namespace SCP343
         [Description("How long people should beable to respawn themselves as d-class.")]
         public static int scp343_hecktime { get; internal set; } = 30;
         [Description("If scp343_heck is false, what should send in console")]
-        public static string scp343_heckerrordisable { get; internal set; } = ".heck343 is disabled by config";
+        public static string scp343_heckerrordisable { get; internal set; } = ".heck343 is disabled by Plugin.Configig";
         [Description("Should SPC-343 beable to interact with the nuke.")]
         public static bool scp343_nuke_interact { get; internal set; } = true;
         [Description("How long in seconds till SPC-343 can open any door.")]
@@ -112,55 +112,54 @@ namespace SCP343
 
         internal static void Reload()
         {
-            Log.Info("Loading configs.....");
+            Log.Info("Loading Plugin.Configigs.....");
             Plugin.Config.Reload();
-            var conf = Plugin.Config;
-            IsEnabled = conf.GetBool("scp343_IsEnabled", true, "IsEnabled?");
-            scp343_canescape = conf.GetBool("scp343_canescape", false);
-            scp343_alerttext = conf.GetString("scp343_alerttext", scp343_alerttext);
-            scp343_consoletext = conf.GetString("scp343_consoletext", scp343_consoletext);
-            scp343_alertbackd = conf.GetString("scp343_alertbackd", scp343_alertbackd);
-            scp343_alertheckerrortime = conf.GetString("scp343_alertheckerrortime", scp343_alertheckerrortime);
-            scp343_alertheckerrornot343 = conf.GetString("scp343_alertheckerrornot343", scp343_alertheckerrornot343);
-            scp343_hecktime = conf.GetInt("scp343_hecktime", scp343_hecktime);
-            scp343_nuke_interact = conf.GetBool("scp343_nuke_interact", scp343_nuke_interact);
-            scp343_spawnchance = conf.GetFloat("scp343_spawnchance", scp343_spawnchance);
-            scp343_itemdroplist = conf.GetListEnum("scp343_itemdroplist",scp343_itemdroplist);
-            scp343_opendoortime = conf.GetInt("scp343_opendoortime", scp343_opendoortime);
-            scp343_itemstoconvert = conf.GetListEnum("scp343_itemstoconvert", scp343_itemstoconvert);
-            scp343_converteditems = conf.GetListEnum("scp343_converteditems", scp343_converteditems);
-            scp343_itemsatspawn = conf.GetListEnum("scp343_itemsatspawn", scp343_itemsatspawn);
-            lift_moving_speed = conf.GetFloat("scp343_lift_moving_speed", lift_moving_speed);
-            scp343_canopenanydoor = conf.GetBool("scp343_canopenanydoor", scp343_canopenanydoor);
-            scp343_alert = conf.GetBool("scp343_alert", true);
-            scp343_console = conf.GetBool("scp343_console", true);
-            scp343_heck = conf.GetBool("scp343_heck", scp343_heck);
-            scp343_heckerrordisable = conf.GetString("scp343_heckerrordisable", scp343_heckerrordisable);
-            scp343_itemconverttoggle = conf.GetBool("scp343_itemconverttoggle", scp343_itemconverttoggle);
-            minplayers = conf.GetInt("scp343_minplayers", minplayers);
-            scp343_unitname = conf.GetString("scp343_unitname", scp343_unitname);
-            scp343_activating_tesla_in_range = conf.GetBool("scp343_activating_tesla_in_range", scp343_activating_tesla_in_range, "If scp343 in range of the tesla");
-            scp343_invisible_for_173 = conf.GetBool("scp343_invisible_for_173", false);
-            scp343_turned_for_scp173_andscp096 = conf.GetBool("scp343_turned_for_scp173_andscp096", true);
-            scp343_show_timer_when_can_open_door = conf.GetBool("scp343_show_timer_when_can_open_door", false);
-            scp343_text_show_timer_when_can_open_door = conf.GetString("scp343_text_show_timer_when_can_open_door", scp343_text_show_timer_when_can_open_door);
-            scp343_interact_scp914 = conf.GetBool("scp343_interact_scp914", false, "Can scp-343 interact with scp-914");
-            scp343_min_heal_players = conf.GetInt("scp343_min_heal_players", 30);
-            scp343_max_heal_players = conf.GetInt("scp343_max_heal_players", 70);
-            scp343_can_use_TranquilizerGun = conf.GetBool("scp343_can_use_TranquilizerGun", true);
-            scp343_itemscannotdrop = conf.GetListEnum("scp343_itemscannotdrop", scp343_itemscannotdrop);
-            scp343_notfoundplayer = conf.GetString("scp343_notfoundplayer", scp343_notfoundplayer);
-            scp343_teleport_to_player = conf.GetString("scp343_teleport_to_player", scp343_teleport_to_player);
-            scp343_healplayer = conf.GetString("scp343_healplayer", scp343_healplayer);
-            scp343_cooldown = conf.GetString("scp343_cooldown", scp343_cooldown);
-            scp343_cannotrevive = conf.GetString("scp343_cannotrevive", scp343_cannotrevive);
-            scp343_playerwhorevived = conf.GetString("scp343_playerwhorevived", scp343_playerwhorevived);
-            scp343_revive_text = conf.GetString("scp343_revive_text", scp343_revive_text);
-            scp343_youmustexit914 = conf.GetString("scp343_youmustexit914", scp343_youmustexit914);
-            scp343_max_revive_count = conf.GetInt("scp343_max_revive_count", 3, "How many SCP-343 can revive players?");
-            scp343_can_visibled_while_speaking = conf.GetBool("scp343_can_visibled_while_speaking", true);
-            scp343_HealCooldown = conf.GetInt("scp343_heal_cooldown", 120, "Cooldown after healing players");
-            scp343_end_cooldown = conf.GetString("scp343_end_cooldown", scp343_end_cooldown);
+            IsEnabled = Plugin.Config.GetBool("scp343_IsEnabled", true, "IsEnabled?");
+            scp343_canescape = Plugin.Config.GetBool("scp343_canescape", false);
+            scp343_alerttext = Plugin.Config.GetString("scp343_alerttext", scp343_alerttext);
+            scp343_consoletext = Plugin.Config.GetString("scp343_consoletext", scp343_consoletext);
+            scp343_alertbackd = Plugin.Config.GetString("scp343_alertbackd", scp343_alertbackd);
+            scp343_alertheckerrortime = Plugin.Config.GetString("scp343_alertheckerrortime", scp343_alertheckerrortime);
+            scp343_alertheckerrornot343 = Plugin.Config.GetString("scp343_alertheckerrornot343", scp343_alertheckerrornot343);
+            scp343_hecktime = Plugin.Config.GetInt("scp343_hecktime", scp343_hecktime);
+            scp343_nuke_interact = Plugin.Config.GetBool("scp343_nuke_interact", scp343_nuke_interact);
+            scp343_spawnchance = Plugin.Config.GetFloat("scp343_spawnchance", scp343_spawnchance);
+            scp343_itemdroplist = Plugin.Config.GetListEnum("scp343_itemdroplist",scp343_itemdroplist);
+            scp343_opendoortime = Plugin.Config.GetInt("scp343_opendoortime", scp343_opendoortime);
+            scp343_itemstoconvert = Plugin.Config.GetListEnum("scp343_itemstoconvert", scp343_itemstoconvert);
+            scp343_converteditems = Plugin.Config.GetListEnum("scp343_converteditems", scp343_converteditems);
+            scp343_itemsatspawn = Plugin.Config.GetListEnum("scp343_itemsatspawn", scp343_itemsatspawn);
+            lift_moving_speed = Plugin.Config.GetFloat("scp343_lift_moving_speed", lift_moving_speed);
+            scp343_canopenanydoor = Plugin.Config.GetBool("scp343_canopenanydoor", scp343_canopenanydoor);
+            scp343_alert = Plugin.Config.GetBool("scp343_alert", true);
+            scp343_console = Plugin.Config.GetBool("scp343_console", true);
+            scp343_heck = Plugin.Config.GetBool("scp343_heck", scp343_heck);
+            scp343_heckerrordisable = Plugin.Config.GetString("scp343_heckerrordisable", scp343_heckerrordisable);
+            scp343_itemconverttoggle = Plugin.Config.GetBool("scp343_itemconverttoggle", scp343_itemconverttoggle);
+            minplayers = Plugin.Config.GetInt("scp343_minplayers", minplayers);
+            scp343_unitname = Plugin.Config.GetString("scp343_unitname", scp343_unitname);
+            scp343_activating_tesla_in_range = Plugin.Config.GetBool("scp343_activating_tesla_in_range", scp343_activating_tesla_in_range, "If scp343 in range of the tesla");
+            scp343_invisible_for_173 = Plugin.Config.GetBool("scp343_invisible_for_173", false);
+            scp343_turned_for_scp173_andscp096 = Plugin.Config.GetBool("scp343_turned_for_scp173_andscp096", true);
+            scp343_show_timer_when_can_open_door = Plugin.Config.GetBool("scp343_show_timer_when_can_open_door", false);
+            scp343_text_show_timer_when_can_open_door = Plugin.Config.GetString("scp343_text_show_timer_when_can_open_door", scp343_text_show_timer_when_can_open_door);
+            scp343_interact_scp914 = Plugin.Config.GetBool("scp343_interact_scp914", false, "Can scp-343 interact with scp-914");
+            scp343_min_heal_players = Plugin.Config.GetInt("scp343_min_heal_players", 30);
+            scp343_max_heal_players = Plugin.Config.GetInt("scp343_max_heal_players", 70);
+            scp343_can_use_TranquilizerGun = Plugin.Config.GetBool("scp343_can_use_TranquilizerGun", true);
+            scp343_itemscannotdrop = Plugin.Config.GetListEnum("scp343_itemscannotdrop", scp343_itemscannotdrop);
+            scp343_notfoundplayer = Plugin.Config.GetString("scp343_notfoundplayer", scp343_notfoundplayer);
+            scp343_teleport_to_player = Plugin.Config.GetString("scp343_teleport_to_player", scp343_teleport_to_player);
+            scp343_healplayer = Plugin.Config.GetString("scp343_healplayer", scp343_healplayer);
+            scp343_cooldown = Plugin.Config.GetString("scp343_cooldown", scp343_cooldown);
+            scp343_cannotrevive = Plugin.Config.GetString("scp343_cannotrevive", scp343_cannotrevive);
+            scp343_playerwhorevived = Plugin.Config.GetString("scp343_playerwhorevived", scp343_playerwhorevived);
+            scp343_revive_text = Plugin.Config.GetString("scp343_revive_text", scp343_revive_text);
+            scp343_youmustexit914 = Plugin.Config.GetString("scp343_youmustexit914", scp343_youmustexit914);
+            scp343_max_revive_count = Plugin.Config.GetInt("scp343_max_revive_count", 3, "How many SCP-343 can revive players?");
+            scp343_can_visibled_while_speaking = Plugin.Config.GetBool("scp343_can_visibled_while_speaking", true);
+            scp343_HealCooldown = Plugin.Config.GetInt("scp343_heal_cooldown", 120, "Cooldown after healing players");
+            scp343_end_cooldown = Plugin.Config.GetString("scp343_end_cooldown", scp343_end_cooldown);
         }
     }
 }

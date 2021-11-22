@@ -16,12 +16,7 @@ namespace SCP343
 
         public static bool IsSCP343(this Player player) => scp343badgelist.Contains(player);
 
-        public static Badge GetSCPBadge(this Player player)
-        {
-            Badge badge = null;
-            if (player.IsSCP343()) badge = scp343badgelist.Get(player);
-            return badge;
-        }
+        public static Badge GetSCPBadge(this Player player) => player.IsSCP343() ? scp343badgelist.Get(player) : null;
 
         public static List<T> GetListEnum<T>(this Config config, string key, List<T> def, string comment = "") where T: struct
         {
