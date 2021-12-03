@@ -42,7 +42,7 @@ namespace SCP343
         public override int Priority => 10;
         public override string Name => "SCP-343";
         public override string Developer => "Maniac Devil Knuckles";
-        public override Version Version => new Version(2, 8, 3);
+        public override Version Version => new Version(3, 0, 0);
         public override Version NeededQurreVersion => new Version(1, 10, 0);
         internal static Scp343 Instance { get; set; } = null;
         public Harmony harmony { get; internal set; } = null;
