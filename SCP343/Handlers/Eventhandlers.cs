@@ -667,6 +667,7 @@ namespace SCP343.Handlers
         public void OnVoiceSpeak(PressPrimaryChatEvent ev)
         {
             if (!ev.Player.IsSCP343()) return;
+            if (!ev.Player.GetSCPBadge().IsInvisible) return;
             if ((!ev.Value && ev.Player.Invisible) || (ev.Value && !ev.Player.Invisible)) ev.Player.Invisible = !ev.Player.Invisible;
         }
 
