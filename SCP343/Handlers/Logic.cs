@@ -57,7 +57,7 @@ namespace SCP343.Handlers
             player.Invisible = true;
             player.GodMode = true;
             player.Broadcast(Cfg.scp343_youweretranq, 4);
-            Qurre.API.Controllers.Ragdoll ragdoll = Qurre.API.Controllers.Ragdoll.Create(player.Role, player.Position, player.CameraTransform.rotation, default, new PlayerStats.HitInfo(0, "SCP-343", DamageTypes.None, player.Id, true), false, player);
+            Qurre.API.Controllers.Ragdoll ragdoll = Qurre.API.Controllers.Ragdoll.Create(player.Role, player.Position, player.CameraTransform.rotation, new PlayerStatsSystem.CustomReasonDamageHandler("tranquilizer", 0), "SCP-343", player.Id);
             Vector3 pos = player.Position;
             player.Position = new Vector3(1, 1, 1);
             yield return Timing.WaitForSeconds(5f);
@@ -69,10 +69,9 @@ namespace SCP343.Handlers
 
         internal static bool adminsor343(Player player)
         {
-            bool flag = false;
-            if (player.IsSCP343()) flag = true;
-            if (player.Sender.CheckPermission(PlayerPermissions.AdminChat)) flag = true;
-            return flag;
+            if (player.IsSCP343()) return true;
+            if (player.Sender.CheckPermission(PlayerPermissions.AdminChat)) return true;
+            return false;
         }
 
         internal static IEnumerator<float> WhenOpenDoor(Player player)

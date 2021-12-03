@@ -5,9 +5,9 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{5F26DF2B-E7BD-417A-9A42-581C37061823}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <RootNamespace>scp-343</RootNamespace>
+    <RootNamespace>SCP343</RootNamespace>
     <AssemblyName>SCP343</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -32,7 +32,7 @@
       <HintPath>..\..\..\Downloads\Exiled\EXILED\Plugins\dependencies\System.ComponentModel.DataAnnotations.dll</HintPath>
     </Reference>
     <Reference Include="Qurre">
-      <HintPath>..\packages\Qurre.1.9.9\lib\net472\Qurre.dll</HintPath>
+      <HintPath>packages\Qurre.1.10.1\lib\net472\Qurre.dll</HintPath>
     </Reference>
     <Reference Include="NorthwoodLib">
       <HintPath>..\..\Managed\NorthwoodLib.dll</HintPath>
@@ -73,10 +73,10 @@
     <Compile Include="Commands\Spawn343.cs" />
     <Compile Include="scp343badge.cs" />
     <Compile Include="Handlers\Logic.cs" />
-    <Compile Include="patches\EscapePatch.cs" />
-    <Compile Include="patches\Scp079InteractTesla.cs" />
+    <Compile Include="Patches\EscapePatch.cs" />
+    <Compile Include="Patches\Scp079InteractTesla.cs" />
     <Compile Include="Handlers\Eventhandlers.cs" />
-    <Compile Include="patches\PatchAmmo.cs" />
+    <Compile Include="Patches\PatchAmmo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="qurre_ol.ico" />

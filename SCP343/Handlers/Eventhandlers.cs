@@ -417,17 +417,16 @@ namespace SCP343.Handlers
             if (ev.Player.IsSCP343()) ev.Allowed = false;
         }
 
-        private static Vector3 FindLookRotation(Vector3 player, Vector3 target) => (target - player).normalized;
+        private static float FindLookRotation(Vector3 player, Vector3 target) => Quaternion.LookRotation((target - player).normalized).eulerAngles.y;
 
         internal void OnTransmitPlayerData(TransmitPlayerDataEvent ev)
         {
             if (ev.PlayerToShow.IsSCP343())
             {
-                if (debug) Log.Info(ev.PlayerToShow.Radio.UsingVoiceChat);
+                //if (debug) Log.Info(ev.PlayerToShow.Radio.UsingVoiceChat);
                 if (ev.Player.Role == RoleType.Scp096 || ev.Player.Role == RoleType.Scp173)
                 {
-                    Vector3 vector = FindLookRotation(ev.Player.Position, ev.PlayerToShow.Position);
-                    ev.Rotation = Quaternion.LookRotation(vector).eulerAngles.y;
+                    ev.Rotation = FindLookRotation(ev.Player.Position, ev.PlayerToShow.Position);
                 }
             }
         }
@@ -437,9 +436,9 @@ namespace SCP343.Handlers
             if (scp343badgelist.Count() < 1) return;
             if (ev.Player.Scp096Controller.Targets.Count <= 1)
             {
-                if (ev.Player.Scp096Controller.Targets.All(p => p.IsSCP343())) ev.Allowed = false;
+                if (ev.Player.Scp096Controller.Targets.All(ExtentionMethods.IsSCP343)) ev.Allowed = false;
             }
-            foreach (Player player in ev.Player.Scp096Controller.Targets.Where(p => p.IsSCP343())) ev.Player.Scp096Controller.RemoveTarget(player);
+            foreach (Player player in ev.Player.Scp096Controller.Targets.Where(ExtentionMethods.IsSCP343)) ev.Player.Scp096Controller.RemoveTarget(player);
         }
 
         internal void OnAddingTarget(AddTargetEvent ev)
@@ -489,6 +488,7 @@ namespace SCP343.Handlers
             {
                 ev.Player.Invisible = !ev.Player.Invisible;
                 ev.Player.Broadcast(ev.Player.Invisible ? Cfg.scp343_is_invisible_true : Cfg.scp343_is_invisible_false, 10, true);
+                ev.Player.GetSCPBadge().IsInvisible = ev.Player.Invisible;
             }
         }
 
@@ -591,6 +591,7 @@ namespace SCP343.Handlers
             {
                 ev.Player.Invisible = !ev.Player.Invisible;
                 ev.Player.Broadcast(ev.Player.Invisible ? Cfg.scp343_is_invisible_true : Cfg.scp343_is_invisible_false, 10, true);
+                ev.Player.GetSCPBadge().IsInvisible = ev.Player.Invisible;
             }
         }
 
@@ -673,6 +674,7 @@ namespace SCP343.Handlers
         {
             if (!ev.Player.IsSCP343()) return;
             if (!ev.Player.HasItem(ItemType.Radio)) return;
+            if (!ev.Player.GetSCPBadge().IsInvisible) return;
             if ((!ev.Value && ev.Player.Invisible) || (ev.Value && !ev.Player.Invisible)) ev.Player.Invisible = !ev.Player.Invisible;
         }
     }

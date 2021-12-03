@@ -75,6 +75,7 @@ namespace SCP343
         public bool CanHeck { get; internal set; } = false;
         public GameObject GameObject => Player.GameObject;
         public ReferenceHub ReferenceHub => Player.ReferenceHub;
+        public bool IsInvisible { get; internal set; } = false;
         public bool IsSCP343
         {
             get => _IsScp343;
