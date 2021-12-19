@@ -6,59 +6,51 @@ namespace SCP343
 {
     public static class Cfg
     {
-        [Description("Indicates whether the plugin is enabled or not")]
         public static bool IsEnabled { get; internal set; } = true;
 
-        [Description("scp343 can escape?")]
         public static bool scp343_canescape { get; internal set; } = false;
 
-        [Description("scp343 can open doors?")]
         public static bool scp343_canopenanydoor { get; internal set; } = true;
 
-        [Description("What broadcasted who become scp343")]
         public static string scp343_alerttext { get; internal set; } = "You are <color=red>SCP-343</color>. Check your client console on [~]";
 
-        [Description("Will or will not broadcast")]
         public static bool scp343_alert { get; internal set; } = true;
-        [Description("What 343 is shown if scp343_broadcast is true.")]
-        public static string scp343_consoletext { get; internal set; } = "You are <color=red>scp343</color>:\n\n1. You can open all doors;\n\n2. You can transform weapons to first and kit;\n\n 3. You have a god mode.\n\n4. You can teleport to player by sending console command .tp343 or drop coin\n\n5.In 1 metre away you , you can heal players by sending command .heal343 or dropping adrenaline\n6. In 1 meter away you, you can revive any dead player sending command .revive343 or dropping flashlight\n7. You can be invisible sending command .invis\nOr you can use items dropping instead of sending commands";
-        [Description("What 343 is shown if scp343 will back to usual class d")]
+
+        public static string scp343_consoletext { get; internal set; } = "You are <color=red>scp343</color>:\n\n1. You can open all doors;\n\n2. You can transform weapons to first and kit;\n\n 3. You have a god mode.\n\n4. You can teleport to player by sending console command .tp343 or drop coin\n\n5.In 1 metre away you , you can heal players by sending command .heal343 or dropping adrenaline\n6. In 1 meter away you, you can revive any dead player sending command .revive343 or dropping flashlight\n7. You can be invisible sending command .invis\nOr you can use items dropping instead of sending commands. If you drop scp-330 and looking at human then will gift random item";
+
         public static string scp343_alertbackd { get; internal set; } = "You stopped being scp-343";
         public static string scp343_alertheckerrortime { get; internal set; } = "Time is left.";
         public static string scp343_alertheckerrornot343 { get; internal set; } = "Wait, you are not scp-343";
-        [Description("When 343 spawns should that person be given information about 343")]
+
         public static bool scp343_console { get; internal set; } = true;
-        [Description("Should players be allowed to use the .heck343 client command to respawn themselves as d-class within scp343_hecktime seconds of round start.")]
+
         public static bool scp343_heck { get; internal set; } = true;
-        [Description("How long people should beable to respawn themselves as d-class.")]
+
         public static int scp343_hecktime { get; internal set; } = 30;
-        [Description("If scp343_heck is false, what should send in console")]
-        public static string scp343_heckerrordisable { get; internal set; } = ".heck343 is disabled by Plugin.Configig";
-        [Description("Should SPC-343 beable to interact with the nuke.")]
+
+        public static string scp343_heckerrordisable { get; internal set; } = ".heck343 is disabled by config";
+
         public static bool scp343_nuke_interact { get; internal set; } = true;
-        [Description("How long in seconds till SPC-343 can open any door.")]
+
         public static int scp343_opendoortime { get; internal set; } = 30;
-        [Description("Should SPC-343 convert items?")]
+
         public static bool scp343_itemconverttoggle { get; internal set; } = true;
-        [Description("Percent chance for SPC-343 to spawn at the start of the round.")]
+
         public static float scp343_spawnchance { get; internal set; } = 30f;
-        [Description("What items SCP-343 drops instead of picking up.")]
+
         public static List<ItemType> scp343_itemdroplist { get; internal set; } = new List<ItemType> { ItemType.KeycardJanitor, ItemType.KeycardScientist, ItemType.KeycardResearchCoordinator, ItemType.KeycardZoneManager, ItemType.KeycardGuard, ItemType.KeycardNTFOfficer, ItemType.KeycardContainmentEngineer, ItemType.KeycardNTFLieutenant, ItemType.KeycardNTFCommander, ItemType.KeycardFacilityManager, ItemType.KeycardChaosInsurgency , ItemType.KeycardO5, ItemType.Flashlight, ItemType.Radio, ItemType.Ammo556x45, ItemType.Ammo44cal, ItemType.Ammo762x39, ItemType.Ammo9x19, ItemType.SCP268, ItemType.Adrenaline };
-        [Description("What items SCP-343 converts.")]
+
         public static List<ItemType> scp343_itemstoconvert { get; internal set; } = new List<ItemType> { ItemType.GunCOM15, ItemType.Medkit, ItemType.MicroHID, ItemType.GunE11SR, ItemType.GunCrossvec, ItemType.GunFSP9, ItemType.GunLogicer, ItemType.GrenadeHE, ItemType.GrenadeFlash, ItemType.GunCOM18, ItemType.Coin };
-        [Description("What a item should be converted to.")]
+
         public static List<ItemType> scp343_converteditems { get; internal set; } = new List<ItemType> { ItemType.Medkit };
-        [Description("Minimum players for spawn SCP-343")]
+
         public static int minplayers { get; internal set; } = 5;
-        [Description("What give scp-343 on spawn")]
-        public static List<ItemType> scp343_itemsatspawn { get; internal set; } = new List<ItemType> { ItemType.Coin, ItemType.Adrenaline, ItemType.Flashlight, ItemType.SCP268, ItemType.GunCOM15 };
-        [Description("Moving Speed lift for all players")]
+
+        public static List<ItemType> scp343_itemsatspawn { get; internal set; } = new List<ItemType> { ItemType.Coin, ItemType.Adrenaline, ItemType.Flashlight, ItemType.SCP268, ItemType.GunCOM15, ItemType.SCP330 };
+
         public static float lift_moving_speed { get; internal set; } = 6.5f;
 
-        [Description("UnitName for scp-343")]
         public static string scp343_unitname { get; internal set; } = "SCP-343";
-
-        [Description("Tesla is activating if SCP-343 in range?")]
 
         public static bool scp343_activating_tesla_in_range { get; internal set; } = true;
 
@@ -78,7 +70,7 @@ namespace SCP343
 
         public static bool scp343_can_use_TranquilizerGun { get; internal set; } = true;
 
-        public static List<ItemType> scp343_itemscannotdrop { get; internal set; } = new List<ItemType> { ItemType.Coin, ItemType.Adrenaline, ItemType.Flashlight, ItemType.SCP268, ItemType.GunCOM15 };
+        public static List<ItemType> scp343_itemscannotdrop { get; internal set; } = new List<ItemType> { ItemType.Coin, ItemType.Adrenaline, ItemType.Flashlight, ItemType.SCP268, ItemType.GunCOM15, ItemType.SCP330 };
 
         public static string scp343_notfoundplayer { get; internal set; } = "Not found players!";
 
@@ -100,7 +92,7 @@ namespace SCP343
 
         public static int scp343_max_revive_count { get; internal set; } = 3;
 
-        public static string   scp343_is_invisible_true { get; internal set; } = "You are now is invisible for all";
+        public static string scp343_is_invisible_true { get; internal set; } = "You are now is invisible for all";
 
         public static string scp343_is_invisible_false { get; internal set; } = "You are not is invisible for all";
 
@@ -110,9 +102,17 @@ namespace SCP343
 
         public static string scp343_end_cooldown { get; internal set; } = "You can now heal another players!";
 
+        public static ushort scp343_max_gifts { get; internal set; } = 10;
+
+        public static List<ItemType> Gifts { get; internal set; } = new List<ItemType>() { ItemType.Coin, ItemType.Medkit, ItemType.KeycardContainmentEngineer };
+
+        public static string scp343_gift_message { get; internal set; } = "You gave %target% %item% as a gift";
+
+        public static string player_gift_message { get; internal set; } = "%player% gave %item% as a gift";
+
         internal static void Reload()
         {
-            Log.Info("Loading Plugin.Configigs.....");
+            Log.Info("Loading Configs scp-343.....");
             Plugin.Config.Reload();
             IsEnabled = Plugin.Config.GetBool("scp343_IsEnabled", true, "IsEnabled?");
             scp343_canescape = Plugin.Config.GetBool("scp343_canescape", false);
@@ -160,6 +160,10 @@ namespace SCP343
             scp343_can_visibled_while_speaking = Plugin.Config.GetBool("scp343_can_visibled_while_speaking", true);
             scp343_HealCooldown = Plugin.Config.GetInt("scp343_heal_cooldown", 120, "Cooldown after healing players");
             scp343_end_cooldown = Plugin.Config.GetString("scp343_end_cooldown", scp343_end_cooldown);
+            scp343_max_gifts = Plugin.Config.GetUShort("scp343_max_gifts", scp343_max_gifts, "How many scp343 can give human a gift?");
+            Gifts = Plugin.Config.GetListEnum("scp343_gifts", Gifts);
+            scp343_gift_message = Plugin.Config.GetString("scp343_gift_message", scp343_gift_message);
+            player_gift_message = Plugin.Config.GetString("scp343_gift_message_to_player", scp343_gift_message);
         }
     }
 }

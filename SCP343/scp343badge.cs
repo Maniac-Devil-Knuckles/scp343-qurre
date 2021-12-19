@@ -92,6 +92,8 @@ namespace SCP343
         public bool CanHeal => HealCooldown <= 0;
         public int HealCooldown { get; internal set; } = 120;
 
+        public ushort Presents { get; internal set; }
+
         private bool _IsScp343 = false;
     }
 
@@ -108,13 +110,18 @@ namespace SCP343
             if (Contains(scp343.Id)) return;
             scp343.Revive343 = Cfg.scp343_max_revive_count;
             scp343.HealCooldown = 20;
+            scp343.Presents = Cfg.scp343_max_gifts;
             scp343.Player.Tag = " scp343-knuckles";
             badges.Add(scp343);
         }
 
         internal static bool Remove(Player player) => Remove(player.Id);
 
-        internal static bool Remove(int PlayerId) => badges.RemoveWhere(b => b.Id == PlayerId) > 0;
+        internal static bool Remove(int PlayerId)
+        {
+            Get(PlayerId).Player.Tag = "";
+            return badges.RemoveWhere(b => b.Id == PlayerId) > 0;
+        }
 
         internal static void Clear() => badges.Clear();
         /// <summary>

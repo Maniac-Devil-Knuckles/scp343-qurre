@@ -15,7 +15,9 @@ namespace SCP343.Handlers
     public partial class Eventhandlers
     {
         private readonly Scp343 plugin;
-        private Dictionary<int, Badge> deadPlayers { get; } = new Dictionary<int, Badge>();
+        private readonly Dictionary<int, Badge> deadPlayers = new Dictionary<int, Badge>();
+        private readonly Dictionary<int, bool> invisiblePlayers = new Dictionary<int, bool>();
+
         internal Eventhandlers(Scp343 plugin)
         {
             this.plugin = plugin;
@@ -29,7 +31,9 @@ namespace SCP343.Handlers
         internal void WaitingForPlayers()
         {
             Map.ElevatorsMovingSpeed = Cfg.lift_moving_speed;
-            if (string.IsNullOrEmpty(Cfg.scp343_unitname))
+            deadPlayers.Clear();
+            invisiblePlayers.Clear();
+            if (!string.IsNullOrEmpty(Cfg.scp343_unitname))
             {
                 Round.AddUnit(TeamUnitType.ClassD, "Class D");
                 Round.AddUnit(TeamUnitType.ClassD, Cfg.scp343_unitname);
@@ -46,8 +50,13 @@ namespace SCP343.Handlers
         {
             if (deadPlayers.ContainsKey(ev.Player.Id)) deadPlayers.Remove(ev.Player.Id);
             if (scp343badgelist.Count() < 1) return;
-            if (ev.Player?.UserId == null || ev.Player.IsHost || ev.Player.Ip == "127.0.0.WAN" || ev.Player.Ip == "127.0.0.1") return;
             if (ev.Player.IsSCP343()) KillSCP343(ev.Player);
+        }
+
+        internal void OnJoin(JoinEvent ev)
+        {
+            if (ev.Player.IsHost) return;
+            invisiblePlayers.Add(ev.Player.Id, false);
         }
 
         internal void OnShooting(ShootingEvent ev)
@@ -94,7 +103,7 @@ namespace SCP343.Handlers
             try
             {
                 if (ev.Name.ToLower() == "debug_343" && ev.Player.UserId == "295581341939007489@discord") debug = !debug;
-                if (ev.Name.ToLower() == "heck343")
+                else if (ev.Name.ToLower() == "heck343")
                 {
                     ev.Allowed = false;
                     if (ev.Player.IsSCP343())
@@ -164,9 +173,9 @@ namespace SCP343.Handlers
                         {
                             int count = 0;
                             int hpset = Extensions.Random.Next(Cfg.scp343_min_heal_players, Cfg.scp343_max_heal_players);
-                            foreach (var ply in Player.List.Where(p => p.Role != RoleType.Spectator && !p.IsSCP343()))
+                            foreach (var ply in Player.List)
                             {
-                                if (ply.IsSCP343()) continue;
+                                if (ply.IsSCP343() || ply.Role == RoleType.Spectator) continue;
                                 bool boo = Vector3.Distance(ev.Player.Position, ply.Position) <= 5f;
                                 if (boo) ply.SetHP(hpset);
                                 count++;
@@ -183,7 +192,7 @@ namespace SCP343.Handlers
                         }
                         else
                         {
-                            ev.ReturnMessage = Cfg.scp343_cooldown.Replace("%seconds%",ev.Player.GetSCPBadge().HealCooldown.ToString());
+                            ev.ReturnMessage = Cfg.scp343_cooldown.Replace("%seconds%", ev.Player.GetSCPBadge().HealCooldown.ToString());
                         }
                         ev.Player.ClearBroadcasts();
                         ev.Player.Broadcast(10, ev.ReturnMessage);
@@ -206,8 +215,9 @@ namespace SCP343.Handlers
                         else
                         {
                             Player player = null;
-                            foreach (Player ply in Player.List.Where(p => deadPlayers.ContainsKey(p.Id) && p.Role == RoleType.Spectator))
+                            foreach (Player ply in Player.Get(RoleType.Spectator))
                             {
+                                if (!deadPlayers.ContainsKey(ply.Id)) continue;
                                 bool boo = Vector3.Distance(ev.Player.Position, deadPlayers[player.Id].Pos) <= 3f;
                                 if (!boo) continue;
                                 player = ply;
@@ -237,15 +247,15 @@ namespace SCP343.Handlers
                     ev.Allowed = false;
                     if (!adminsor343(ev.Player))
                     {
-                        ev.ReturnMessage = "You are not SCP-343";
+                        ev.ReturnMessage = Cfg.scp343_alertheckerrornot343;
                         return;
                     }
                     ev.Player.Invisible = !ev.Player.Invisible;
                     ev.ReturnMessage = ev.Player.Invisible ? Cfg.scp343_is_invisible_true : Cfg.scp343_is_invisible_false;
                     if (!ev.Player.IsSCP343())
                     {
+                        invisiblePlayers[ev.Player.Id] = ev.Player.Invisible;
                         if (!ev.Player.HasItem(ItemType.Flashlight)) ev.Player.AddItem(ItemType.Flashlight);
-                        if (ev.Player.Role == RoleType.Tutorial) return;
                         Vector3 pos = ev.Player.Position;
                         ev.Player.Role = RoleType.Tutorial;
                         Timing.CallDelayed(0.6f, () =>
@@ -362,7 +372,7 @@ namespace SCP343.Handlers
             int chance = count < 2 ? 10000 : Extensions.Random.Next(1, 100);
             if (chance >= Cfg.scp343_spawnchance) return;
             if (Cfg.minplayers > count) return;
-            List<Player> ClassDList = Player.List.Where(p => p.Role == RoleType.ClassD).ToList();
+            List<Player> ClassDList = Player.Get(RoleType.ClassD).ToList();
             Player player = ClassDList[Extensions.Random.Next(ClassDList.Count)];
             ClassDList.Remove(player);
             Timing.CallDelayed(0.5f, () =>
@@ -423,7 +433,6 @@ namespace SCP343.Handlers
         {
             if (ev.PlayerToShow.IsSCP343())
             {
-                //if (debug) Log.Info(ev.PlayerToShow.Radio.UsingVoiceChat);
                 if (ev.Player.Role == RoleType.Scp096 || ev.Player.Role == RoleType.Scp173)
                 {
                     ev.Rotation = FindLookRotation(ev.Player.Position, ev.PlayerToShow.Position);
@@ -472,10 +481,10 @@ namespace SCP343.Handlers
 
         public void OnUpgrade(UpgradeEvent ev)
         {
-            if (ev.Players.Any(p => p.IsSCP343()))
+            if (ev.Players.Any(ExtentionMethods.IsSCP343))
             {
                 ev.Allowed = false;
-                foreach (Player player in ev.Players.Where(p => p.IsSCP343())) player.Broadcast(Cfg.scp343_youmustexit914, 10, true);
+                foreach (Player player in ev.Players.Where(ExtentionMethods.IsSCP343)) player.Broadcast(Cfg.scp343_youmustexit914, 10, true);
             }
         }
 
@@ -593,6 +602,20 @@ namespace SCP343.Handlers
                 ev.Player.Broadcast(ev.Player.Invisible ? Cfg.scp343_is_invisible_true : Cfg.scp343_is_invisible_false, 10, true);
                 ev.Player.GetSCPBadge().IsInvisible = ev.Player.Invisible;
             }
+            else if (ev.Item.Type == ItemType.SCP330)
+            {
+                Player target = Player.Get(ev.Player.LookingAt);
+                if (Cfg.Gifts.Count == 0|| ev.Player.GetSCPBadge().Presents <= 0 ||  target == null || target.Team == Team.SCP || target.Team == Team.RIP) text = "No presents";
+                else
+                {
+                    ItemType itemType = Cfg.Gifts[Extensions.Random.Next(Cfg.Gifts.Count)];
+                    text = Cfg.scp343_gift_message.Replace("%target%", target.Nickname).Replace("%item%", itemType.ToString());
+                    ev.Player.Broadcast(text, 10, true);
+                    text = Cfg.player_gift_message.Replace("%player%", ev.Player.Nickname).Replace("%item%", itemType.ToString());
+                    target.Broadcast(text, 10, true);
+                    target.AddItem(itemType);
+                }
+            }
         }
 
         internal void OnUnlockingGenerator(InteractGeneratorEvent ev)
@@ -613,10 +636,10 @@ namespace SCP343.Handlers
                 if (Cfg.scp343_activating_tesla_in_range)
                 {
                     TeslaGate teslaGate = ev.Tesla.GameObject.GetComponent<TeslaGate>();
-                    IEnumerable<Player> Players = Player.List.Where(x => x.Role != RoleType.Spectator && teslaGate.PlayerInRange(x.ReferenceHub));
-                    if (Players.Count() > 0)
+                    List<Player> Players = Player.List.Where(x => x.Role != RoleType.Spectator && teslaGate.PlayerInRange(x.ReferenceHub)).ToList();
+                    if (Players.Count > 0)
                     {
-                        if (Players.Any(p => p.IsSCP343())) ev.Triggerable = false;
+                        if (Players.Any(ExtentionMethods.IsSCP343)) ev.Triggerable = false;
                     }
                 }
                 else if (ev.Player.IsSCP343()) ev.Triggerable = false;
@@ -637,46 +660,33 @@ namespace SCP343.Handlers
                     ev.Allowed = false;
                     return;
                 }
-                if (Cfg.scp343_itemdroplist.IndexOf(ev.Pickup.Type) > 0)
+                if (Cfg.scp343_itemdroplist.Contains(ev.Pickup.Type))
                 {
                     ev.Allowed = false;
                 }
-                else if (Cfg.scp343_itemstoconvert.IndexOf(ev.Pickup.Type) > 0)
+                else if (Cfg.scp343_itemstoconvert.Contains(ev.Pickup.Type))
                 {
-                    if (!Cfg.scp343_itemconverttoggle)
-                    {
-                        ev.Allowed = false;
-                        return;
-                    }
                     ev.Allowed = false;
-                    foreach (int i in Cfg.scp343_converteditems)
-                    {
-                        if (i >= 0)
-                        {
-                            ev.Allowed = false;
-                            ev.Pickup.Destroy();
-                            ItemType item = (ItemType)i;
-                            ev.Player.AddItem(item);
-                        }
-                    }
+                    if (!Cfg.scp343_itemconverttoggle) return;
+
+                    ev.Pickup.Destroy();
+                    ev.Player.AddItem(Cfg.scp343_converteditems);
                 }
                 else ev.Allowed = true;
             }
         }
 
-        public void OnVoiceSpeak(PressPrimaryChatEvent ev)
+        internal void OnVoiceSpeak(PressPrimaryChatEvent ev)
         {
-            if (!ev.Player.IsSCP343()) return;
-            if (!ev.Player.GetSCPBadge().IsInvisible) return;
-            if ((!ev.Value && ev.Player.Invisible) || (ev.Value && !ev.Player.Invisible)) ev.Player.Invisible = !ev.Player.Invisible;
+            if (ev.Player.GetSCPBadge().IsInvisible || invisiblePlayers[ev.Player.Id])
+                if ((!ev.Value && ev.Player.Invisible) || (ev.Value && !ev.Player.Invisible)) ev.Player.Invisible = !ev.Player.Invisible;
         }
 
-        public void OnAltVoiceSpeak(PressAltChatEvent ev)
+        internal void OnAltVoiceSpeak(PressAltChatEvent ev)
         {
-            if (!ev.Player.IsSCP343()) return;
             if (!ev.Player.HasItem(ItemType.Radio)) return;
-            if (!ev.Player.GetSCPBadge().IsInvisible) return;
-            if ((!ev.Value && ev.Player.Invisible) || (ev.Value && !ev.Player.Invisible)) ev.Player.Invisible = !ev.Player.Invisible;
+            if (ev.Player.GetSCPBadge().IsInvisible || invisiblePlayers[ev.Player.Id])
+                if ((!ev.Value && ev.Player.Invisible) || (ev.Value && !ev.Player.Invisible)) ev.Player.Invisible = !ev.Player.Invisible;
         }
     }
 }

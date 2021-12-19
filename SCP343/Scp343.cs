@@ -9,6 +9,7 @@ using SCP106 = Qurre.Events.Scp106;
 using WARHEAD = Qurre.Events.Alpha;
 using SCP096 = Qurre.Events.Scp096;
 using Voice = Qurre.Events.Voice;
+using ROUND = Qurre.Events.Round;
 using HarmonyLib;
 using System.Collections.Generic;
 using Qurre;
@@ -42,8 +43,8 @@ namespace SCP343
         public override int Priority => 10;
         public override string Name => "SCP-343";
         public override string Developer => "Maniac Devil Knuckles";
-        public override Version Version => new Version(3, 0, 0);
-        public override Version NeededQurreVersion => new Version(1, 10, 0);
+        public override Version Version => new Version(3, 1, 0);
+        public override Version NeededQurreVersion => new Version(1, 10, 4);
         internal static Scp343 Instance { get; set; } = null;
         public Harmony harmony { get; internal set; } = null;
         internal int i = 0;
@@ -60,7 +61,6 @@ namespace SCP343
                 }
                 try
                 {
-                    //Config.betaitemsatspawn.ParseInventorySettings();
                     harmony = new Harmony("knuckles.scp343\nVersion " + i++);
                     harmony.PatchAll();
                     Log.Info("cool");
@@ -75,15 +75,16 @@ namespace SCP343
                 Eventhandlers = new Eventhandlers(this);
                 Log.Info("Enabling SCP343 by Maniac Devil Knuckles");
                 PLAYER.TransmitPlayerData += Eventhandlers.OnTransmitPlayerData;
+                PLAYER.Join += Eventhandlers.OnJoin;
                 PLAYER.Shooting += Eventhandlers.OnShooting;
-                Qurre.Events.Round.Waiting += Eventhandlers.WaitingForPlayers;
-                Qurre.Events.Round.Check += Eventhandlers.OnRoundEnding;
+                ROUND.Waiting += Eventhandlers.WaitingForPlayers;
+                ROUND.Check += Eventhandlers.OnRoundEnding;
                 PLAYER.TeslaTrigger += Eventhandlers.OnTriggeringTesla;
-                Qurre.Events.Round.Start += Eventhandlers.OnRoundStarted;
+                ROUND.Start += Eventhandlers.OnRoundStarted;
                 SERVER.SendingConsole += Eventhandlers.OnSendingConsoleCommand;
                 PLAYER.InteractDoor += Eventhandlers.OnInteractingDoor;
                 PLAYER.InteractLift += Eventhandlers.OnInteractingElevator;
-                Qurre.Events.Round.Restart += Eventhandlers.OnRestartingRound;
+                ROUND.Restart += Eventhandlers.OnRestartingRound;
                 PLAYER.Leave += Eventhandlers.OnPlayerLeft;
                 SCP106.Contain += Eventhandlers.OnContaining;
                 SCP096.Enrage += Eventhandlers.OnEnraging;
@@ -122,15 +123,16 @@ namespace SCP343
             harmony.UnpatchAll(harmony.Id);
             harmony = null;
             PLAYER.Shooting -= Eventhandlers.OnShooting;
+            PLAYER.Join -= Eventhandlers.OnJoin;
             PLAYER.TransmitPlayerData -= Eventhandlers.OnTransmitPlayerData;
-            Qurre.Events.Round.Waiting -= Eventhandlers.WaitingForPlayers;
-            Qurre.Events.Round.Check -= Eventhandlers.OnRoundEnding;
+            ROUND.Waiting -= Eventhandlers.WaitingForPlayers;
+            ROUND.Check -= Eventhandlers.OnRoundEnding;
             PLAYER.TeslaTrigger -= Eventhandlers.OnTriggeringTesla;
-            Qurre.Events.Round.Start -= Eventhandlers.OnRoundStarted;
+            ROUND.Start -= Eventhandlers.OnRoundStarted;
             SERVER.SendingConsole -= Eventhandlers.OnSendingConsoleCommand;
             PLAYER.InteractDoor -= Eventhandlers.OnInteractingDoor;
             PLAYER.InteractLift -= Eventhandlers.OnInteractingElevator;
-            Qurre.Events.Round.Restart -= Eventhandlers.OnRestartingRound;
+            ROUND.Restart -= Eventhandlers.OnRestartingRound;
             PLAYER.Leave -= Eventhandlers.OnPlayerLeft;
             SCP106.Contain -= Eventhandlers.OnContaining;
             SCP096.Enrage -= Eventhandlers.OnEnraging;
