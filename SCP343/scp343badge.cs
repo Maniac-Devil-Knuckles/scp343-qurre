@@ -100,10 +100,6 @@ namespace SCP343
     {
         private static readonly HashSet<Badge> badges = new HashSet<Badge>();
 
-        internal static IEnumerable<Player> List => ListBadges.Select(b => b.Player);
-
-        internal static IEnumerable<Badge> ListBadges => badges;
-
         internal static void Add(Badge scp343)
         {
             if (Contains(scp343.Id)) return;
@@ -144,36 +140,36 @@ namespace SCP343
         /// <summary>
         /// Count of <see cref="Scp343"/>
         /// </summary>
-        public static int Count(Func<Badge, bool> predicate) => ListBadges.Count(predicate);
+        public static int Count(Func<Badge, bool> predicate) => badges.Count(predicate);
 
         /// <summary>
         /// Get Badge by <see cref="Player"/>
         /// </summary>
         /// <returns><seealso cref="Badge"/></returns>
-        public static Badge Get(Player player) => Get(b => b.Id == player.Id);
+        public static Badge Get(Player player) => Contains(player) ? Get(b => b.Id == player.Id).First() : null;
 
         /// <summary>
         /// Get Badge by <see cref="Player.Id"/> 
         /// </summary>
         /// <returns><seealso cref="Badge"/></returns>
-        public static Badge Get(int PlayerId) => Get(b => b.Id == PlayerId);
+        public static Badge Get(int PlayerId) => Contains(PlayerId) ? Get(b => b.Id == PlayerId).First() : null;
 
         /// <summary>
         /// Get Badge by <see cref="GameObject"/>
         /// </summary>
         /// <returns><seealso cref="Badge"/></returns>
-        public static Badge Get(GameObject GameObject) => Get(b => b.GameObject == GameObject);
+        public static Badge Get(GameObject GameObject) => ReferenceHub.TryGetHub(GameObject,out ReferenceHub _) ? Get(b => b.GameObject == GameObject).First() : null;
 
         /// <summary>
         /// Get Badge by <see cref="ReferenceHub"/>
         /// </summary>
         /// <returns><seealso cref="Badge"/></returns>
-        public static Badge Get(ReferenceHub ReferenceHub) => Get(b => b.ReferenceHub == ReferenceHub);
+        public static Badge Get(ReferenceHub ReferenceHub) => ReferenceHub.GetAllHubs().ContainsValue(ReferenceHub) ? Get(b => b.ReferenceHub == ReferenceHub).First() : null;
 
         /// <summary>
         /// Get Badge by predicate
         /// </summary>
         /// <returns><seealso cref="Badge"/></returns>
-        public static Badge Get(Func<Badge, bool> predicate) => ListBadges.FirstOrDefault(predicate);
+        public static IEnumerable<Badge> Get(Func<Badge, bool> predicate) => badges.Where(predicate);
     }
 }

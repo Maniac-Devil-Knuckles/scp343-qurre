@@ -16,6 +16,7 @@ using Qurre;
 using RemoteAdmin;
 using System.Reflection;
 using CommandSystem;
+using System.Linq;
 
 namespace SCP343
 {
@@ -29,8 +30,8 @@ namespace SCP343
         /// <summary>
         /// <para>Just a list</para>
         /// </summary>
-        public static IEnumerable<Player> AllScps343 => scp343badgelist.List;
-        public static IEnumerable<Badge> AllScp343Badges => scp343badgelist.ListBadges;
+        public static IEnumerable<Player> AllScps343 => AllScp343Badges.Select(b=>b.Player);
+        public static IEnumerable<Badge> AllScp343Badges => scp343badgelist.Get(b=>b.IsSCP343);
         /// <summary>
         /// <para>This kills scp343</para>
         /// </summary>
@@ -53,10 +54,10 @@ namespace SCP343
         {
             try
             {
-                Plugin.Config.Reload();
+                Cfg.Reload();
                 if (!Cfg.IsEnabled)
                 {
-                    Disable();
+                    Log.Info("Disabled plugin by Config");
                     return;
                 }
                 try
