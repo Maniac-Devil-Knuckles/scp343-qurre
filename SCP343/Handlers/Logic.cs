@@ -67,12 +67,7 @@ namespace SCP343.Handlers
             ragdoll.Destroy();
         }
 
-        internal static bool adminsor343(Player player)
-        {
-            if (player.IsSCP343()) return true;
-            if (player.Sender.CheckPermission(PlayerPermissions.AdminChat)) return true;
-            return false;
-        }
+        internal static bool adminsor343(Player player) => player.IsSCP343() || player.Sender.CheckPermission(PlayerPermissions.AdminChat);
 
         internal static IEnumerator<float> WhenOpenDoor(Player player)
         {
@@ -155,11 +150,7 @@ namespace SCP343.Handlers
             {
                 WhenOpenDoor(player).RunCoroutine("player_scp343_" + player.Id);
             }
-            if (Cfg.scp343_heck) Timing.CallDelayed(Cfg.scp343_hecktime, () =>
-            {
-                if (!player.IsSCP343()) return;
-                player.GetSCPBadge().CanHeck = false;
-            });
+            if (Cfg.scp343_heck) CanHeck343(player).RunCoroutine("Canheck343das" + player.UserId);
             if (!string.IsNullOrEmpty(Cfg.scp343_unitname))
             {
                 player.UnitName = Cfg.scp343_unitname;
@@ -167,6 +158,23 @@ namespace SCP343.Handlers
             HealingCooldown(player).RunCoroutine("healcd" + player.UserId);
             player.UseStamina = false;
             return badge;
+        }
+
+        internal static IEnumerator<float> CanHeck343(Player player)
+        {
+            float time = Cfg.scp343_hecktime;
+            yield return 0.5f;
+            for(; ; )
+            {
+                if (!player.IsSCP343()) yield break;
+                else if (time <= 0f) yield return 1f;
+                else
+                {
+                    player.GetSCPBadge().CanHeck = false;
+                    yield break;
+                }
+                time -= 1f;
+            }
         }
 
         internal static void KillSCP343(Player player)

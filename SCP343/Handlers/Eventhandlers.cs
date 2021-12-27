@@ -251,18 +251,12 @@ namespace SCP343.Handlers
                         return;
                     }
                     ev.Player.Invisible = !ev.Player.Invisible;
+                    invisiblePlayers[ev.Player.Id] = ev.Player.Invisible;
                     ev.ReturnMessage = ev.Player.Invisible ? Cfg.scp343_is_invisible_true : Cfg.scp343_is_invisible_false;
                     if (!ev.Player.IsSCP343())
                     {
                         invisiblePlayers[ev.Player.Id] = ev.Player.Invisible;
                         if (!ev.Player.HasItem(ItemType.Flashlight)) ev.Player.AddItem(ItemType.Flashlight);
-                        Vector3 pos = ev.Player.Position;
-                        ev.Player.Role = RoleType.Tutorial;
-                        Timing.CallDelayed(0.6f, () =>
-                        {
-                            ev.Player.Position = pos;
-                            if (!ev.Player.HasItem(ItemType.Flashlight)) ev.Player.AddItem(ItemType.Flashlight);
-                        });
                     }
                     return;
                 }
@@ -324,17 +318,12 @@ namespace SCP343.Handlers
         {
             if (scp343badgelist.Count() < 1) return;
 
-            if (ev.Target.IsSCP343() && ev.DamageType == DamageTypes.Scp207)
-            {
-                ev.Amount = 0f;
-                ev.Allowed = false;
-            }
             if (ev.Target.IsSCP343())
             {
+                ev.Amount = 0f;
                 if (ev.DamageType == DamageTypes.Decont || ev.DamageType == DamageTypes.Nuke)
                 {
                     ev.Amount = ev.Target.Hp;
-                    return;
                 }
                 else
                 {
@@ -342,6 +331,7 @@ namespace SCP343.Handlers
                     if (ev.Attacker.Role.Is939()) ev.Target.DisableEffect(EffectType.Amnesia);
                     ev.Allowed = false;
                 }
+
             }
             if (ev.Attacker.IsSCP343())
             {
@@ -497,7 +487,7 @@ namespace SCP343.Handlers
             {
                 ev.Player.Invisible = !ev.Player.Invisible;
                 ev.Player.Broadcast(ev.Player.Invisible ? Cfg.scp343_is_invisible_true : Cfg.scp343_is_invisible_false, 10, true);
-                ev.Player.GetSCPBadge().IsInvisible = ev.Player.Invisible;
+                invisiblePlayers[ev.Player.Id] = ev.Player.Invisible;
             }
         }
 
@@ -600,7 +590,7 @@ namespace SCP343.Handlers
             {
                 ev.Player.Invisible = !ev.Player.Invisible;
                 ev.Player.Broadcast(ev.Player.Invisible ? Cfg.scp343_is_invisible_true : Cfg.scp343_is_invisible_false, 10, true);
-                ev.Player.GetSCPBadge().IsInvisible = ev.Player.Invisible;
+                invisiblePlayers[ev.Player.Id] = ev.Player.Invisible;
             }
             else if (ev.Item.Type == ItemType.SCP330)
             {
@@ -614,6 +604,7 @@ namespace SCP343.Handlers
                     text = Cfg.player_gift_message.Replace("%player%", ev.Player.Nickname).Replace("%item%", itemType.ToString());
                     target.Broadcast(text, 10, true);
                     target.AddItem(itemType);
+                    ev.Player.GetSCPBadge().Presents--;
                 }
             }
         }
@@ -678,14 +669,14 @@ namespace SCP343.Handlers
 
         internal void OnVoiceSpeak(PressPrimaryChatEvent ev)
         {
-            if (ev.Player.GetSCPBadge().IsInvisible || invisiblePlayers[ev.Player.Id])
+            if (invisiblePlayers[ev.Player.Id])
                 if ((!ev.Value && ev.Player.Invisible) || (ev.Value && !ev.Player.Invisible)) ev.Player.Invisible = !ev.Player.Invisible;
         }
 
         internal void OnAltVoiceSpeak(PressAltChatEvent ev)
         {
             if (!ev.Player.HasItem(ItemType.Radio)) return;
-            if (ev.Player.GetSCPBadge().IsInvisible || invisiblePlayers[ev.Player.Id])
+            if (invisiblePlayers[ev.Player.Id])
                 if ((!ev.Value && ev.Player.Invisible) || (ev.Value && !ev.Player.Invisible)) ev.Player.Invisible = !ev.Player.Invisible;
         }
     }

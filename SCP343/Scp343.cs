@@ -43,8 +43,8 @@ namespace SCP343
         public override int Priority => 10;
         public override string Name => "SCP-343";
         public override string Developer => "Maniac Devil Knuckles";
-        public override Version Version => new Version(3, 1, 0);
-        public override Version NeededQurreVersion => new Version(1, 10, 4);
+        public override Version Version => new Version(3, 1, 1);
+        public override Version NeededQurreVersion => new Version(1, 11, 0);
         internal static Scp343 Instance { get; set; } = null;
         public Harmony harmony { get; internal set; } = null;
         internal int i = 0;
@@ -53,7 +53,7 @@ namespace SCP343
         {
             try
             {
-                Cfg.Reload();
+                Plugin.Config.Reload();
                 if (!Cfg.IsEnabled)
                 {
                     Disable();
@@ -71,7 +71,6 @@ namespace SCP343
                     Log.Info(ex);//
                 }
                 Instance = this;
-                OnRegisteringCommands();
                 Eventhandlers = new Eventhandlers(this);
                 Log.Info("Enabling SCP343 by Maniac Devil Knuckles");
                 PLAYER.TransmitPlayerData += Eventhandlers.OnTransmitPlayerData;
@@ -158,52 +157,5 @@ namespace SCP343
             Eventhandlers = null;
         }
 
-        internal Dictionary<Type, Dictionary<Type, ICommand>> Commands { get; } = new Dictionary<Type, Dictionary<Type, ICommand>>()
-        {
-            { typeof(RemoteAdminCommandHandler), new Dictionary<Type, ICommand>() },
-            { typeof(GameConsoleCommandHandler), new Dictionary<Type, ICommand>() },
-            { typeof(ClientCommandHandler), new Dictionary<Type, ICommand>() },
-        };
-
-        Assembly Assembly => GetType().Assembly;
-
-        private void OnRegisteringCommands()
-        {
-            foreach (Type type in Assembly.GetTypes())
-            {
-                if (type.GetInterface("ICommand") != typeof(ICommand))
-                    continue;
-
-                if (!Attribute.IsDefined(type, typeof(CommandHandlerAttribute)))
-                    continue;
-                    
-                foreach (CustomAttributeData customAttributeData in type.CustomAttributes)
-                {
-                    try
-                    {
-                        if (customAttributeData.AttributeType != typeof(CommandHandlerAttribute))
-                            continue;
-
-                        Type commandType = (Type)customAttributeData.ConstructorArguments?[0].Value;
-
-                        if (!Commands.TryGetValue(commandType, out Dictionary<Type, ICommand> typeCommands))
-                            continue;
-
-                        if (!typeCommands.TryGetValue(type, out ICommand command))
-                            command = (ICommand)Activator.CreateInstance(type);
-
-                        if (commandType == typeof(RemoteAdminCommandHandler))
-                            CommandProcessor.RemoteAdminCommandHandler.RegisterCommand(command);
-                        else if (commandType == typeof(GameConsoleCommandHandler))
-                            GameCore.Console.singleton.ConsoleCommandHandler.RegisterCommand(command);
-                        Commands[commandType][type] = command;
-                    }
-                    catch (Exception exception)
-                    {
-                        Log.Error($"An error has occurred while registering a command: {exception}");
-                    }
-                }
-            }
-        }
     }
 }

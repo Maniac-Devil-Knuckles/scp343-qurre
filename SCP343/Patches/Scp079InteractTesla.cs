@@ -9,7 +9,7 @@ namespace SCP343.Patches
     internal static class Scp079InteractTesla
     {
         private static bool Prefix(Scp079PlayerScript __instance, Command079 command, string args, GameObject target)
-        {
+        { 
             if (__instance._interactRateLimit.CanExecute(true)) return false;
             if (!__instance.iAm079) return false;
             GameCore.Console.AddDebugLog("SCP079", "Command received from a client: " + command, MessageImportance.LessImportant, false);

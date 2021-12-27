@@ -4,7 +4,7 @@ using HarmonyLib;
 namespace SCP343.Patches
 {
     [HarmonyPatch(typeof(CharacterClassManager),"UserCode_CmdRegisterEscape")]
-    public class EscapePatch
+    public static class EscapePatch
     {
         private static bool Prefix(CharacterClassManager __instance) => !Player.Get(__instance.gameObject).IsSCP343() || Cfg.scp343_canescape;
     }
