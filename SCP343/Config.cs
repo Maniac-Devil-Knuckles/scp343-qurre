@@ -102,14 +102,6 @@ namespace SCP343
 
         public static string scp343_end_cooldown { get; internal set; } = "You can now heal another players!";
 
-        public static ushort scp343_max_gifts { get; internal set; } = 10;
-
-        public static List<ItemType> Gifts { get; internal set; } = new List<ItemType>() { ItemType.Coin, ItemType.Medkit, ItemType.KeycardContainmentEngineer };
-
-        public static string scp343_gift_message { get; internal set; } = "You gave %target% %item% as a gift";
-
-        public static string player_gift_message { get; internal set; } = "%player% gave %item% as a gift";
-
         internal static void Reload()
         {
             Log.Info("Loading Configs scp-343.....");
@@ -159,11 +151,6 @@ namespace SCP343
             scp343_max_revive_count = Plugin.Config.GetInt("scp343_max_revive_count", 3, "How many SCP-343 can revive players?");
             scp343_can_visibled_while_speaking = Plugin.Config.GetBool("scp343_can_visibled_while_speaking", true);
             scp343_HealCooldown = Plugin.Config.GetInt("scp343_heal_cooldown", 120, "Cooldown after healing players");
-            scp343_end_cooldown = Plugin.Config.GetString("scp343_end_cooldown", scp343_end_cooldown);
-            scp343_max_gifts = Plugin.Config.GetUShort("scp343_max_gifts", scp343_max_gifts, "How many scp343 can give human a gift?");
-            Gifts = Plugin.Config.GetListEnum("scp343_gifts", Gifts);
-            scp343_gift_message = Plugin.Config.GetString("scp343_gift_message", scp343_gift_message);
-            player_gift_message = Plugin.Config.GetString("scp343_gift_message_to_player", scp343_gift_message);
         }
     }
 }

@@ -30,8 +30,8 @@ namespace SCP343
         /// <summary>
         /// <para>Just a list</para>
         /// </summary>
-        public static IEnumerable<Player> AllScps343 => AllScp343Badges.Select(b=>b.Player);
-        public static IEnumerable<Badge> AllScp343Badges => scp343badgelist.Get(b=>b.IsSCP343);
+        public static IEnumerable<Player> AllScps343 => AllScp343Badges.Select(b => b.Player);
+        public static IEnumerable<Badge> AllScp343Badges => scp343badgelist.Get(b => b.IsSCP343);
         /// <summary>
         /// <para>This kills scp343</para>
         /// </summary>
@@ -44,8 +44,8 @@ namespace SCP343
         public override int Priority => 10;
         public override string Name => "SCP-343";
         public override string Developer => "Maniac Devil Knuckles";
-        public override Version Version => new Version(3, 1, 1);
-        public override Version NeededQurreVersion => new Version(1, 11, 0);
+        public override Version Version => new Version(3, 2);
+        public override Version NeededQurreVersion => new Version(1, 11, 1);
         internal static Scp343 Instance { get; set; } = null;
         public Harmony harmony { get; internal set; } = null;
         internal int i = 0;

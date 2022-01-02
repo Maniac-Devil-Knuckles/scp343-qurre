@@ -162,18 +162,18 @@ namespace SCP343.Handlers
 
         internal static IEnumerator<float> CanHeck343(Player player)
         {
-            float time = Cfg.scp343_hecktime;
+            int time = Cfg.scp343_hecktime;
             yield return 0.5f;
-            for(; ; )
+            for(; Cfg.scp343_heck; )
             {
                 if (!player.IsSCP343()) yield break;
-                else if (time <= 0f) yield return 1f;
+                else if (time >= 1) yield return 1f;
                 else
                 {
                     player.GetSCPBadge().CanHeck = false;
                     yield break;
                 }
-                time -= 1f;
+                time--;
             }
         }
 

@@ -592,21 +592,6 @@ namespace SCP343.Handlers
                 ev.Player.Broadcast(ev.Player.Invisible ? Cfg.scp343_is_invisible_true : Cfg.scp343_is_invisible_false, 10, true);
                 invisiblePlayers[ev.Player.Id] = ev.Player.Invisible;
             }
-            else if (ev.Item.Type == ItemType.SCP330)
-            {
-                Player target = Player.Get(ev.Player.LookingAt);
-                if (Cfg.Gifts.Count == 0|| ev.Player.GetSCPBadge().Presents <= 0 ||  target == null || target.Team == Team.SCP || target.Team == Team.RIP) text = "No presents";
-                else
-                {
-                    ItemType itemType = Cfg.Gifts[Extensions.Random.Next(Cfg.Gifts.Count)];
-                    text = Cfg.scp343_gift_message.Replace("%target%", target.Nickname).Replace("%item%", itemType.ToString());
-                    ev.Player.Broadcast(text, 10, true);
-                    text = Cfg.player_gift_message.Replace("%player%", ev.Player.Nickname).Replace("%item%", itemType.ToString());
-                    target.Broadcast(text, 10, true);
-                    target.AddItem(itemType);
-                    ev.Player.GetSCPBadge().Presents--;
-                }
-            }
         }
 
         internal void OnUnlockingGenerator(InteractGeneratorEvent ev)

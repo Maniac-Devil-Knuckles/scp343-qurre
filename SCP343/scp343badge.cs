@@ -91,8 +91,6 @@ namespace SCP343
         public bool CanHeal => HealCooldown <= 0;
         public int HealCooldown { get; internal set; } = 120;
 
-        public ushort Presents { get; internal set; }
-
         private bool _IsScp343 = false;
     }
 
@@ -105,7 +103,6 @@ namespace SCP343
             if (Contains(scp343.Id)) return;
             scp343.Revive343 = Cfg.scp343_max_revive_count;
             scp343.HealCooldown = 20;
-            scp343.Presents = Cfg.scp343_max_gifts;
             scp343.Player.Tag = " scp343-knuckles";
             badges.Add(scp343);
         }
@@ -158,7 +155,7 @@ namespace SCP343
         /// Get Badge by <see cref="GameObject"/>
         /// </summary>
         /// <returns><seealso cref="Badge"/></returns>
-        public static Badge Get(GameObject GameObject) => ReferenceHub.TryGetHub(GameObject,out ReferenceHub _) ? Get(b => b.GameObject == GameObject).First() : null;
+        public static Badge Get(GameObject GameObject) => ReferenceHub.TryGetHub(GameObject, out ReferenceHub _) ? Get(b => b.GameObject == GameObject).First() : null;
 
         /// <summary>
         /// Get Badge by <see cref="ReferenceHub"/>
