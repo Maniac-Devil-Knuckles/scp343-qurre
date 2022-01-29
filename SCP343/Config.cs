@@ -102,6 +102,10 @@ namespace SCP343
 
         public static string scp343_end_cooldown { get; internal set; } = "You can now heal another players!";
 
+        public static int scp343_shootcooldown { get; internal set; } = 30;
+
+        public static string scp343_shootcooldowntext { get; internal set; } = "Please wait %second% seconds before shooting";
+
         internal static void Reload()
         {
             Log.Info("Loading Configs scp-343.....");
@@ -151,6 +155,8 @@ namespace SCP343
             scp343_max_revive_count = Plugin.Config.GetInt("scp343_max_revive_count", 3, "How many SCP-343 can revive players?");
             scp343_can_visibled_while_speaking = Plugin.Config.GetBool("scp343_can_visibled_while_speaking", true);
             scp343_HealCooldown = Plugin.Config.GetInt("scp343_heal_cooldown", 120, "Cooldown after healing players");
+            scp343_shootcooldown = Plugin.Config.GetInt("scp343_shootcooldown", scp343_shootcooldown);
+            scp343_shootcooldowntext = Plugin.Config.GetString("scp343_shootcooldowntext", scp343_shootcooldowntext);
         }
     }
 }

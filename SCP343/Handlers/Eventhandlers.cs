@@ -61,7 +61,13 @@ namespace SCP343.Handlers
 
         internal void OnShooting(ShootingEvent ev)
         {
-            if (ev.Shooter.CurrentItem.TypeId == ItemType.GunCOM15 && !Cfg.scp343_can_use_TranquilizerGun) ev.Allowed = false;
+            if (ev.Shooter.IsSCP343() && ev.Shooter.CurrentItem.TypeId == ItemType.GunCOM15)
+                if(!Cfg.scp343_can_use_TranquilizerGun) ev.Allowed = false;
+                else if (ev.Shooter.GetSCPBadge().ShootCooldown > 0)
+                {
+                    ev.Allowed = false;
+                    ev.Shooter.ShowHint(Cfg.scp343_shootcooldowntext, 5);
+                }
         }
 
         internal void OnInteractingElevator(InteractLiftEvent ev)

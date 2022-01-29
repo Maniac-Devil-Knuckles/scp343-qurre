@@ -91,6 +91,8 @@ namespace SCP343
         public bool CanHeal => HealCooldown <= 0;
         public int HealCooldown { get; internal set; } = 120;
 
+        public int ShootCooldown { get; internal set; } = 10;
+
         private bool _IsScp343 = false;
     }
 

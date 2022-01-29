@@ -28,6 +28,8 @@ namespace SCP343.Handlers
                     IsShowed = true;
                     player.Broadcast(Cfg.scp343_end_cooldown, 5, true);
                 }
+
+                if (player.GetSCPBadge().ShootCooldown > 0) player.GetSCPBadge().ShootCooldown--;
             }
         }
 
