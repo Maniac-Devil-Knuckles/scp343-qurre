@@ -61,13 +61,15 @@ namespace SCP343.Handlers
 
         internal void OnShooting(ShootingEvent ev)
         {
+            if (scp343badgelist.Count() < 1) return;
             if (ev.Shooter.IsSCP343() && ev.Shooter.CurrentItem.TypeId == ItemType.GunCOM15)
                 if(!Scp343.CustomConfig.can_use_TranquilizerGun) ev.Allowed = false;
                 else if (ev.Shooter.GetSCPBadge().ShootCooldown > 0)
                 {
                     ev.Allowed = false;
-                    ev.Shooter.ShowHint(Scp343.CustomConfig.Translation.shootcooldowntext.Replace("%seconds%", ev.Shooter.GetSCPBadge().ShootCooldown.ToString()), 5);
+                    ev.Shooter.ShowHint(Scp343.CustomConfig.Translation.shootcooldowntext.Replace("%seconds%",ev.Shooter.GetSCPBadge().ShootCooldown.ToString()), 5);
                 }
+                else ev.Shooter.GetSCPBadge().ShootCooldown = Scp343.CustomConfig.shootcooldown;
         }
 
         internal void OnInteractingElevator(InteractLiftEvent ev)
@@ -659,12 +661,14 @@ namespace SCP343.Handlers
 
         internal void OnVoiceSpeak(PressPrimaryChatEvent ev)
         {
+            if (!Scp343.CustomConfig.can_visibled_while_speaking) return;
             if (invisiblePlayers[ev.Player.Id])
                 if ((!ev.Value && ev.Player.Invisible) || (ev.Value && !ev.Player.Invisible)) ev.Player.Invisible = !ev.Player.Invisible;
         }
 
         internal void OnAltVoiceSpeak(PressAltChatEvent ev)
         {
+            if (!Scp343.CustomConfig.can_visibled_while_speaking) return;
             if (!ev.Player.HasItem(ItemType.Radio)) return;
             if (invisiblePlayers[ev.Player.Id])
                 if ((!ev.Value && ev.Player.Invisible) || (ev.Value && !ev.Player.Invisible)) ev.Player.Invisible = !ev.Player.Invisible;

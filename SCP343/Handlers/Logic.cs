@@ -26,7 +26,7 @@ namespace SCP343.Handlers
                 else if (!IsShowed)
                 {
                     IsShowed = true;
-                    player.Broadcast(Cfg.scp343_end_cooldown, 5, true);
+                    player.Broadcast(Scp343.CustomConfig.Translation.end_cooldown, 5, true);
                 }
 
                 if (player.GetSCPBadge().ShootCooldown > 0) player.GetSCPBadge().ShootCooldown--;
@@ -40,7 +40,7 @@ namespace SCP343.Handlers
             {
                 yield return Timing.WaitForSeconds(1f);
                 int cooldown = player.GetSCPBadge().HealCooldown;
-                if (cooldown > 0) player.Broadcast(Cfg.scp343_cooldown.Replace("%seconds%", cooldown.ToString()), 1, true);
+                if (cooldown > 0) player.Broadcast(Scp343.CustomConfig.Translation.cooldown.Replace("%seconds%", cooldown.ToString()), 1, true);
             }
         }
 
@@ -58,7 +58,7 @@ namespace SCP343.Handlers
         {
             player.Invisible = true;
             player.GodMode = true;
-            player.Broadcast(Cfg.scp343_youweretranq, 4);
+            player.Broadcast(Scp343.CustomConfig.Translation.youweretranq, 4);
             Qurre.API.Controllers.Ragdoll ragdoll = Qurre.API.Controllers.Ragdoll.Create(player.Role, player.Position, player.CameraTransform.rotation, new PlayerStatsSystem.CustomReasonDamageHandler("tranquilizer", 0), "SCP-343", player.Id);
             Vector3 pos = player.Position;
             player.Position = new Vector3(1, 1, 1);
@@ -73,7 +73,7 @@ namespace SCP343.Handlers
 
         internal static IEnumerator<float> WhenOpenDoor(Player player)
         {
-            int _time = Cfg.scp343_opendoortime;
+            int _time = Scp343.CustomConfig.opendoortime;
             yield return Timing.WaitForSeconds(1f);
             for (; ; )
             {
@@ -84,7 +84,7 @@ namespace SCP343.Handlers
                     Log.Info(player.GetSCPBadge().CanOpenDoor);
                     break;
                 }
-                player.ShowHint(Cfg.scp343_text_show_timer_when_can_open_door.Replace("{343_time_open_door}", _time.ToString()));
+                player.ShowHint(Scp343.CustomConfig.Translation.text_show_timer_when_can_open_door.Replace("{343_time_open_door}", _time.ToString()));
                 _time--;
                 yield return Timing.WaitForSeconds(1f);
             }
@@ -122,16 +122,16 @@ namespace SCP343.Handlers
                 else player.RoleName = "SCP-343" + globalbadge;
                 player.RoleColor = "red";
             });
-            if (Cfg.scp343_invisible_for_173) foreach (Player pl in Player.List)
+            if (Scp343.CustomConfig.invisible_for_173) foreach (Player pl in Player.List)
                 {
                     if (!pl.Scp173Controller.IgnoredPlayers.Contains(player)) pl.Scp173Controller.IgnoredPlayers.Add(player);
                 }
-            if (Cfg.scp343_alert && !scp0492)
+            if (Scp343.CustomConfig.alert && !scp0492)
             {
                 player.ClearBroadcasts();
-                player.Broadcast(15, Cfg.scp343_alerttext);
+                player.Broadcast(15, Scp343.CustomConfig.Translation.alerttext);
             }
-            if (Cfg.scp343_console && !scp0492) player.SendConsoleMessage("\n----------------------------------------------------------- \n" + Cfg.scp343_consoletext.Replace("343DOORTIME", Cfg.scp343_opendoortime.ToString()).Replace("343HECKTIME", Cfg.scp343_hecktime.ToString()).Replace("\\n", "\n") + "\n-----------------------------------------------------------", "green");
+            if (Scp343.CustomConfig.console && !scp0492) player.SendConsoleMessage("\n----------------------------------------------------------- \n" + Scp343.CustomConfig.Translation.consoletext.Replace("343DOORTIME", Scp343.CustomConfig.opendoortime.ToString()).Replace("343HECKTIME", Scp343.CustomConfig.hecktime.ToString()).Replace("\\n", "\n") + "\n-----------------------------------------------------------", "green");
 
             Timing.CallDelayed(0.5f, () =>
             {
@@ -140,22 +140,22 @@ namespace SCP343.Handlers
                 player.ClearInventory();
                 if (!scp0492)
                 {
-                    player.AddItem(Cfg.scp343_itemsatspawn);
+                    player.AddItem(Scp343.CustomConfig.itemsatspawn);
                 }
-                if (Cfg.scp343_heck)
+                if (Scp343.CustomConfig.heck)
                 {
                     player.GetSCPBadge().CanHeck = true;
                 }
                 player.Hp = 100f;
             });
-            if (Cfg.scp343_canopenanydoor)
+            if (Scp343.CustomConfig.canopenanydoor)
             {
-                WhenOpenDoor(player).RunCoroutine("player_scp343_" + player.Id);
+                WhenOpenDoor(player).RunCoroutine("player_" + player.Id);
             }
-            if (Cfg.scp343_heck) CanHeck343(player).RunCoroutine("Canheck343das" + player.UserId);
-            if (!string.IsNullOrEmpty(Cfg.scp343_unitname))
+            if (Scp343.CustomConfig.heck) CanHeck343(player).RunCoroutine("Canheck343das" + player.UserId);
+            if (!string.IsNullOrEmpty(Scp343.CustomConfig.Translation.unitname))
             {
-                player.UnitName = Cfg.scp343_unitname;
+                player.UnitName = Scp343.CustomConfig.Translation.unitname;
             }
             HealingCooldown(player).RunCoroutine("healcd" + player.UserId);
             player.UseStamina = false;
@@ -164,9 +164,9 @@ namespace SCP343.Handlers
 
         internal static IEnumerator<float> CanHeck343(Player player)
         {
-            int time = Cfg.scp343_hecktime;
+            int time = Scp343.CustomConfig.hecktime;
             yield return 0.5f;
-            for(; Cfg.scp343_heck; )
+            for(; Scp343.CustomConfig.heck; )
             {
                 if (!player.IsSCP343()) yield break;
                 else if (time >= 1) yield return 1f;
@@ -183,7 +183,7 @@ namespace SCP343.Handlers
         {
             if (!player.IsSCP343()) return;
             player.UseStamina = true;
-            if (Cfg.scp343_invisible_for_173) foreach(Player pl in Player.List)
+            if (Scp343.CustomConfig.invisible_for_173) foreach(Player pl in Player.List)
             {
                 if (pl.Scp173Controller.IgnoredPlayers.Contains(player)) pl.Scp173Controller.IgnoredPlayers.Remove(player);
             }
