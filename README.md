@@ -4,59 +4,127 @@
 ## Install Instructions.
 Put SCP343.dll under the release tab into %appdata%\Qurre\Plugins\ on Windows, or into ~/.config/Qurre/Plugins/ on Linux
 
+Config in %appdata%\Qurre\Configs\Custom\SCP343-7777.yaml on windows or in ~/.config/Qurre/Configs/Custom/SCP343-7777.yaml on Linux
+
 # Config Options.
 ```yaml
-#IsEnabled?
-scp343_IsEnabled: true
-scp343_canescape: false
-scp343_alerttext: You are <color=red>SCP-343</color>. Check your client console on [~]
-scp343_consoletext: You are <color=red>scp343</color>:\n\n1. You can open all doors;\n\n2. You can transform weapons to first and kit;\n\n 3. You have a god mode.\n\n4. You can teleport to player by sending console command .tp343 or drop coin\n\n5.In 1 metre away you , you can heal players by sending command .heal343 or dropping adrenaline\n6. In 1 meter away you, you can revive any dead player sending command .revive343 or dropping flashlight\n7. You can be invisible sending command .invis\nOr you can use items dropping instead of sending commands
-scp343_alertbackd: You stopped being scp-343
-scp343_alertheckerrortime: Time is left.
-scp343_alertheckerrornot343: Wait, you are not scp-343
-scp343_hecktime: 30
-scp343_nuke_interact: true
-scp343_spawnchance: 30
-scp343_itemdroplist: 0,1,2,3,4,5,6,7,8,9,11,15,19,12,19,22,27,28,29,32,33
-scp343_opendoortime: 30
-scp343_itemstoconvert: 10,13,14,16,20,21,23,24,25,26,30,35
-scp343_converteditems: 14
-scp343_itemsatspawn: 35,33,15,32,13
-scp343_lift_moving_speed: 6,5
-scp343_canopenanydoor: true
-scp343_alert: true
-scp343_console: true
-scp343_heck: true
-scp343_heckerrordisable: .heck343 is disabled by config
-scp343_itemconverttoggle: true
-scp343_minplayers: 5
-scp343_unitname: SCP-343
-#If scp343 in range of the tesla
-scp343_activating_tesla_in_range: true
-scp343_invisible_for_173: false
-scp343_turned_for_scp173_andscp096: true
-scp343_show_timer_when_can_open_door: false
-scp343_text_show_timer_when_can_open_door: In {343_time_open_door} seconds you can open door
-#Can scp-343 interact with scp-914
-scp343_interact_scp914: false
-scp343_min_heal_players: 30
-scp343_max_heal_players: 70
-scp343_can_use_TranquilizerGun: true
-scp343_itemscannotdrop: 35,33,15,32,13
-scp343_notfoundplayer: Not found players!
-scp343_teleport_to_player: You teleported to %player% playing as %role%
-scp343_healplayer: You healed players health
-scp343_cooldown: Please wait %seconds% seconds for healing another players
-scp343_cannotrevive: You can not revive players
-scp343_playerwhorevived: You was revived by SCP-343
-scp343_revive_text: You revived %user%
-scp343_youmustexit914: You must exit SCP-914
-#How many SCP-343 can revive players?
-scp343_max_revive_count: 3
-scp343_can_visibled_while_speaking: true
-#Cooldown after healing players
-scp343_heal_cooldown: 120
-scp343_end_cooldown: You can now heal another players!
+Name: SCP343
+IsEnabled: true
+canescape: false
+canopenanydoor: true
+alert: true
+console: true
+heck: true
+hecktime: 30
+nuke_interact: true
+opendoortime: 30
+itemconverttoggle: true
+spawnchance: 30
+itemdroplist:
+- KeycardJanitor
+- KeycardScientist
+- KeycardResearchCoordinator
+- KeycardZoneManager
+- KeycardGuard
+- KeycardNTFOfficer
+- KeycardContainmentEngineer
+- KeycardNTFLieutenant
+- KeycardNTFCommander
+- KeycardFacilityManager
+- KeycardChaosInsurgency
+- KeycardO5
+- Flashlight
+- Radio
+- Ammo556x45
+- Ammo44cal
+- Ammo762x39
+- Ammo9x19
+- SCP268
+- Adrenaline
+itemstoconvert:
+- GunCOM15
+- Medkit
+- MicroHID
+- GunE11SR
+- GunCrossvec
+- GunFSP9
+- GunLogicer
+- GrenadeHE
+- GrenadeFlash
+- GunCOM18
+- Coin
+converteditems:
+- Medkit
+minplayers: 5
+itemsatspawn:
+- Coin
+- Adrenaline
+- Flashlight
+- SCP268
+- GunCOM15
+- SCP330
+lift_moving_speed: 6.5
+activating_tesla_in_range: true
+turned_for_scp173_andscp096: true
+invisible_for_173: false
+show_timer_when_can_open_door: false
+interact_scp914: false
+min_heal_players: 30
+max_heal_players: 70
+can_use_TranquilizerGun: true
+itemscannotdrop:
+- Coin
+- Adrenaline
+- Flashlight
+- SCP268
+- GunCOM15
+- SCP330
+can_visibled_while_speaking: true
+HealCooldown: 120
+shootcooldown: 30
+max_revive_count: 3
+Translation:
+  alerttext: You are <color=red>SCP-343</color>. Check your client console on [~]
+  consoletext: >-
+    You are <color=red>scp343</color>:
+
+
+    1. You can open all doors;
+
+
+    2. You can transform weapons to first and kit;
+
+     3. You have a god mode.
+
+    4. You can teleport to player by sending console command .tp343 or drop coin
+
+
+    5.In 1 metre away you , you can heal players by sending command .heal343 or dropping adrenaline
+
+    6. In 1 meter away you, you can revive any dead player sending command .revive343 or dropping flashlight
+
+    7. You can be invisible sending command .invis
+
+    Or you can use items dropping instead of sending commands. If you drop scp-330 and looking at human then will gift random item
+  alertbackd: You stopped being scp-343
+  alertheckerrortime: Time is left.
+  alertheckerrornot343: Wait, you are not scp-343
+  heckerrordisable: .heck343 is disabled by config
+  unitname: SCP-343
+  text_show_timer_when_can_open_door: In {343_time_open_door} seconds you can open door
+  notfoundplayer: Not found players!
+  teleport_to_player: You teleported to %player% playing as %role%
+  healplayer: You healed players health
+  cooldown: Please wait %seconds% seconds for healing another players
+  cannotrevive: You can not revive players
+  playerwhorevived: You was revived by SCP-343
+  revive_text: You revived %user%
+  youmustexit914: You must exit SCP-914
+  youweretranq: You were shooted by SCP-343 using TranquilizerGun
+  is_invisible_true: You are now is invisible for all
+  is_invisible_false: You are not is invisible for all
+  end_cooldown: You can now heal another players!
+  shootcooldowntext: Please wait %seconds% seconds before shooting
 ```
 
 
