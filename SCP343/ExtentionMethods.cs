@@ -18,28 +18,5 @@ namespace SCP343
 
         public static Badge GetSCPBadge(this Player player) => player.IsSCP343() ? scp343badgelist.Get(player) : null;
 
-        public static List<T> GetListEnum<T>(this Config config, string key, List<T> def, string comment = "") where T: struct
-        {
-            try
-            {
-                string _def = string.Join(",", def.Select(d => Convert.ToInt32(d).ToString()));
-                Log.Info(_def);
-                string _result = config.GetString(key, _def, comment);
-                List<T> result = _result.Split(',').Select(r =>
-                {
-                    if (Enum.TryParse(r, out T t)) return t;
-                    Enum.TryParse("-1", out t);
-                    return t;
-                }).ToList();
-                return result;
-            }
-            catch (Exception ex)
-            {
-                Log.Error(key);
-                Log.Error(ex);
-                return def;
-            }
-        }
-
     }
 }

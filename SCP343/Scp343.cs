@@ -37,11 +37,13 @@ namespace SCP343
 
     public class Scp343 : Plugin
     {
+        public static Cfg CustomConfig { get; } = new Cfg();
+
         private static Eventhandlers Eventhandlers { get; set; } = null;
         public override int Priority => 10;
         public override string Name => "SCP-343";
         public override string Developer => "Maniac Devil Knuckles";
-        public override Version Version => new Version(3, 2);
+        public override Version Version => new Version(3, 2, 1);
         public override Version NeededQurreVersion => new Version(1, 11, 1);
         internal static Scp343 Instance { get; set; } = null;
         public Harmony harmony { get; internal set; } = null;
@@ -51,8 +53,8 @@ namespace SCP343
         {
             try
             {
-                Cfg.Reload();
-                if (!Cfg.IsEnabled)
+                CustomConfigs.Add(CustomConfig);
+                if (!CustomConfig.IsEnabled)
                 {
                     Log.Info("Disabled plugin by Config");
                     return;
@@ -116,6 +118,7 @@ namespace SCP343
 
         public override void Disable()
         {
+            CustomConfigs.Remove(CustomConfig);
             Log.Info("Disabling SCP343 by Maniac Devil Knuckles");
             harmony.UnpatchAll(harmony.Id);
             harmony = null;

@@ -103,7 +103,7 @@ namespace SCP343
         internal static void Add(Badge scp343)
         {
             if (Contains(scp343.Id)) return;
-            scp343.Revive343 = Cfg.scp343_max_revive_count;
+            scp343.Revive343 = Scp343.CustomConfig.max_revive_count;
             scp343.HealCooldown = 20;
             scp343.Player.Tag = " scp343-knuckles";
             badges.Add(scp343);
