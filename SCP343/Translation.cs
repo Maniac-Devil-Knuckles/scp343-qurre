@@ -46,5 +46,7 @@ namespace SCP343
         public string end_cooldown { get; internal set; } = "You can now heal another players!";
 
         public string shootcooldowntext { get; internal set; } = "Please wait %seconds% seconds before shooting";
+
+        public string class_d_unit { get; internal set; } = "Class D";
     }
 }

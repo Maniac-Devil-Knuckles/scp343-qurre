@@ -35,7 +35,7 @@ namespace SCP343.Handlers
             invisiblePlayers.Clear();
             if (!string.IsNullOrEmpty(Scp343.CustomConfig.Translation.unitname))
             {
-                Round.AddUnit(TeamUnitType.ClassD, "Class D");
+                if (!string.IsNullOrEmpty(Scp343.CustomConfig.Translation.class_d_unit)) if (Scp343.CustomConfig.Translation.class_d_unit.ToLower() != "None") Round.AddUnit(TeamUnitType.ClassD, Scp343.CustomConfig.Translation.class_d_unit);
                 Round.AddUnit(TeamUnitType.ClassD, Scp343.CustomConfig.Translation.unitname);
             }
         }

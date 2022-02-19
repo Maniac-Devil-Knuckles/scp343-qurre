@@ -50,4 +50,10 @@ namespace SCP343.Patches
             return result;
         }
     }
+
+    //[HarmonyPatch(typeof(scp035.EventHandlers), "PickupItem")]
+    internal static class Scp035
+    {
+        internal static bool Prefix(PickupItemEvent ev) => !ev.Player.IsSCP343();
+    }
 }

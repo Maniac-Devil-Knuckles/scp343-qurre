@@ -14,6 +14,7 @@ using HarmonyLib;
 using System.Collections.Generic;
 using Qurre;
 using System.Linq;
+using SCP343.Patches;
 
 namespace SCP343
 {
@@ -40,11 +41,11 @@ namespace SCP343
         public static Cfg CustomConfig { get; } = new Cfg();
 
         private static Eventhandlers Eventhandlers { get; set; } = null;
-        public override int Priority => 10;
+        public override int Priority => int.MaxValue;
         public override string Name => "SCP-343";
         public override string Developer => "Maniac Devil Knuckles";
-        public override Version Version => new Version(3, 3, 1);
-        public override Version NeededQurreVersion => new Version(1, 11, 12);
+        public override Version Version => new Version(4, 0, 0);
+        public override Version NeededQurreVersion => new Version(1, 12, 0);
         internal static Scp343 Instance { get; set; } = null;
         public Harmony harmony { get; internal set; } = null;
         internal int i = 0;
@@ -69,6 +70,28 @@ namespace SCP343
                 {
                     Log.Info("error\n\n\n\n\n\n\n\\n\n");
                     Log.Info(ex);//
+                }
+
+                try
+                {
+                    if (PluginManager.plugins.Any(p => p.Name == "scp035" && p.Developer == "fydne"))
+                    {
+                        Log.Info("Patching method scp035...");
+                        Plugin plugin = PluginManager.plugins.First(p => p.Name == "scp035" && p.Developer == "fydne");
+                        var pickupoMethod =
+                            AccessTools.Method(
+                                plugin.GetType().Assembly.GetTypes().First(t => t.IsClass && t.Name == "EventHandlers"),
+                                "PickupItem");
+
+                        var patchprefix =
+                            SymbolExtensions.GetMethodInfo((Qurre.API.Events.PickupItemEvent ev) => Scp035.Prefix(ev));
+                        harmony.Patch(pickupoMethod, new HarmonyMethod(patchprefix));
+                        Log.Info("Successfully");
+                    }
+                }
+                catch (Exception e)
+                {
+                    Log.Info("smth not working");
                 }
                 Instance = this;
                 Eventhandlers = new Eventhandlers(this);

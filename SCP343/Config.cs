@@ -66,6 +66,6 @@ namespace SCP343
 
         public int max_revive_count { get; internal set; } = 3;
 
-        public Translation Translation { get; internal set; } = new Translation();
+        public Translation Translation { get; set; } = new Translation();
     }
 }

@@ -27,8 +27,8 @@
     <ConsolePause>false</ConsolePause>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Qurre, Version=1.11.11.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Qurre.1.11.11\lib\net472\Qurre.dll</HintPath>
+    <Reference Include="Qurre, Version=1.12.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\Qurre.1.12.0\lib\net472\Qurre.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations">
@@ -75,6 +75,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="qurre_ol.ico" />
+    <Content Include="scp035.dll" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
