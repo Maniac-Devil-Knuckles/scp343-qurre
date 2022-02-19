@@ -125,6 +125,7 @@ Translation:
   is_invisible_false: You are not is invisible for all
   end_cooldown: You can now heal another players!
   shootcooldowntext: Please wait %seconds% seconds before shooting
+  class_d_unit: Class D
 ```
 
 
