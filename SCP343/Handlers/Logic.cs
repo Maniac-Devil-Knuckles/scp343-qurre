@@ -122,7 +122,8 @@ namespace SCP343.Handlers
                 else player.RoleName = "SCP-343" + globalbadge;
                 player.RoleColor = "red";
             });
-            if (Scp343.CustomConfig.invisible_for_173) foreach (Player pl in Player.List)
+            if (Scp343.CustomConfig.invisible_for_173) 
+                foreach (Player pl in Player.List)
                 {
                     if (!pl.Scp173Controller.IgnoredPlayers.Contains(player)) pl.Scp173Controller.IgnoredPlayers.Add(player);
                 }
@@ -159,6 +160,9 @@ namespace SCP343.Handlers
             }
             HealingCooldown(player).RunCoroutine("healcd" + player.UserId);
             player.UseStamina = false;
+            player.Dissonance.EnableListening(TriggerType.Role, Assets._Scripts.Dissonance.RoleType.SCP);
+            player.Dissonance.EnableSpeaking(TriggerType.Role, Assets._Scripts.Dissonance.RoleType.SCP);
+            player.Dissonance.SCPChat = true;
             return badge;
         }
 

@@ -18,6 +18,8 @@ namespace SCP343.Handlers
         private readonly Dictionary<int, Badge> deadPlayers = new Dictionary<int, Badge>();
         private readonly Dictionary<int, bool> invisiblePlayers = new Dictionary<int, bool>();
 
+        public static bool PickupScp035 { get; set; } = false;
+
         internal Eventhandlers(Scp343 plugin)
         {
             this.plugin = plugin;
@@ -331,6 +333,7 @@ namespace SCP343.Handlers
                 if (ev.DamageType == DamageTypes.Decont || ev.DamageType == DamageTypes.Nuke)
                 {
                     ev.Amount = ev.Target.Hp;
+                    return;
                 }
                 else
                 {
@@ -638,6 +641,12 @@ namespace SCP343.Handlers
             if (scp343badgelist.Count() < 1) return;
             if (ev.Player.IsSCP343())
             {
+                if (PickupScp035)
+                {
+                    ev.Allowed = false;
+                    PickupScp035 = false;
+                    return;
+                }
                 if (!Scp343.CustomConfig.itemconverttoggle)
                 {
                     ev.Allowed = false;
@@ -650,7 +659,6 @@ namespace SCP343.Handlers
                 else if (Scp343.CustomConfig.itemstoconvert.Contains(ev.Pickup.Type))
                 {
                     ev.Allowed = false;
-                    if (!Scp343.CustomConfig.itemconverttoggle) return;
 
                     ev.Pickup.Destroy();
                     ev.Player.AddItem(Scp343.CustomConfig.converteditems);

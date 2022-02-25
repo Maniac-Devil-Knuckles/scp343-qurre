@@ -1,8 +1,17 @@
-﻿using Qurre.API;
+﻿using System;
+using System.Collections.Generic;
+using Qurre.API;
 using Qurre.API.Events;
 using HarmonyLib;
 using UnityEngine;
 using System.Linq;
+using System.Reflection;
+using System.Reflection.Emit;
+using NorthwoodLib.Pools;
+using Qurre;
+using Qurre.API.Controllers.Items;
+using SCP343.Handlers;
+
 namespace SCP343.Patches
 {
     [HarmonyPatch(typeof(Scp079PlayerScript), "UserCode_CmdInteract")]
@@ -51,9 +60,41 @@ namespace SCP343.Patches
         }
     }
 
-    //[HarmonyPatch(typeof(scp035.EventHandlers), "PickupItem")]
     internal static class Scp035
     {
-        internal static bool Prefix(PickupItemEvent ev) => !ev.Player.IsSCP343();
+        internal static bool Prefix(object __instance, PickupItemEvent ev)
+        {
+            if (!ev.Player.IsSCP343()) return true;
+            Eventhandlers.PickupScp035 = true;
+            if (Scp343.CustomConfig.itemstoconvert.Contains(ev.Pickup.Type) && Scp343.CustomConfig.itemconverttoggle)
+            {
+                try
+                {
+                    var fieldinfo= __instance.GetType().GetField("Items", BindingFlags.Static | BindingFlags.NonPublic);
+                    List<Pickup> pickup= (List<Pickup>)fieldinfo.GetValue(null);
+                    pickup.Remove(ev.Pickup);
+                    fieldinfo.SetValue(null, pickup);
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(0);
+                    Log.Info(ex);
+                }
+
+                try
+                {
+                    __instance.GetType().GetMethod("RefreshItems",BindingFlags.Instance | BindingFlags.NonPublic).Invoke(__instance, null);
+                }
+                catch (Exception exception)
+                {
+                    Log.Error(1);
+                    Log.Info(exception);
+                }
+                ev.Pickup.Destroy();
+                ev.Player.AddItem(Scp343.CustomConfig.converteditems);
+                ev.Allowed = false;
+            }
+            return false;
+        }
     }
 }
