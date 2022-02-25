@@ -85,7 +85,6 @@ namespace SCP343
                                 "PickupItem");
 
                         var patchprefix = AccessTools.Method(typeof(Scp035), "Prefix");
-                        Log.Info(patchprefix == null);
                         harmony.Patch(pickupMethod, new HarmonyMethod(patchprefix));
                         Log.Info("Successfully");
                     }
