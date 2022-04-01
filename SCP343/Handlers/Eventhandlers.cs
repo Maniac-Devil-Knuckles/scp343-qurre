@@ -445,9 +445,9 @@ namespace SCP343.Handlers
             if (scp343badgelist.Count() < 1) return;
             if (ev.Player.Scp096Controller.Targets.Count <= 1)
             {
-                if (ev.Player.Scp096Controller.Targets.All(ExtentionMethods.IsSCP343)) ev.Allowed = false;
+                if (ev.Player.Scp096Controller.Targets.All(API.IsSCP343)) ev.Allowed = false;
             }
-            foreach (Player player in ev.Player.Scp096Controller.Targets.Where(ExtentionMethods.IsSCP343)) ev.Player.Scp096Controller.RemoveTarget(player);
+            foreach (Player player in ev.Player.Scp096Controller.Targets.Where(API.IsSCP343)) ev.Player.Scp096Controller.RemoveTarget(player);
         }
 
         internal void OnAddingTarget(AddTargetEvent ev)
@@ -481,10 +481,10 @@ namespace SCP343.Handlers
 
         public void OnUpgrade(UpgradeEvent ev)
         {
-            if (ev.Players.Any(ExtentionMethods.IsSCP343))
+            if (ev.Players.Any(API.IsSCP343))
             {
                 ev.Allowed = false;
-                foreach (Player player in ev.Players.Where(ExtentionMethods.IsSCP343)) player.Broadcast(Scp343.CustomConfig.Translation.youmustexit914, 10, true);
+                foreach (Player player in ev.Players.Where(API.IsSCP343)) player.Broadcast(Scp343.CustomConfig.Translation.youmustexit914, 10, true);
             }
         }
 
@@ -538,7 +538,7 @@ namespace SCP343.Handlers
                     int hpset = Extensions.Random.Next(Scp343.CustomConfig.min_heal_players, Scp343.CustomConfig.max_heal_players);
                     foreach (Player ply in Player.List.Where(p => p.Role != RoleType.Spectator && !p.IsSCP343()))
                     {
-                        if (Vector3.Distance(ev.Player.Position, ply.Position) <= 5f)
+                        if (ev.Player.DistanceTo(ply) <= 5f)
                         {
                             ply.SetHP(hpset);
                             count++;
@@ -573,8 +573,7 @@ namespace SCP343.Handlers
                     Player player = null;
                     foreach (Player ply in Player.List.Where(p => deadPlayers.ContainsKey(p.Id) && p.Role == RoleType.Spectator))
                     {
-                        bool boo = Vector3.Distance(ev.Player.Position, deadPlayers[player.Id].Pos) <= 3f;
-                        if (!boo) continue;
+                        if (player.DistanceTo(deadPlayers[player.Id].Pos) > 3f) continue;
                         player = ply;
                         break;
                     }
@@ -625,7 +624,7 @@ namespace SCP343.Handlers
                     List<Player> Players = Player.List.Where(x => x.Role != RoleType.Spectator && teslaGate.PlayerInRange(x.ReferenceHub)).ToList();
                     if (Players.Count > 0)
                     {
-                        if (Players.Any(ExtentionMethods.IsSCP343)) ev.Triggerable = false;
+                        if (Players.Any(API.IsSCP343)) ev.Triggerable = false;
                     }
                 }
                 else if (ev.Player.IsSCP343()) ev.Triggerable = false;

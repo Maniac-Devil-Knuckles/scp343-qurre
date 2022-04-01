@@ -19,23 +19,6 @@ using System.Reflection.Emit;
 
 namespace SCP343
 {
-    public static class API
-    {
-        /// <summary>
-        /// <para>This spawns <see cref="Player"/> as scp343</para>
-        /// </summary>
-        /// <returns><see cref="Badge"/></returns>
-        public static Badge Spawn343(Player player, UnityEngine.Vector3 position = default) => Eventhandlers.spawn343(player, position: position);
-        /// <summary>
-        /// <para>Just a list</para>
-        /// </summary>
-        public static IEnumerable<Player> AllScps343 => AllScp343Badges.Select(b => b.Player);
-        public static IEnumerable<Badge> AllScp343Badges => scp343badgelist.Get(b => b.IsSCP343);
-        /// <summary>
-        /// <para>This kills scp343</para>
-        /// </summary>
-        public static void Kill343(Player player) => Eventhandlers.KillSCP343(player);
-    }
 
     public class Scp343 : Plugin
     {
@@ -84,7 +67,7 @@ namespace SCP343
                                 plugin.GetType().Assembly.GetTypes().First(t => t.IsClass && t.Name == "EventHandlers"),
                                 "PickupItem");
 
-                        var patchprefix = AccessTools.Method(typeof(Scp035), "Prefix");
+                        var patchprefix = AccessTools.Method(typeof(Scp035), nameof(Scp035.Prefix));
                         harmony.Patch(pickupMethod, new HarmonyMethod(patchprefix));
                         Log.Info("Successfully");
                     }

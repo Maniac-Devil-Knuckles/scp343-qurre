@@ -39,10 +39,7 @@ namespace SCP343.Commands
                 return false;
             }
 
-            Player player = null;
-
-            if (int.TryParse(arguments.At(0), out int id)) player = Player.Get(id);
-            else player = Player.Get(string.Join(" ", arguments));
+            Player player = Player.Get(string.Join(" ", arguments));
             if (player == null || player.Id == Server.Host.Id)
             {
                 response = "Incorrect PlayerId";

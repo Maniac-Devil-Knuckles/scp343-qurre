@@ -19,7 +19,7 @@ namespace SCP343.Patches
     {
         private static bool Prefix(Scp079PlayerScript __instance, Command079 command, string args, GameObject target)
         { 
-            if (__instance._interactRateLimit.CanExecute(true)) return false;
+            if (__instance._interactRateLimit.CanExecute()) return false;
             if (!__instance.iAm079) return false;
             GameCore.Console.AddDebugLog("SCP079", "Command received from a client: " + command, MessageImportance.LessImportant, false);
             bool result;
@@ -70,8 +70,8 @@ namespace SCP343.Patches
             {
                 try
                 {
-                    var fieldinfo= __instance.GetType().GetField("Items", BindingFlags.Static | BindingFlags.NonPublic);
-                    List<Pickup> pickup= (List<Pickup>)fieldinfo.GetValue(null);
+                    var fieldinfo = __instance.GetType().GetField("Items", BindingFlags.Static | BindingFlags.NonPublic);
+                    var pickup = (List<Pickup>) fieldinfo.GetValue(null);
                     pickup.Remove(ev.Pickup);
                     fieldinfo.SetValue(null, pickup);
                 }
@@ -83,7 +83,7 @@ namespace SCP343.Patches
 
                 try
                 {
-                    __instance.GetType().GetMethod("RefreshItems",BindingFlags.Instance | BindingFlags.NonPublic).Invoke(__instance, null);
+                    __instance.GetType().GetMethod("RefreshItems", BindingFlags.Instance | BindingFlags.NonPublic).Invoke(__instance, null);
                 }
                 catch (Exception exception)
                 {

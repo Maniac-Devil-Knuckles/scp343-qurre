@@ -187,10 +187,12 @@ namespace SCP343.Handlers
         {
             if (!player.IsSCP343()) return;
             player.UseStamina = true;
-            if (Scp343.CustomConfig.invisible_for_173) foreach(Player pl in Player.List)
-            {
-                if (pl.Scp173Controller.IgnoredPlayers.Contains(player)) pl.Scp173Controller.IgnoredPlayers.Remove(player);
-            }
+            if (Scp343.CustomConfig.invisible_for_173)
+                foreach (Player pl in Player.List)
+                {
+                    if (pl.Scp173Controller.IgnoredPlayers.Contains(player))
+                        pl.Scp173Controller.IgnoredPlayers.Remove(player);
+                }
             player.UnitName = "";
             player.RoleColor = player.GetSCPBadge().RoleColor;
             player.RoleName = player.GetSCPBadge().RoleName;
