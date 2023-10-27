@@ -64,6 +64,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Patches\PatchAmmo.cs" />
     <Compile Include="Scp343.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Config.cs" />
@@ -80,9 +81,7 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Patches\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>copy /y "C:\Users\knuck\Documents\GitHub\scp343-qurre\SCP343\bin\Release\SCP343.dll" "%25appdata%25\Qurre\Plugins\"</PostBuildEvent>
