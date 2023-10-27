@@ -1,8 +1,7 @@
 
 using System;
 using Qurre.API;
-//using HarmonyLib;
-//using SCP343.Patches;
+using HarmonyLib;
 using Qurre.API.Attributes;
 
 namespace SCP343
@@ -10,9 +9,9 @@ namespace SCP343
     [PluginInit("SCP-343","Maniac Devil Knuckles","5.0.0")]
     public static class Scp343
     {
-        //public static Harmony harmony { get; internal set; } = null;
+        public static Harmony harmony { get; internal set; } = null;
         
-        //internal static int i = 0;
+        internal static int i = 0;
 
         [PluginEnable]
         public static void Enable()
@@ -26,7 +25,7 @@ namespace SCP343
                     Disable();
                     return;
                 }
-                /*try
+                try
                 {
                     harmony = new Harmony("knuckles.scp343\nVersion " + i++);
                     harmony.PatchAll();
@@ -37,7 +36,7 @@ namespace SCP343
                     Log.Info("error\n\n\n\n\n\n\n\\n\n");
                     Log.Info(ex);//
                 }
-                
+                /*
                 try
                 {
                     if (Pathes.Plugins.Contains("scp035"))
@@ -73,8 +72,8 @@ namespace SCP343
         public static void Disable()
         {
             Log.Info("Disabling SCP343 by Maniac Devil Knuckles");
-          //  harmony.UnpatchAll(harmony.Id);
-          //  harmony = null;
+            if (harmony != null) harmony.UnpatchAll(harmony.Id);
+            harmony = null;
         }
 
     }
