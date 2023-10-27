@@ -1,0 +1,10 @@
+
+*.dll
+SCP343/scp035.dll
+SCP343/scp035.dll
+*.txt
+*.cache
+*.CopyComplete
+SCP343/obj/Debug/.NETFramework,Version=v4.8.AssemblyAttributes.cs
+*.pdb
+SCP343/obj/Release/.NETFramework,Version=v4.8.AssemblyAttributes.cs

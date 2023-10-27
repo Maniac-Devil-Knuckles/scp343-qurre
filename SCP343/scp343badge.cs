@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using PlayerRoles;
 using Qurre.API;
 using UnityEngine;
 namespace SCP343
@@ -10,9 +11,9 @@ namespace SCP343
         internal Badge(Player player, bool scp343 = false, string SCPName = "")
         {
             Player = player;
-            RoleColor = player.RoleColor;
-            RoleName = player.RoleName;
-            Id = player.Id;
+            RoleColor = player.Administrative.RoleColor;
+            RoleName = player.Administrative.RoleName;
+            Id = player.UserInfomation.Id;
             IsSCP343 = scp343;
             this.SCPName = SCPName;
         }
@@ -20,48 +21,38 @@ namespace SCP343
         public Badge(Player player, string SCPName = "")
         {
             Player = player;
-            RoleColor = player.RoleColor;
-            RoleName = player.RoleName;
-            Id = player.Id;
+            RoleColor = player.Administrative.RoleColor;
+            RoleName = player.Administrative.RoleName;
+            Id = player.UserInfomation.Id;
             IsSCP343 = false;
             this.SCPName = SCPName;
         }
 
-        public Badge(Player player, RoleType Role, Vector3 Pos)
+        public Badge(Player player, RoleTypeId Role, Vector3 Pos)
         {
             Player = player;
             this.Role = Role;
-            RoleColor = player.RoleColor;
-            RoleName = player.RoleName;
+            RoleColor = player.Administrative.RoleColor;
+            RoleName = player.Administrative.RoleName;
             this.Pos = Pos;
         }
 
         internal Badge(int PlayerId, bool scp343 = false, string SCPName = "")
         {
-            Player = Player.Get(PlayerId);
-            RoleColor = Player.RoleColor;
-            RoleName = Player.RoleName;
-            Id = Player.Id;
-            IsSCP343 = scp343;
-            this.SCPName = SCPName;
-        }
-
-        internal Badge(string args, bool scp343 = false, string SCPName = "")
-        {
-            Player = Player.Get(args);
-            RoleColor = Player.RoleColor;
-            RoleName = Player.RoleName;
-            Id = Player.Id;
+            Player = Player.List.First(p=> p.UserInfomation.Id == PlayerId);
+            RoleColor = Player.Administrative.RoleColor;
+            RoleName = Player.Administrative.RoleName;
+            Id = Player.UserInfomation.Id;
             IsSCP343 = scp343;
             this.SCPName = SCPName;
         }
 
         internal Badge(GameObject GameObject, bool scp343 = false, string SCPName = "")
         {
-            Player = Player.Get(GameObject);
-            RoleColor = Player.RoleColor;
-            RoleName = Player.RoleName;
-            Id = Player.Id;
+            Player = Qurre.API.Player.List.Where(p=> p.GameObject.Equals(GameObject)).FirstOrDefault();
+            RoleColor = Player.Administrative.RoleColor;
+            RoleName = Player.Administrative.RoleName;
+            Id = Player.UserInfomation.Id;
             IsSCP343 = scp343;
             this.SCPName = SCPName;
         }
@@ -70,7 +61,7 @@ namespace SCP343
         public string RoleName { get; } = "";
         public Player Player { get; } = null;
         public int Id { get; } = 0;
-        public string UserId => Player.UserId;
+        public string UserId => Player.UserInfomation.UserId;
         public bool CanOpenDoor { get; internal set; } = false;
         public bool CanHeck { get; internal set; } = false;
         public GameObject GameObject => Player.GameObject;
@@ -81,12 +72,12 @@ namespace SCP343
             private set
             {
                 _IsScp343 = value;
-                if (value) scp343badgelist.Add(this);
+                if (value) Scp343BadgeList.Add(this);
             }
         }
         public string SCPName { get; internal set; } = "";
         public int Revive343 { get; internal set; } = 0;
-        public RoleType Role { get; } = RoleType.None;
+        public RoleTypeId Role { get; } = RoleTypeId.None;
         public Vector3 Pos { get; } = Vector3.zero;
         public bool CanHeal => HealCooldown <= 0;
         public int HealCooldown { get; internal set; } = 120;
@@ -96,20 +87,20 @@ namespace SCP343
         private bool _IsScp343 = false;
     }
 
-    public static class scp343badgelist
+    public static class Scp343BadgeList
     {
         private static readonly HashSet<Badge> badges = new HashSet<Badge>();
 
         internal static void Add(Badge scp343)
         {
             if (Contains(scp343.Id)) return;
-            scp343.Revive343 = Scp343.CustomConfig.max_revive_count;
+            scp343.Revive343 = Config.Max_Revive_Count;
             scp343.HealCooldown = 20;
             scp343.Player.Tag = " scp343-knuckles";
             badges.Add(scp343);
         }
 
-        internal static bool Remove(Player player) => Remove(player.Id);
+        internal static bool Remove(Player player) => Remove(player.UserInfomation.Id);
 
         internal static bool Remove(int PlayerId)
         {
@@ -121,7 +112,7 @@ namespace SCP343
         /// <summary>
         /// This returns if <see cref="Player"/> is scp343 or isn`t
         /// </summary>
-        public static bool Contains(Player player) => Contains(player.Id);
+        public static bool Contains(Player player) => Contains(player.UserInfomation.Id);
         /// <summary>
         /// This returns if someone or all <see cref="Player"/> is scp343 or isn`t
         /// </summary>
@@ -145,7 +136,7 @@ namespace SCP343
         /// Get Badge by <see cref="Player"/>
         /// </summary>
         /// <returns><seealso cref="Badge"/></returns>
-        public static Badge Get(Player player) => Contains(player) ? Get(b => b.Id == player.Id).First() : null;
+        public static Badge Get(Player player) => Contains(player) ? Get(b => b.Id == player.UserInfomation.Id).First() : null;
 
         /// <summary>
         /// Get Badge by <see cref="Player.Id"/> 
@@ -163,7 +154,7 @@ namespace SCP343
         /// Get Badge by <see cref="ReferenceHub"/>
         /// </summary>
         /// <returns><seealso cref="Badge"/></returns>
-        public static Badge Get(ReferenceHub ReferenceHub) => ReferenceHub.GetAllHubs().ContainsValue(ReferenceHub) ? Get(b => b.ReferenceHub == ReferenceHub).First() : null;
+        public static Badge Get(ReferenceHub ReferenceHub) => ReferenceHub.HubByPlayerIds.ContainsValue(ReferenceHub) ? Get(b => b.ReferenceHub == ReferenceHub).First() : null;
 
         /// <summary>
         /// Get Badge by predicate

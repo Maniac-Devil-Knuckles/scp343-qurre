@@ -28,6 +28,8 @@ namespace SCP343.Commands
 
         protected override bool ExecuteParent(ArraySegment<string> arguments, ICommandSender sender, out string response)
         {
+            response = "";
+            if (!Config.IsEnabled) return false;
             if (!sender.CheckPermission(PlayerPermissions.ForceclassWithoutRestrictions, out response))
             {
                 return false;
@@ -35,12 +37,12 @@ namespace SCP343.Commands
             
             if (arguments.Count < 1)
             {
-                response = "Usage command : \"spawn343 PlayerName/PlayerId\"";
+                response = "Usage command : \"spawn343 PlayerId/UserId\"";
                 return false;
             }
 
-            Player player = Player.Get(string.Join(" ", arguments));
-            if (player == null || player.Id == Server.Host.Id)
+            Player player = Player.List.First(p=>p.UserInfomation.Nickname == string.Join(" ", arguments) || p.UserInfomation.Id == int.Parse(string.Join(" ", arguments)) || p.UserInfomation.UserId == string.Join(" ", arguments)) ?? null;
+            if (player == null || player.UserInfomation.Id == Server.Host.UserInfomation.Id)
             {
                 response = "Incorrect PlayerId";
                 return false;
@@ -51,13 +53,13 @@ namespace SCP343.Commands
                 return false;
             }
 
-            player.SetRole(RoleType.ClassD, false, CharacterClassManager.SpawnReason.ForceClass);
+            player.RoleInfomation.SetNew(PlayerRoles.RoleTypeId.ClassD, PlayerRoles.RoleChangeReason.RemoteAdmin);
 
             Timing.CallDelayed(0.5f, () =>
             {
                 API.Spawn343(player);
             });
-            response = $"Made {player.Nickname} SCP-343";
+            response = $"Made {player.UserInfomation.Nickname} SCP-343";
             return true;
         }
     }

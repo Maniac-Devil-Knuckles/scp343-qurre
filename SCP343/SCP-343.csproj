@@ -27,18 +27,22 @@
     <ConsolePause>false</ConsolePause>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Assembly-CSharp_public">
+      <HintPath>..\..\..\..\AppData\Roaming\Qurre\Assembly-CSharp_public.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\AppData\Roaming\Qurre\Plugins\Dependencies\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="NorthwoodLib">
       <HintPath>..\..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\SCP Secret Laboratory Dedicated Server\SCPSL_Data\Managed\NorthwoodLib.dll</HintPath>
     </Reference>
-    <Reference Include="Qurre, Version=1.13.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\Qurre.1.13.0\lib\net472\Qurre.dll</HintPath>
+    <Reference Include="Qurre">
+      <HintPath>..\..\..\..\AppData\Roaming\Qurre\Qurre.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations">
       <HintPath>..\..\..\Downloads\Exiled\EXILED\Plugins\dependencies\System.ComponentModel.DataAnnotations.dll</HintPath>
-    </Reference>
-    <Reference Include="Assembly-CSharp_publicized">
-      <HintPath>..\..\..\..\..\AppData\Roaming\Qurre\Assembly-CSharp_publicized.dll</HintPath>
     </Reference>
     <Reference Include="Assembly-CSharp-firstpass">
       <HintPath>..\..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\SCP Secret Laboratory Dedicated Server\SCPSL_Data\Managed\Assembly-CSharp-firstpass.dll</HintPath>
@@ -56,10 +60,7 @@
       <HintPath>..\..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\SCP Secret Laboratory Dedicated Server\SCPSL_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
     </Reference>
     <Reference Include="0Harmony">
-      <HintPath>..\..\..\..\..\AppData\Roaming\Qurre\Plugins\dependencies\0Harmony.dll</HintPath>
-    </Reference>
-    <Reference Include="YamlDotNet">
-      <HintPath>..\..\..\..\..\AppData\Roaming\Qurre\Plugins\dependencies\YamlDotNet.dll</HintPath>
+      <HintPath>..\..\..\..\AppData\Roaming\Qurre\Plugins\Dependencies\0Harmony.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -70,18 +71,20 @@
     <Compile Include="Commands\Spawn343.cs" />
     <Compile Include="scp343badge.cs" />
     <Compile Include="Handlers\Logic.cs" />
-    <Compile Include="Patches\EscapePatch.cs" />
-    <Compile Include="Patches\Scp079InteractTesla.cs" />
     <Compile Include="Handlers\Eventhandlers.cs" />
-    <Compile Include="Patches\PatchAmmo.cs" />
     <Compile Include="Translation.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="qurre_ol.ico" />
-    <Content Include="scp035.dll" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Patches\" />
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>copy /y "C:\Users\knuck\Documents\GitHub\scp343-qurre\SCP343\bin\Release\SCP343.dll" "%25appdata%25\Qurre\Plugins\"</PostBuildEvent>
+  </PropertyGroup>
 </Project>
