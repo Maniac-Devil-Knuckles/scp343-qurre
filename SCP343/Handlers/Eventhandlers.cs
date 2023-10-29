@@ -359,8 +359,7 @@ namespace SCP343.Handlers
             int count = Player.List.Count();
             if (Config.MinPlayersWhenCanSpawn > count) return;
             int chance = count < 2 ? 10000 : new Random().Next(1, 100);
-            if (chance >= Config.SpawnChance)
-                if (99 < Config.SpawnChance ) return;
+            if (chance >= Config.SpawnChance) return;
             List<Player> ClassDList = Player.List.Where(p=> p.RoleInfomation.Role == RoleTypeId.ClassD).ToList();
             Player player = ClassDList[new Random().Next(ClassDList.Count)];
             ClassDList.Remove(player);
@@ -496,7 +495,7 @@ namespace SCP343.Handlers
                     {
                         if (ev.Player.DistanceTo(ply) <= 5f)
                         {
-                            ply.SetHP(hpset);
+                            ply.SetHP(hpset); 
                             count++;
                         }
                     }

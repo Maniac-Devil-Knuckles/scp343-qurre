@@ -98,11 +98,11 @@ namespace SCP343.Handlers
             player.Inventory.Clear();
             Timing.CallDelayed(1f, () =>
             {
-                player.Inventory.AddItem(ItemType.Ammo556x45, 300);
-                player.Inventory.AddItem(ItemType.Ammo9x19, 300);
-                player.Inventory.AddItem(ItemType.Ammo12gauge, 300);
-                player.Inventory.AddItem(ItemType.Ammo44cal, 300);
-                player.Inventory.AddItem(ItemType.Ammo762x39, 300);
+                player.Inventory.Ammo.Ammo556 = 300;
+                player.Inventory.Ammo.Ammo762 = 300;
+                player.Inventory.Ammo.Ammo9 = 300;
+                player.Inventory.Ammo.Ammo12Gauge = 300;
+                player.Inventory.Ammo.Ammo44Cal = 300;
             });
             if (scp0492)
             {
