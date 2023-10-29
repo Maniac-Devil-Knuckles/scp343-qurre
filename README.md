@@ -1,6 +1,8 @@
 # [SCP-343](http://www.scp-wiki.net/scp-343)
 # Important: This plugin for Qurre
 
+Download Qurre - https://github.com/Qurre-sl/Qurre
+
 ## Install Instructions.
 Put SCP343.dll under the release tab into %appdata%\Qurre\Plugins\ on Windows, or into ~/.config/Qurre/Plugins/ on Linux
 
@@ -8,124 +10,89 @@ Config in %appdata%\Qurre\Configs\Custom\SCP343-7777.yaml on windows or in ~/.co
 
 # Config Options.
 ```yaml
-Name: SCP343
-IsEnabled: true
-canescape: false
-canopenanydoor: true
-alert: true
-console: true
-heck: true
-hecktime: 30
-nuke_interact: true
-opendoortime: 30
-itemconverttoggle: true
-spawnchance: 30
-itemdroplist:
-- KeycardJanitor
-- KeycardScientist
-- KeycardResearchCoordinator
-- KeycardZoneManager
-- KeycardGuard
-- KeycardNTFOfficer
-- KeycardContainmentEngineer
-- KeycardNTFLieutenant
-- KeycardNTFCommander
-- KeycardFacilityManager
-- KeycardChaosInsurgency
-- KeycardO5
-- Flashlight
-- Radio
-- Ammo556x45
-- Ammo44cal
-- Ammo762x39
-- Ammo9x19
-- SCP268
-- Adrenaline
-itemstoconvert:
-- GunCOM15
-- Medkit
-- MicroHID
-- GunE11SR
-- GunCrossvec
-- GunFSP9
-- GunLogicer
-- GrenadeHE
-- GrenadeFlash
-- GunCOM18
-- Coin
-converteditems:
-- Medkit
-minplayers: 5
-itemsatspawn:
-- Coin
-- Adrenaline
-- Flashlight
-- SCP268
-- GunCOM15
-- SCP330
-lift_moving_speed: 6.5
-activating_tesla_in_range: true
-turned_for_scp173_andscp096: true
-invisible_for_173: false
-show_timer_when_can_open_door: false
-interact_scp914: false
-min_heal_players: 30
-max_heal_players: 70
-can_use_TranquilizerGun: true
-itemscannotdrop:
-- Coin
-- Adrenaline
-- Flashlight
-- SCP268
-- GunCOM15
-- SCP330
-can_visibled_while_speaking: true
-HealCooldown: 120
-shootcooldown: 30
-max_revive_count: 3
-Translation:
-  alerttext: You are <color=red>SCP-343</color>. Check your client console on [~]
-  consoletext: >-
-    You are <color=red>scp343</color>:
-
-
-    1. You can open all doors;
-
-
-    2. You can transform weapons to first and kit;
-
-     3. You have a god mode.
-
-    4. You can teleport to player by sending console command .tp343 or drop coin
-
-
-    5.In 1 metre away you , you can heal players by sending command .heal343 or dropping adrenaline
-
-    6. In 1 meter away you, you can revive any dead player sending command .revive343 or dropping flashlight
-
-    7. You can be invisible sending command .invis
-
-    Or you can use items dropping instead of sending commands. If you drop scp-330 and looking at human then will gift random item
-  alertbackd: You stopped being scp-343
-  alertheckerrortime: Time is left.
-  alertheckerrornot343: Wait, you are not scp-343
-  heckerrordisable: .heck343 is disabled by config
-  unitname: SCP-343
-  text_show_timer_when_can_open_door: In {343_time_open_door} seconds you can open door
-  notfoundplayer: Not found players!
-  teleport_to_player: You teleported to %player% playing as %role%
-  healplayer: You healed players health
-  cooldown: Please wait %seconds% seconds for healing another players
-  cannotrevive: You can not revive players
-  playerwhorevived: You was revived by SCP-343
-  revive_text: You revived %user%
-  youmustexit914: You must exit SCP-914
-  youweretranq: You were shooted by SCP-343 using TranquilizerGun
-  is_invisible_true: You are now is invisible for all
-  is_invisible_false: You are not is invisible for all
-  end_cooldown: You can now heal another players!
-  shootcooldowntext: Please wait %seconds% seconds before shooting
-  class_d_unit: Class D
+"SCP_343": {
+    "IsEnabled": true,
+    "CanEscape": false,
+    "CanOpenAnyDoor": true,
+    "Alert": true,
+    "Console": true,
+    "Heck": true,
+    "HeckTime": 30,
+    "Nuke_Interact": true,
+    "OpenDoorTime": 30,
+    "ItemsConvertToggle": true,
+    "SpawnChance": 30,
+    "ItemDropList": [
+      "0",
+      "1",
+      "2",
+      "3",
+      "4",
+      "8",
+      "6",
+      "7",
+      "5",
+      "9",
+      "10",
+      "11",
+      "15",
+      "12",
+      "22",
+      "27",
+      "28",
+      "29",
+      "32",
+      "33"
+    ],
+    "ItemsToConvert": [
+      "13",
+      "14",
+      "16",
+      "20",
+      "21",
+      "23",
+      "24",
+      "25",
+      "26",
+      "30",
+      "35"
+    ],
+    "ConvertedItems": [
+      "14"
+    ],
+    "MinPlayersWhenCanSpawn": 5,
+    "ItemsAtSpawn": [
+      "35",
+      "33",
+      "17",
+      "32",
+      "13",
+      "42"
+    ],
+    "Activating_Tesla_In_Range": true,
+    "Translation": {
+      "AlertText": "You are <color=red>SCP-343</color>. Check your client console on [~]",
+      "ConsoleText": "You are <color=red>scp343</color>:\n\n1. You can open all doors;\n\n2. You can transform weapons to first and kit;\n\n 3. You have a god mode.\n\n4. You can teleport to player by sending console command .tp343 or drop coin\n\n5.In 1 metre away you , you can heal players by sending command .heal343 or dropping adrenaline\n6. In 1 meter away you, you can revive any dead player sending command .revive343 or dropping SCP-500\n7. You can be invisible sending command .invis\nOr you can use items dropping instead of sending commands. If you drop scp-330 and looking at human then will gift random item",
+      "AlertBackTo_DClass": "You stopped being scp-343",
+      "AlertHeckErrorTime": "Time is left.",
+      "AlertHeckError_IsNot343": "Wait, you are not scp-343",
+      "HeckErrorDisable": ".heck343 is disabled by config",
+      "Text_Show_Timer_When_Can_Open_Door": "In {343_time_open_door} seconds you can open door",
+      "NotFoundPlayer": "Not found players!",
+      "Teleport_To_Player": "You teleported to %player% playing as %role%",
+      "HealPlayer": "You healed players health",
+      "CoolDown": "Please wait %seconds% seconds for healing another players",
+      "CanNotRevive": "You can not revive players",
+      "PlayerWhoRevived": "You was revived by SCP-343",
+      "Revive_Text": "You revived %user%",
+      "YouMustExit914": "You must exit SCP-914",
+      "YouWereTranq": "You were shooted by SCP-343 using TranquilizerGun",
+      "Is_Invisible_True": "You are now is invisible for all",
+      "Is_Invisible_False": "You are not is invisible for all",
+      "End_Cooldown": "You can now heal another players!",
+      "ShootCoolDownText": "Please wait %seconds% seconds before shooting"
+    }
+  }
 ```
 
 
