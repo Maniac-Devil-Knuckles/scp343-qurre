@@ -3,6 +3,9 @@ using System;
 using Qurre.API;
 using HarmonyLib;
 using Qurre.API.Attributes;
+using SCP343.Commands;
+using CommandSystem;
+using RemoteAdmin;
 
 namespace SCP343
 {
@@ -12,6 +15,8 @@ namespace SCP343
         public static Harmony harmony { get; internal set; } = null;
         
         internal static int i = 0;
+
+        internal static Spawn343 Spawn343 { get; set; } = null;
 
         [PluginEnable]
         public static void Enable()
@@ -36,6 +41,9 @@ namespace SCP343
                     Log.Info("error\n\n\n\n\n\n\n\\n\n");
                     Log.Info(ex);//
                 }
+                Spawn343 = new Spawn343();
+                CommandProcessor.RemoteAdminCommandHandler.RegisterCommand(Spawn343);
+                GameCore.Console.singleton.ConsoleCommandHandler.RegisterCommand(Spawn343);
                 /*
                 try
                 {
@@ -72,6 +80,12 @@ namespace SCP343
         public static void Disable()
         {
             Log.Info("Disabling SCP343 by Maniac Devil Knuckles");
+            if (Spawn343 != null)
+            {
+                CommandProcessor.RemoteAdminCommandHandler.UnregisterCommand(Spawn343);
+                GameCore.Console.singleton.ConsoleCommandHandler.UnregisterCommand(Spawn343);
+            }
+            Spawn343 = null;
             if (harmony != null) harmony.UnpatchAll(harmony.Id);
             harmony = null;
         }

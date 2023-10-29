@@ -25,7 +25,6 @@ namespace SCP343.Handlers
     internal static partial class Eventhandlers
     {
         private static readonly Dictionary<int, Badge> deadPlayers = new Dictionary<int, Badge>();
-        private static readonly Dictionary<int, bool> invisiblePlayers = new Dictionary<int, bool>();
 
         public static bool PickupScp035 { get; set; } = false;
 
@@ -42,7 +41,6 @@ namespace SCP343.Handlers
         {
             if (!Config.IsEnabled) return;
             deadPlayers.Clear();
-            invisiblePlayers.Clear();
         }
 
         [EventMethod(PLAYER.Leave)]
@@ -52,14 +50,6 @@ namespace SCP343.Handlers
             if (deadPlayers.ContainsKey(ev.Player.UserInfomation.Id)) deadPlayers.Remove(ev.Player.UserInfomation.Id);
             if (Scp343BadgeList.Count() < 1) return;
             if (ev.Player.IsSCP343()) KillSCP343(ev.Player);
-        }
-
-        [EventMethod(PLAYER.Join)]
-        internal static void OnJoin(JoinEvent ev)
-        {
-            if (!Config.IsEnabled) return;
-            if (ev.Player.IsHost) return;
-            invisiblePlayers.Add(ev.Player.UserInfomation.Id, false);
         }
         /*
         internal static void OnShooting( ev)
@@ -110,36 +100,6 @@ namespace SCP343.Handlers
             {
                 if (ev.Name.ToLower() == "debug_343" && ev.Player.UserInfomation.UserId == "295581341939007489@discord") debug = !debug;
                 if (!Config.IsEnabled) return;
-                if (ev.Player.Sender.CheckPermission(PlayerPermissions.ForceclassWithoutRestrictions) && ev.Name.ToLower() == "spawn343")
-                {
-                    ev.Allowed = false;
-                    ArraySegment<string> arguments = new ArraySegment<string>(ev.Args);
-                    if (arguments.Count < 1)
-                    {
-                        ev.Reply = "Usage command : \"spawn343 PlayerId/UserId\"";
-                        return;
-                    }
-
-                    Player player = Player.List.First(p => p.UserInfomation.Nickname == string.Join(" ", arguments) || p.UserInfomation.Id == int.Parse(string.Join(" ", arguments)) || p.UserInfomation.UserId == string.Join(" ", arguments)) ?? null;
-                    if (player == null || player.UserInfomation.Id == Server.Host.UserInfomation.Id)
-                    {
-                        ev.Reply = "Incorrect PlayerId";
-                        return;
-                    }
-                    if (player.IsSCP343())
-                    {
-                        ev.Reply = "This player already scp343";
-                        return;
-                    }
-
-                    player.RoleInfomation.SetNew(PlayerRoles.RoleTypeId.ClassD, PlayerRoles.RoleChangeReason.RemoteAdmin);
-
-                    Timing.CallDelayed(0.5f, () =>
-                    {
-                        API.Spawn343(player);
-                    });
-                    ev.Reply = $"Made {player.UserInfomation.Nickname} SCP-343";
-                }
                 else if (ev.Name.ToLower() == "heck343")
                 {
                     ev.Allowed = false;
@@ -279,25 +239,6 @@ namespace SCP343.Handlers
                     }
                     ev.Player.Broadcasts.Clear();
                     new Qurre.API.Controllers.Broadcast(ev.Player, ev.Reply, 10);
-                }
-                else if (ev.Name.ToLower() == "invis")
-                {
-                    ev.Allowed = false;
-                    if (!adminsor343(ev.Player))
-                    {
-                        ev.Reply = Config.Translation.AlertHeckError_IsNot343;
-                        return;
-                    }
-                    bool invisible = invisiblePlayers[ev.Player.UserInfomation.Id];
-                    if (invisible) ev.Player.Effects.Disable(EffectType.Invisible);
-                    else ev.Player.Effects.Enable(EffectType.Invisible);
-                    invisiblePlayers[ev.Player.UserInfomation.Id] = !invisible;
-                    ev.Reply = !invisible ? Config.Translation.Is_Invisible_True : Config.Translation.Is_Invisible_False;
-                    if (!ev.Player.IsSCP343())
-                    {
-                        if (!ev.Player.Inventory.HasItem(ItemType.Flashlight)) ev.Player.Inventory.AddItem(ItemType.Flashlight);
-                    }
-                    return;
                 }
             }
             catch (Exception ex)
@@ -465,7 +406,7 @@ namespace SCP343.Handlers
         }
 
         [EventMethod(PLAYER.Leave)]
-        internal static void OnDestroyingEvent(LeaveEvent ev)
+        internal static void OnLeave(LeaveEvent ev)
         {
             if (!Config.IsEnabled) return;
             if (Scp343BadgeList.Count() < 1) return;
@@ -494,32 +435,6 @@ namespace SCP343.Handlers
                 }
             }
         }
-
-        internal static void OnEnraging(EnrageEvent ev)
-        {
-            if (Scp343BadgeList.Count() < 1) return;
-            if (ev.Player.Scp096Controller.Targets.Count <= 1)
-            {
-                if (ev.Player.Scp096Controller.Targets.All(API.IsSCP343)) ev.Allowed = false;
-            }
-            foreach (Player player in ev.Player.Scp096Controller.Targets.Where(API.IsSCP343)) ev.Player.Scp096Controller.RemoveTarget(player);
-        }
-
-        internal static void OnAddingTarget(AddTargetEvent ev)
-        {
-            if (Scp343BadgeList.Count() < 1) return;
-            if (ev.Target.IsSCP343())
-            {
-                ev.Allowed = false;
-            }
-        }
-      
-        [EventMethod()]
-        internal static void OnActivating(ev)
-        {
-            if (Scp343BadgeList.Count() < 1) return;
-            if (ev.Player.IsSCP343() && !Config.Interact_Scp914) ev.Allowed = false;
-        }
       //*/
         [EventMethod(PLAYER.Escape)]
         internal static void OnEscaping(EscapeEvent ev)
@@ -531,21 +446,6 @@ namespace SCP343.Handlers
                 ev.Allowed = Config.CanEscape;
             }
         }
-        /*
-        public static void OnUpgradePlayer(Scp914UpgradeHandler ev)
-        {
-            if (ev.Player.IsSCP343()) TeleportScp914(ev.Player).RunCoroutine("scp343-" + ev.Player.UserInfomation.Id);
-        }
-        
-        public static void OnUpgrade(UpgradeEvent ev)
-        {
-            if (ev.Players.Any(API.IsSCP343))
-            {
-                ev.Allowed = false;
-                foreach (Player player in ev.Players.Where(API.IsSCP343)) player.Broadcast(Config.Translation.youmustexit914, 10, true);
-            }
-        }
-        */
 
         [EventMethod(PLAYER.UseItem)]
         internal static void OnItemUsing(UseItemEvent ev)
@@ -554,13 +454,6 @@ namespace SCP343.Handlers
             if (Scp343BadgeList.Count() < 1) return;
             if (!ev.Player.IsSCP343()) return;
             ev.Allowed = false;
-            if (ev.Item.Type == ItemType.SCP268)
-            {
-                bool invisible = !invisiblePlayers[ev.Player.UserInfomation.Id];
-                ev.Player.Broadcasts.Clear();
-                new Qurre.API.Controllers.Broadcast(ev.Player, invisible ? Config.Translation.Is_Invisible_True : Config.Translation.Is_Invisible_False, 10).Start();
-                invisiblePlayers[ev.Player.UserInfomation.Id] = invisible;
-            }
         }
 
         [EventMethod(PLAYER.DropItem)]
@@ -591,7 +484,6 @@ namespace SCP343.Handlers
                         text = Config.Translation.Teleport_To_Player.Replace("%player%", player.UserInfomation.Nickname).Replace("%role%", player.RoleInfomation.Role.ToString());
                     }
                 }
-                ev.Player.Broadcasts.Clear();
                 new Qurre.API.Controllers.Broadcast(ev.Player, text, 10).Start();
             }
             else if (ev.Item.Type == ItemType.Adrenaline)
@@ -623,10 +515,9 @@ namespace SCP343.Handlers
                     ShowHealingCooldown(ev.Player).RunCoroutine("showhealingcd" + ev.Player.UserInfomation.UserId);
                     return;
                 }
-                ev.Player.Broadcasts.Clear();
                 new Qurre.API.Controllers.Broadcast(ev.Player, text, 10).Start();
             }
-            else if (ev.Item.Type == ItemType.Flashlight)
+            else if (ev.Item.Type == ItemType.SCP500)
             {
                 if (ev.Player.GetSCPBadge().Revive343 == 0)
                 {
@@ -656,14 +547,7 @@ namespace SCP343.Handlers
                         ev.Player.GetSCPBadge().Revive343--;
                     }
                 }
-                ev.Player.Inventory.Clear();
                 new Qurre.API.Controllers.Broadcast(ev.Player, text, 10).Start();
-            }
-            else if (ev.Item.Type == ItemType.SCP268)
-            {
-                bool invisible = !invisiblePlayers[ev.Player.UserInfomation.Id];
-                new Qurre.API.Controllers.Broadcast(ev.Player, invisible ? Config.Translation.Is_Invisible_True : Config.Translation.Is_Invisible_False, 10);
-                invisiblePlayers[ev.Player.UserInfomation.Id] = invisible;
             }
         }
 
@@ -705,12 +589,6 @@ namespace SCP343.Handlers
             }
         }
 
-        [EventMethod(SERVER.RequestPlayerListCommand)]
-        public static void Test(RequestPlayerListCommandEvent ev)
-        {
-            Log.Debug(ev.Reply);
-        }
-
         [EventMethod(PLAYER.DropAmmo)]
         internal static void DropAmmo(DropAmmoEvent ev)
         {
@@ -749,21 +627,5 @@ namespace SCP343.Handlers
                 else ev.Allowed = true;
             }
         }
-        /*
-        internal static void OnVoiceSpeak(PressPrimaryChatEvent ev)
-        {
-            if (!Config.can_visibled_while_speaking) return;
-            if (invisiblePlayers[ev.Player.UserInfomation.Id])
-                if ((!ev.Value && ev.Player.Invisible) || (ev.Value && !ev.Player.Invisible)) ev.Player.Invisible = !ev.Player.Invisible;
-        }
-
-        internal static void OnAltVoiceSpeak(PressAltChatEvent ev)
-        {
-            if (!Config.can_visibled_while_speaking) return;
-            if (!ev.Player.HasItem(ItemType.Radio)) return;
-            if (invisiblePlayers[ev.Player.UserInfomation.Id])
-                if ((!ev.Value && ev.Player.Invisible) || (ev.Value && !ev.Player.Invisible)) ev.Player.Invisible = !ev.Player.Invisible;
-        }
-        */
     }
 }
