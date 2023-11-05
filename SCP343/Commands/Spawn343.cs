@@ -28,8 +28,6 @@ namespace SCP343.Commands
 
         protected override bool ExecuteParent(ArraySegment<string> arguments, ICommandSender sender, out string response)
         {
-            response = "";
-            if (!Config.IsEnabled) return false;
             if (!sender.CheckPermission(PlayerPermissions.ForceclassWithoutRestrictions, out response))
             {
                 return false;
@@ -41,7 +39,7 @@ namespace SCP343.Commands
                 return false;
             }
 
-            Player player = Player.List.First(p=>p.UserInfomation.Nickname == string.Join(" ", arguments) || p.UserInfomation.Id == int.Parse(string.Join(" ", arguments)) || p.UserInfomation.UserId == string.Join(" ", arguments)) ?? null;
+            Player player = Player.List.FirstOrDefault(p=>p.UserInfomation.Nickname == string.Join(" ", arguments) || p.UserInfomation.Id == int.Parse(string.Join(" ", arguments)) || p.UserInfomation.UserId == string.Join(" ", arguments)) ?? null;
             if (player == null || player.UserInfomation.Id == Server.Host.UserInfomation.Id)
             {
                 response = "Incorrect PlayerId";

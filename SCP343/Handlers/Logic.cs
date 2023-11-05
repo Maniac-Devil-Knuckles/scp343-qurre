@@ -3,15 +3,25 @@ using System.Collections.Generic;
 using Qurre.API;
 using UnityEngine;
 using MEC;
-using Qurre;
-using System.Linq;
-using SCP343;
 using Qurre.API.Classification.Roles;
+using System.Reflection;
+using System.Linq;
+using Qurre.API.Controllers;
 
 namespace SCP343.Handlers
 {
     internal static partial class Eventhandlers
     {
+        internal static Assembly Scp035 { get; set; } = null;
+
+        private static void RefreshItemsScp035()
+        {
+            if (Scp035 == null) return;
+            Scp035.GetTypes().First(t => t.IsClass && t.Name == "Logic").GetMethod("RefreshItems", BindingFlags.Static | BindingFlags.Public).Invoke(null, null);
+        }
+
+        private static List<Pickup> List => (List<Pickup>)Scp035.GetTypes().First(t=> t.IsClass && t.Name == "Plugin").GetField("items", BindingFlags.Static | BindingFlags.Public).GetValue(null);
+
         private static IEnumerator<float> HealingCooldown(Player player)
         {
             yield return Timing.WaitForSeconds(1f);

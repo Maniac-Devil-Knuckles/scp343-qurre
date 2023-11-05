@@ -10,6 +10,7 @@ using System.IO;
 using System.Reflection;
 using System.Linq;
 using SCP343.Patches;
+using SCP343.Handlers;
 
 namespace SCP343
 {
@@ -20,6 +21,7 @@ namespace SCP343
         
         internal static int i = 0;
 
+        internal static Assembly Scp035 { get; set; } = null;
         internal static Spawn343 Spawn343 { get; set; } = null;
 
         [PluginEnable]
@@ -48,15 +50,7 @@ namespace SCP343
                 Spawn343 = new Spawn343();
                 CommandProcessor.RemoteAdminCommandHandler.RegisterCommand(Spawn343);
                 GameCore.Console.singleton.ConsoleCommandHandler.RegisterCommand(Spawn343);
-                try
-                {
-                    PatchScp035();
-                }
-                catch (Exception e)
-                {
-                    Log.Info("smth not working");
-                    Log.Error(e);
-                }
+                PatchScp035();
                 Log.Info("Enabling SCP343 by Maniac Devil Knuckles");
                 
             }
@@ -79,39 +73,31 @@ namespace SCP343
             if (harmony != null) harmony.UnpatchAll(harmony.Id);
             harmony = null;
         }
-
+        
         internal static void PatchScp035()
         {
             foreach (string pluginString in Directory.GetFiles(Pathes.Plugins))
             {
                 try
                 {
-                    Assembly pl = Assembly.Load(LoaderManager.ReadFile(pluginString));
-                    if (pl == null) continue;
-                    PluginInit plugin = null;
-                    foreach (var type in pl.GetTypes())
+                    foreach(Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
                     {
-                        PluginInit init = type.GetCustomAttribute<PluginInit>();
-                        if (init == null)
-                            continue;
-                        if (init.Developer == "DaNoNe" && init.Name == "SCP035")
+                        PluginInit plugin = null;
+                        foreach (var type in assembly.GetTypes())
                         {
-                            plugin = init;
-                            break;
+                            PluginInit init = type.GetCustomAttribute<PluginInit>();
+                            if (init == null)
+                                continue;
+                            if (init.Developer == "DaNoNe" && init.Name == "SCP035")
+                            {
+                                plugin = init;
+                                break;
+                            }
                         }
+                        if (plugin == null) continue;
+                        Eventhandlers.Scp035 = assembly;
+                        break;
                     }
-                    if (plugin == null) continue;
-                    var pickupMethod =
-                        AccessTools.Method(
-                            pl.GetTypes().First(t => t.IsClass && t.Name == "EventHandler"),
-                            "PickupItemEvent");
-
-                    Log.Info("Patching method scp035...");
-                    Scp035.Assembly = pl;
-                    var patchprefix = AccessTools.Method(typeof(Scp035), nameof(Scp035.Prefix));
-                    harmony.Patch(pickupMethod, new HarmonyMethod(patchprefix));
-                    Log.Info("Successfully");
-                    break;
                 }
                 catch (Exception ex) { Log.Error(ex); }
             }

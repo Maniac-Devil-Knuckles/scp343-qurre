@@ -26,9 +26,6 @@ namespace SCP343.Handlers
     {
         private static readonly Dictionary<int, Badge> deadPlayers = new Dictionary<int, Badge>();
 
-        public static bool PickupScp035 { get; set; } = false;
-
-
         [EventMethod(SCPS.Attack)]
         internal static void OnScpAttack(ScpAttackEvent ev)
         {
@@ -601,12 +598,11 @@ namespace SCP343.Handlers
             if (Scp343BadgeList.Count() < 1) return;
             if (ev.Player.IsSCP343())
             {
-                if (PickupScp035)
+                try
                 {
-                    ev.Allowed = false;
-                    PickupScp035 = false;
-                    return;
+                    if (Scp035 !=null ) if (ev.Pickup != null && List.Contains(ev.Pickup)) RefreshItemsScp035();
                 }
+                catch (Exception) { }
                 if (!Config.ItemsConvertToggle)
                 {
                     ev.Allowed = false;
