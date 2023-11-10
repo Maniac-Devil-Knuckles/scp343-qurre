@@ -76,8 +76,6 @@ namespace SCP343
         
         internal static void PatchScp035()
         {
-            foreach (string pluginString in Directory.GetFiles(Pathes.Plugins))
-            {
                 try
                 {
                     foreach(Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
@@ -96,11 +94,11 @@ namespace SCP343
                         }
                         if (plugin == null) continue;
                         Eventhandlers.Scp035 = assembly;
+                        Log.Info("Assembly Scp035 was found and linked);
                         break;
                     }
                 }
                 catch (Exception ex) { Log.Error(ex); }
-            }
         }
     }
 }
