@@ -76,29 +76,29 @@ namespace SCP343
         
         internal static void PatchScp035()
         {
-            try
-            {
-                foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
+                try
                 {
-                    PluginInit plugin = null;
-                    foreach (var type in assembly.GetTypes())
+                    foreach(Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
                     {
-                        PluginInit init = type.GetCustomAttribute<PluginInit>();
-                        if (init == null)
-                            continue;
-                        if (init.Developer == "DaNoNe" && init.Name == "SCP035")
+                        PluginInit plugin = null;
+                        foreach (var type in assembly.GetTypes())
                         {
-                            plugin = init;
-                            break;
+                            PluginInit init = type.GetCustomAttribute<PluginInit>();
+                            if (init == null)
+                                continue;
+                            if (init.Developer == "DaNoNe" && init.Name == "SCP035")
+                            {
+                                plugin = init;
+                                break;
+                            }
                         }
+                        if (plugin == null) continue;
+                        Eventhandlers.Scp035 = assembly;
+                        Log.Info("Assembly Scp035 was found and linked);
+                        break;
                     }
-                    if (plugin == null) continue;
-                    Eventhandlers.Scp035 = assembly;
-                    Log.Info("Assembly Scp035 was found and linked");
-                    break;
                 }
-            }
-            catch (Exception ex) { Log.Error(ex); }
+                catch (Exception ex) { Log.Error(ex); }
         }
     }
 }
