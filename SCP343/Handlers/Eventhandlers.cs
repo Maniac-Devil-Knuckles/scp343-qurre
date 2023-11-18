@@ -10,15 +10,11 @@ using UnityEngine;
 using MEC;
 using System.Linq;
 using Random = System.Random;
-using Qurre;
 using Qurre.API.Objects;
 using Qurre.API.Controllers;
 using Qurre.Events.Structs;
 using PlayerRoles;
-using PlayerRoles.FirstPersonControl;
 using Qurre.API.Attributes;
-using Achievements.Handlers;
-using SCP343;
 
 namespace SCP343.Handlers
 {
@@ -48,20 +44,7 @@ namespace SCP343.Handlers
             if (Scp343BadgeList.Count() < 1) return;
             if (ev.Player.IsSCP343()) KillSCP343(ev.Player);
         }
-        /*
-        internal static void OnShooting( ev)
-        {
-            if (scp343badgelist.Count() < 1) return;
-            if (ev.Shooter.IsSCP343() && ev.Shooter.CurrentItem.TypeId == ItemType.GunCOM15)
-                if (!Scp343.CustomConfig.can_use_TranquilizerGun) ev.Allowed = false;
-                else if (ev.Shooter.GetSCPBadge().ShootCooldown > 0)
-                {
-                    ev.Allowed = false;
-                    ev.Shooter.ShowHint(Scp343.CustomConfig.Translation.shootcooldowntext.Replace("%seconds%", ev.Shooter.GetSCPBadge().ShootCooldown.ToString()), 5);
-                }
-                else ev.Shooter.GetSCPBadge().ShootCooldown = Scp343.CustomConfig.shootcooldown;
-        }
-        */
+
         [EventMethod(ROUND.End)]
         internal static void OnRoundEnd(RoundEndEvent ev)
         {
@@ -334,7 +317,7 @@ namespace SCP343.Handlers
         }
 
         [EventMethod(ROUND.Restart)]
-        internal static void OnRestartingRound(RoundRestartEvent ev)
+        internal static void OnRestartingRound()
         {
             if (!Config.IsEnabled) return;
             foreach (Player pl in Player.List)
@@ -345,14 +328,10 @@ namespace SCP343.Handlers
         }
 
         [EventMethod(ROUND.Start)]
-        internal static void OnRoundStarted(RoundStartedEvent ev)
+        internal static void OnRoundStarted()
         {
-            if (!Config.IsEnabled) return;
             Scp343BadgeList.Clear();
-            if (!Config.IsEnabled)
-            {
-                return;
-            }
+            if (!Config.IsEnabled) return;
             int count = Player.List.Count();
             if (Config.MinPlayersWhenCanSpawn > count) return;
             int chance = count < 2 ? 10000 : new Random().Next(1, 100);
@@ -412,13 +391,6 @@ namespace SCP343.Handlers
             if (deadPlayers.ContainsKey(ev.Player.UserInfomation.Id)) deadPlayers.Remove(ev.Player.UserInfomation.Id);
         }
         /*
-        internal static void OnContaining(ContainEvent ev)
-        {
-            if (Scp343BadgeList.Count() < 1) return;
-            if (ev.Player.IsSCP343()) ev.Allowed = false;
-        }
-        
-        
         private static float FindLookRotation(Vector3 player, Vector3 target) => Quaternion.LookRotation((target - player).normalized).eulerAngles.y;
         
         internal static void OnTransmitPlayerData( ev)
@@ -588,7 +560,7 @@ namespace SCP343.Handlers
         [EventMethod(PLAYER.DropAmmo)]
         internal static void DropAmmo(DropAmmoEvent ev)
         {
-            if (ev.Player.IsSCP343()) ev.Allowed |= false;
+            if (ev.Player.IsSCP343()) ev.Allowed = false;
         }
 
         [EventMethod(PLAYER.PrePickupItem)]

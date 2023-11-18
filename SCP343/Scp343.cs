@@ -4,12 +4,8 @@ using Qurre.API;
 using HarmonyLib;
 using Qurre.API.Attributes;
 using SCP343.Commands;
-using CommandSystem;
 using RemoteAdmin;
-using System.IO;
 using System.Reflection;
-using System.Linq;
-using SCP343.Patches;
 using SCP343.Handlers;
 
 namespace SCP343
@@ -19,9 +15,8 @@ namespace SCP343
     {
         public static Harmony harmony { get; internal set; } = null;
         
-        internal static int i = 0;
+        internal static int i { get; set; } = 0;
 
-        internal static Assembly Scp035 { get; set; } = null;
         internal static Spawn343 Spawn343 { get; set; } = null;
 
         [PluginEnable]

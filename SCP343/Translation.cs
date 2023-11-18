@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace SCP343
+﻿namespace SCP343
 {
 	public class Translation
 	{

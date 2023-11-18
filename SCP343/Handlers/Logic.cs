@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Qurre.API;
 using UnityEngine;
 using MEC;
@@ -69,8 +68,8 @@ namespace SCP343.Handlers
         {
             player.Client.ShakeScreen();
             player.GamePlay.GodMode = true;
-            new Qurre.API.Controllers.Broadcast(player, Config.Translation.YouWereTranq, 4);
-            Qurre.API.Controllers.Ragdoll ragdoll = new Qurre.API.Controllers.Ragdoll(player.RoleInfomation.Role, player.MovementState.Position, player.MovementState.CameraReference.rotation, new PlayerStatsSystem.CustomReasonDamageHandler("tranquilizer", 0), player);
+            new Qurre.API.Controllers.Broadcast(player, Config.Translation.YouWereTranq, 4).Start();
+            Ragdoll ragdoll = new Ragdoll(player.RoleInfomation.Role, player.MovementState.Position, player.MovementState.CameraReference.rotation, new PlayerStatsSystem.CustomReasonDamageHandler("tranquilizer", 0), player);
             Vector3 pos = player.MovementState.Position;
             player.MovementState.Position = new Vector3(1, 1, 1);
             yield return Timing.WaitForSeconds(5f);
@@ -92,7 +91,6 @@ namespace SCP343.Handlers
                 if (_time <= 0)
                 {
                     player.GetSCPBadge().CanOpenDoor = true;
-                    Log.Info(player.GetSCPBadge().CanOpenDoor);
                     break;
                 }
                 player.Client.ShowHint(Config.Translation.Text_Show_Timer_When_Can_Open_Door.Replace("{343_time_open_door}", _time.ToString()));
@@ -103,8 +101,6 @@ namespace SCP343.Handlers
 
         internal static Badge spawn343(Player player, bool scp0492 = false, Vector3 position = default)
         {
-            string globalbadge = string.Empty;
-            if (!string.IsNullOrEmpty(player.GlobalBadge())) globalbadge = " | " + player.GlobalBadge();
             player.Inventory.Clear();
             Timing.CallDelayed(1f, () =>
             {
@@ -129,8 +125,8 @@ namespace SCP343.Handlers
             Badge badge = new Badge(player, true);
             Timing.CallDelayed(1f, () =>
             {
-                if (player.Administrative.RoleName != "") player.Administrative.RoleName = "SCP-343" + (string.IsNullOrEmpty(globalbadge) ? " | " + player.Administrative.RoleName : globalbadge);
-                else player.Administrative.RoleName = "SCP-343" + globalbadge;
+                if (player.Administrative.RoleName != "") player.Administrative.RoleName = "SCP-343" + (!string.IsNullOrEmpty(player.Administrative.RoleName) ? " | " + player.Administrative.RoleName : string.Empty);
+                else player.Administrative.RoleName = "SCP-343";
                 player.Administrative.RoleColor = "red";
             });
             if (Config.Invisible_For_173) Scp173.IgnoredPlayers.Contains(player);

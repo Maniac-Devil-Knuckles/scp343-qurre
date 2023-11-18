@@ -37,7 +37,5 @@ namespace SCP343
             if (string.IsNullOrEmpty(player.Administrative.ServerRoles.NetworkGlobalBadge)) return string.Empty; 
             return player.Administrative.ServerRoles.NetworkGlobalBadge.Split(new string[] { "Badge text: [" }, System.StringSplitOptions.None)[1].Split(']')[0];
         }
-
-
     }
 }

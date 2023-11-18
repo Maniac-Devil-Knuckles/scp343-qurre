@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Qurre.API.Addons;
-using Qurre.API.Objects;
 
 namespace SCP343
 {
