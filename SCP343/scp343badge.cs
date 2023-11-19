@@ -49,7 +49,7 @@ namespace SCP343
 
         internal Badge(GameObject GameObject, bool scp343 = false, string SCPName = "")
         {
-            Player = Qurre.API.Player.List.Where(p=> p.GameObject.Equals(GameObject)).FirstOrDefault();
+            Player = GameObject.GetPlayer();
             RoleColor = Player.Administrative.RoleColor;
             RoleName = Player.Administrative.RoleName;
             Id = Player.UserInfomation.Id;
@@ -89,7 +89,7 @@ namespace SCP343
 
     public static class Scp343BadgeList
     {
-        private static readonly HashSet<Badge> badges = new HashSet<Badge>();
+        private static readonly HashSet<Badge> badges = new();
 
         internal static void Add(Badge scp343)
         {

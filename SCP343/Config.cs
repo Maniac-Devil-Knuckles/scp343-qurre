@@ -28,15 +28,15 @@ namespace SCP343
 
         public static float SpawnChance { get; internal set; } = 30f;
 
-       public static List<ItemType> ItemsDropList { get; internal set; } = new List<ItemType> { ItemType.KeycardJanitor, ItemType.KeycardScientist, ItemType.KeycardResearchCoordinator, ItemType.KeycardZoneManager, ItemType.KeycardGuard, ItemType.KeycardMTFCaptain, ItemType.KeycardContainmentEngineer, ItemType.KeycardMTFOperative, ItemType.KeycardMTFPrivate, ItemType.KeycardFacilityManager, ItemType.KeycardChaosInsurgency , ItemType.KeycardO5, ItemType.Flashlight, ItemType.Radio, ItemType.Ammo556x45, ItemType.Ammo44cal, ItemType.Ammo762x39, ItemType.Ammo9x19, ItemType.SCP268, ItemType.Adrenaline };
+       public static List<ItemType> ItemsDropList { get; internal set; } = new(){ ItemType.KeycardJanitor, ItemType.KeycardScientist, ItemType.KeycardResearchCoordinator, ItemType.KeycardZoneManager, ItemType.KeycardGuard, ItemType.KeycardMTFCaptain, ItemType.KeycardContainmentEngineer, ItemType.KeycardMTFOperative, ItemType.KeycardMTFPrivate, ItemType.KeycardFacilityManager, ItemType.KeycardChaosInsurgency , ItemType.KeycardO5, ItemType.Flashlight, ItemType.Radio, ItemType.Ammo556x45, ItemType.Ammo44cal, ItemType.Ammo762x39, ItemType.Ammo9x19, ItemType.SCP268, ItemType.Adrenaline };
 
-        public static List<ItemType> ItemsToConvert { get; internal set; } = new List<ItemType> { ItemType.GunCOM15, ItemType.Medkit, ItemType.MicroHID, ItemType.GunE11SR, ItemType.GunCrossvec, ItemType.GunFSP9, ItemType.GunLogicer, ItemType.GrenadeHE, ItemType.GrenadeFlash, ItemType.GunCOM18, ItemType.Coin };
+        public static List<ItemType> ItemsToConvert { get; internal set; } = new(){ ItemType.GunCOM15, ItemType.Medkit, ItemType.MicroHID, ItemType.GunE11SR, ItemType.GunCrossvec, ItemType.GunFSP9, ItemType.GunLogicer, ItemType.GrenadeHE, ItemType.GrenadeFlash, ItemType.GunCOM18, ItemType.Coin };
 
-        public static List<ItemType> ConvertedItems { get; internal set; } = new List<ItemType> { ItemType.Medkit };
+        public static List<ItemType> ConvertedItems { get; internal set; } = new(){ ItemType.Medkit };
 
         public static int MinPlayersWhenCanSpawn { get; internal set; } = 5;
 
-        public static List<ItemType> ItemsAtSpawn { get; internal set; } = new List<ItemType> { ItemType.Coin, ItemType.Adrenaline, ItemType.SCP500, ItemType.SCP268, ItemType.GunCOM15, ItemType.SCP330 };
+        public static List<ItemType> ItemsAtSpawn { get; internal set; } = new(){ ItemType.Coin, ItemType.Adrenaline, ItemType.SCP500, ItemType.SCP268, ItemType.GunCOM15, ItemType.SCP330 };
         
         public static bool Activating_Tesla_In_Range { get; internal set; } = true;
 
@@ -54,7 +54,7 @@ namespace SCP343
 
         public static bool Can_Use_TranquilizerGun { get; internal set; } = true;
 
-        public static List<ItemType> ItemsCanNotDrop { get; internal set; } = new List<ItemType> { ItemType.Coin, ItemType.Adrenaline, ItemType.SCP500, ItemType.SCP268, ItemType.GunCOM15};
+        public static List<ItemType> ItemsCanNotDrop { get; internal set; } = new(){ ItemType.Coin, ItemType.Adrenaline, ItemType.SCP500, ItemType.SCP268, ItemType.GunCOM15};
         
         public static bool Can_Visibled_While_Speaking { get; internal set; } = true;
 
@@ -64,9 +64,9 @@ namespace SCP343
 
         public static int Max_Revive_Count { get; internal set; } = 3;
 
-        public static Translation Translation { get; internal set; } = new Translation();
+        public static Translation Translation { get; internal set; } = new();
 
-        private static readonly JsonConfig jsonConfig = new JsonConfig("SCP_343");
+        private static readonly JsonConfig jsonConfig = new("SCP_343");
 
         internal static void Reload()
         {
@@ -91,7 +91,7 @@ namespace SCP343
             items = jsonConfig.SafeGetValue("ItemsAtSpawn", ItemsAtSpawn.Select(ii => ((int)ii).ToString()).ToArray());
             ItemsAtSpawn = items.Select(dd=> (ItemType)Enum.Parse(typeof(ItemType), dd)).ToList();
             Activating_Tesla_In_Range = jsonConfig.SafeGetValue("Activating_Tesla_In_Range", Activating_Tesla_In_Range);
-            Translation = jsonConfig.SafeGetValue("Translation", new Translation());
+            Translation = jsonConfig.SafeGetValue("Translation", Translation);
             JsonConfig.UpdateFile();
         }
     }

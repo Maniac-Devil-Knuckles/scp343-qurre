@@ -19,7 +19,7 @@ namespace SCP343.Handlers
             Scp035.GetTypes().First(t => t.IsClass && t.Name == "Logic").GetMethod("RefreshItems", BindingFlags.Static | BindingFlags.Public).Invoke(null, null);
         }
 
-        private static List<Pickup> List => (List<Pickup>)Scp035.GetTypes().First(t=> t.IsClass && t.Name == "Plugin").GetField("items", BindingFlags.Static | BindingFlags.Public).GetValue(null);
+        private static List<Pickup> List => (List<Pickup>)Scp035.GetTypes().First(t=> t.IsClass && t.Name == "Plugin").GetField("items", BindingFlags.Static | BindingFlags.Public).GetValue(null) ?? new();
 
         private static IEnumerator<float> HealingCooldown(Player player)
         {
@@ -36,7 +36,7 @@ namespace SCP343.Handlers
                 else if (!IsShowed)
                 {
                     IsShowed = true;
-                    new Qurre.API.Controllers.Broadcast(player, Config.Translation.End_Cooldown, 5);
+                    new Qurre.API.Controllers.Broadcast(player, Config.Translation.End_Cooldown, 5).Start();
                 }
 
                 if (player.GetSCPBadge().ShootCooldown > 0) player.GetSCPBadge().ShootCooldown--;
@@ -50,7 +50,7 @@ namespace SCP343.Handlers
             {
                 yield return Timing.WaitForSeconds(1f);
                 int cooldown = player.GetSCPBadge().HealCooldown;
-                if (cooldown > 0) new Qurre.API.Controllers.Broadcast(player, Config.Translation.CoolDown.Replace("%seconds%", cooldown.ToString()), 1);
+                if (cooldown > 0) new Qurre.API.Controllers.Broadcast(player, Config.Translation.CoolDown.Replace("%seconds%", cooldown.ToString()), 1).Start();
             }
         }
 
@@ -69,17 +69,15 @@ namespace SCP343.Handlers
             player.Client.ShakeScreen();
             player.GamePlay.GodMode = true;
             new Qurre.API.Controllers.Broadcast(player, Config.Translation.YouWereTranq, 4).Start();
-            Ragdoll ragdoll = new Ragdoll(player.RoleInfomation.Role, player.MovementState.Position, player.MovementState.CameraReference.rotation, new PlayerStatsSystem.CustomReasonDamageHandler("tranquilizer", 0), player);
+            Ragdoll ragdoll = new(player.RoleInfomation.Role, player.MovementState.Position, player.MovementState.CameraReference.rotation, new PlayerStatsSystem.CustomReasonDamageHandler("tranquilizer", 0), player);
             Vector3 pos = player.MovementState.Position;
-            player.MovementState.Position = new Vector3(1, 1, 1);
+            player.MovementState.Position = new(1, 1, 1);
             yield return Timing.WaitForSeconds(5f);
             player.GamePlay.GodMode = false;
             player.MovementState.Position = pos;
             player.Client.ShakeScreen();
             ragdoll.Destroy();
         }
-
-        internal static bool adminsor343(Player player) => player.IsSCP343() || player.Sender.CheckPermission(PlayerPermissions.AdminChat);
 
         internal static IEnumerator<float> WhenOpenDoor(Player player)
         {
@@ -99,17 +97,8 @@ namespace SCP343.Handlers
             }
         }
 
-        internal static Badge spawn343(Player player, bool scp0492 = false, Vector3 position = default)
+        internal static Badge Spawn343(Player player, bool scp0492 = false, Vector3 position = default)
         {
-            player.Inventory.Clear();
-            Timing.CallDelayed(1f, () =>
-            {
-                player.Inventory.Ammo.Ammo556 = 300;
-                player.Inventory.Ammo.Ammo762 = 300;
-                player.Inventory.Ammo.Ammo9 = 300;
-                player.Inventory.Ammo.Ammo12Gauge = 300;
-                player.Inventory.Ammo.Ammo44Cal = 300;
-            });
             if (scp0492)
             {
                 KillSCP343(player);
@@ -122,18 +111,18 @@ namespace SCP343.Handlers
                 });
             }
             if (player.IsSCP343()) return player.GetSCPBadge();
-            Badge badge = new Badge(player, true);
+            Badge badge = new(player, true);
             Timing.CallDelayed(1f, () =>
             {
                 if (player.Administrative.RoleName != "") player.Administrative.RoleName = "SCP-343" + (!string.IsNullOrEmpty(player.Administrative.RoleName) ? " | " + player.Administrative.RoleName : string.Empty);
                 else player.Administrative.RoleName = "SCP-343";
                 player.Administrative.RoleColor = "red";
             });
-            if (Config.Invisible_For_173) Scp173.IgnoredPlayers.Contains(player);
+            if (Config.Invisible_For_173) Scp173.IgnoredPlayers.Add(player);
             if (Config.Alert && !scp0492)
             {
                 player.Broadcasts.Clear();
-                new Qurre.API.Controllers.Broadcast(player,Config.Translation.AlertText,15);
+                new Qurre.API.Controllers.Broadcast(player,Config.Translation.AlertText,15).Start();
             }
             if (Config.Console && !scp0492) player.Client.SendConsole("\n----------------------------------------------------------- \n" + Config.Translation.ConsoleText.Replace("343DOORTIME", Config.OpenDoorTime.ToString()).Replace("343HECKTIME", Config.HeckTime.ToString()).Replace("\\n", "\n") + "\n-----------------------------------------------------------", "green");
 
@@ -141,16 +130,17 @@ namespace SCP343.Handlers
             {
                 player.Effects.Enable<CustomPlayerEffects.Scp207>(10000000000);
                 player.Effects.Enable<CustomPlayerEffects.Scp207>(10000000000, true);
-                player.Inventory.Clear();
-                if (!scp0492)
-                {
-                   foreach(ItemType item in Config.ItemsAtSpawn)  player.Inventory.AddItem(item);
-                }
-                if (Config.Heck)
-                {
-                    player.GetSCPBadge().CanHeck = true;
-                }
+                if (!scp0492) player.Inventory.Reset(Config.ItemsAtSpawn);
+                if (Config.Heck) player.GetSCPBadge().CanHeck = true;
                 player.HealthInfomation.Hp = 100f;
+            });
+            Timing.CallDelayed(1f, () =>
+            {
+                player.Inventory.Ammo.Ammo556 = 300;
+                player.Inventory.Ammo.Ammo762 = 300;
+                player.Inventory.Ammo.Ammo9 = 300;
+                player.Inventory.Ammo.Ammo12Gauge = 300;
+                player.Inventory.Ammo.Ammo44Cal = 300;
             });
             if (Config.CanOpenAnyDoor)
             {

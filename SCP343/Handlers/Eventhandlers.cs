@@ -20,7 +20,7 @@ namespace SCP343.Handlers
 {
     internal static partial class Eventhandlers
     {
-        private static readonly Dictionary<int, Badge> deadPlayers = new Dictionary<int, Badge>();
+        private static readonly Dictionary<int, Badge> deadPlayers = new();
 
         [EventMethod(SCPS.Attack)]
         internal static void OnScpAttack(ScpAttackEvent ev)
@@ -60,7 +60,7 @@ namespace SCP343.Handlers
             {
                 bool mtf = Player.List.Count(p => p.RoleInfomation.Team == Team.FoundationForces && !p.Tag.Contains(" scp035")) > 0;
                 bool classd = Player.List.Count(p => p.RoleInfomation.Role == RoleTypeId.ClassD && !p.IsSCP343() && !p.Tag.Contains(" scp035")) > 0;
-                bool chaos = Player.List.Count(p => p.RoleInfomation.Team == Team.ChaosInsurgency && !p.Tag.Contains(" scp035")) > 3;
+                bool chaos = Player.List.Count(p => p.RoleInfomation.Team == Team.ChaosInsurgency && !p.Tag.Contains(" scp035")) > 0;
                 bool scps = Player.List.Count(p => p.RoleInfomation.Team == Team.SCPs && !p.Tag.Contains(" scp035")) > 0;
                 if (mtf && !classd && !scps && !chaos) ev.End = true;
                 else if (!mtf && !classd && scps) ev.End = true;
@@ -173,7 +173,7 @@ namespace SCP343.Handlers
                             ev.Reply = Config.Translation.CoolDown.Replace("%seconds%", ev.Player.GetSCPBadge().HealCooldown.ToString());
                         }
                         ev.Player.Broadcasts.Clear();
-                        new Qurre.API.Controllers.Broadcast(ev.Player,ev.Reply, 10);
+                        new Qurre.API.Controllers.Broadcast(ev.Player,ev.Reply, 10).Start();
                     }
                 }
                 else if (ev.Name.ToLower() == "revive343")
@@ -226,18 +226,6 @@ namespace SCP343.Handlers
                 Log.Error(ex);
             }
         }
-
-        /*
-        internal static void OnEnteringPocketDimension( ev)
-        {
-            if (Scp343BadgeList.Count() < 1) return;
-            if (ev.Player.IsSCP343())
-            {
-                ev.Allowed = false;
-                ev.Position = ev.Player.Position;
-            }
-        }
-        */
 
         [EventMethod(WARHEAD.Start)]
         internal static void OnStarting(AlphaStartEvent ev)
@@ -341,9 +329,8 @@ namespace SCP343.Handlers
             ClassDList.Remove(player);
             Timing.CallDelayed(0.5f, () =>
             {
-                spawn343(player);
+                Spawn343(player);
             });
-
         }
 
         [EventMethod(PLAYER.InteractDoor)]
@@ -371,7 +358,7 @@ namespace SCP343.Handlers
             {
                 ev.Role = RoleTypeId.ClassD;
                 Vector3 pos = ev.Player.MovementState.Position;
-                Timing.CallDelayed(0.3f, () => { spawn343(ev.Player, true); });
+                Timing.CallDelayed(0.3f, () => { Spawn343(ev.Player, true); });
                 Timing.CallDelayed(1.1f, () =>
                 {
                     ev.Player.MovementState.Position = pos;
@@ -390,20 +377,7 @@ namespace SCP343.Handlers
             if (ev.Player.IsSCP343()) KillSCP343(ev.Player);
             if (deadPlayers.ContainsKey(ev.Player.UserInfomation.Id)) deadPlayers.Remove(ev.Player.UserInfomation.Id);
         }
-        /*
-        private static float FindLookRotation(Vector3 player, Vector3 target) => Quaternion.LookRotation((target - player).normalized).eulerAngles.y;
-        
-        internal static void OnTransmitPlayerData( ev)
-        {
-            if (ev.PlayerToShow.IsSCP343())
-            {
-                if (ev.Player.Role == RoleType.Scp096 || ev.Player.Role == RoleType.Scp173)
-                {
-                    ev.Rotation = FindLookRotation(ev.Player.Position, ev.PlayerToShow.Position);
-                }
-            }
-        }
-      //*/
+
         [EventMethod(PLAYER.Escape)]
         internal static void OnEscaping(EscapeEvent ev)
         {
@@ -415,7 +389,7 @@ namespace SCP343.Handlers
             }
         }
 
-        [EventMethod(PLAYER.UseItem)]
+        [EventMethod(PLAYER.UsedItem)]
         internal static void OnItemUsing(UseItemEvent ev)
         {
             if (!Config.IsEnabled) return;
@@ -542,8 +516,7 @@ namespace SCP343.Handlers
             {
                 if (Config.Activating_Tesla_In_Range)
                 {
-                    TeslaGate teslaGate = ev.Tesla.GameObject.GetComponent<TeslaGate>();
-                    List<Player> Players = Player.List.Where(x => x.RoleInfomation.Role != RoleTypeId.Spectator && teslaGate.PlayerInRange(x.ReferenceHub)).ToList();
+                    List<Player> Players = Player.List.Where(x => x.RoleInfomation.Role != RoleTypeId.Spectator && ev.Tesla.Gate.PlayerInRange(x.ReferenceHub)).ToList();
                     if (Players.Count > 0)
                     {
                         if (Players.Any(API.IsSCP343)) ev.Allowed = false;
@@ -572,7 +545,7 @@ namespace SCP343.Handlers
             {
                 try
                 {
-                    if (Scp035 !=null ) if (ev.Pickup != null && List.Contains(ev.Pickup)) RefreshItemsScp035();
+                    if (Scp035 is not null ) if (ev.Pickup is not null && List.Contains(ev.Pickup)) RefreshItemsScp035();
                 }
                 catch (Exception) { }
                 if (!Config.ItemsConvertToggle)
@@ -587,7 +560,6 @@ namespace SCP343.Handlers
                 else if (Config.ItemsToConvert.Contains(ev.Pickup.Type))
                 {
                     ev.Allowed = false;
-
                     ev.Pickup.Destroy();
                     foreach(ItemType item in Config.ConvertedItems) ev.Player.Inventory.AddItem(item);
                 }

@@ -13,7 +13,7 @@ namespace SCP343
     [PluginInit("SCP-343","Maniac Devil Knuckles","5.0.0.1")]
     public static class Scp343
     {
-        public static Harmony harmony { get; internal set; } = null;
+        public static Harmony Harmony { get; internal set; } = null;
         
         internal static int i { get; set; } = 0;
 
@@ -33,8 +33,8 @@ namespace SCP343
                 }
                 try
                 {
-                    harmony = new Harmony("knuckles.scp343\nVersion " + i++);
-                    harmony.PatchAll();
+                    Harmony = new("knuckles.scp343\nVersion " + i++);
+                    Harmony.PatchAll();
                     Log.Info("cool");
                 }
                 catch (Exception ex)
@@ -42,7 +42,7 @@ namespace SCP343
                     Log.Info("error\n\n\n\n\n\n\n\\n\n");
                     Log.Info(ex);//
                 }
-                Spawn343 = new Spawn343();
+                Spawn343 = new();
                 CommandProcessor.RemoteAdminCommandHandler.RegisterCommand(Spawn343);
                 GameCore.Console.singleton.ConsoleCommandHandler.RegisterCommand(Spawn343);
                 PatchScp035();
@@ -65,8 +65,8 @@ namespace SCP343
                 GameCore.Console.singleton.ConsoleCommandHandler.UnregisterCommand(Spawn343);
             }
             Spawn343 = null;
-            if (harmony != null) harmony.UnpatchAll(harmony.Id);
-            harmony = null;
+            if (Harmony is not null) Harmony.UnpatchAll(Harmony.Id);
+            Harmony = null;
         }
         
         internal static void PatchScp035()
@@ -79,7 +79,7 @@ namespace SCP343
                     foreach (var type in assembly.GetTypes())
                     {
                         PluginInit init = type.GetCustomAttribute<PluginInit>();
-                        if (init == null)
+                        if (init is null)
                             continue;
                         if (init.Developer == "DaNoNe" && init.Name == "SCP035")
                         {
@@ -87,7 +87,7 @@ namespace SCP343
                             break;
                         }
                     }
-                    if (plugin == null) continue;
+                    if (plugin is null) continue;
                     Eventhandlers.Scp035 = assembly;
                     Log.Info("Assembly Scp035 was found and linked");
                     break;

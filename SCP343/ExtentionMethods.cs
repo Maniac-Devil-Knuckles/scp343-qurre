@@ -21,7 +21,7 @@ namespace SCP343
         /// <para>This spawns <see cref="Player"/> as scp343</para>
         /// </summary>
         /// <returns><see cref="Badge"/></returns>
-        public static Badge Spawn343(Player player, UnityEngine.Vector3 position = default) => Eventhandlers.spawn343(player, position: position);
+        public static Badge Spawn343(Player player, UnityEngine.Vector3 position = default) => Eventhandlers.Spawn343(player, position: position);
         /// <summary>
         /// <para>Just a list</para>
         /// </summary>
