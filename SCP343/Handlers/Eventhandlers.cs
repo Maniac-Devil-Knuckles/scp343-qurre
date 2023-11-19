@@ -389,7 +389,7 @@ namespace SCP343.Handlers
             }
         }
 
-        [EventMethod(PLAYER.UsedItem)]
+        [EventMethod(PLAYER.UseItem)]
         internal static void OnItemUsing(UseItemEvent ev)
         {
             if (!Config.IsEnabled) return;
