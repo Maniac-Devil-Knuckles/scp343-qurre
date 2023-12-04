@@ -18,43 +18,14 @@ namespace SCP343
             this.SCPName = SCPName;
         }
 
-        public Badge(Player player, string SCPName = "")
-        {
-            Player = player;
-            RoleColor = player.Administrative.RoleColor;
-            RoleName = player.Administrative.RoleName;
-            Id = player.UserInfomation.Id;
-            IsSCP343 = false;
-            this.SCPName = SCPName;
-        }
-
         public Badge(Player player, RoleTypeId Role, Vector3 Pos)
         {
             Player = player;
+            Id = player.UserInfomation.Id;
             this.Role = Role;
             RoleColor = player.Administrative.RoleColor;
             RoleName = player.Administrative.RoleName;
             this.Pos = Pos;
-        }
-
-        internal Badge(int PlayerId, bool scp343 = false, string SCPName = "")
-        {
-            Player = Player.List.First(p=> p.UserInfomation.Id == PlayerId);
-            RoleColor = Player.Administrative.RoleColor;
-            RoleName = Player.Administrative.RoleName;
-            Id = Player.UserInfomation.Id;
-            IsSCP343 = scp343;
-            this.SCPName = SCPName;
-        }
-
-        internal Badge(GameObject GameObject, bool scp343 = false, string SCPName = "")
-        {
-            Player = GameObject.GetPlayer();
-            RoleColor = Player.Administrative.RoleColor;
-            RoleName = Player.Administrative.RoleName;
-            Id = Player.UserInfomation.Id;
-            IsSCP343 = scp343;
-            this.SCPName = SCPName;
         }
 
         public string RoleColor { get; } = "";
@@ -104,6 +75,7 @@ namespace SCP343
 
         internal static bool Remove(int PlayerId)
         {
+            if(!Contains(PlayerId)) return false;
             Get(PlayerId).Player.Tag = "";
             return badges.RemoveWhere(b => b.Id == PlayerId) > 0;
         }
@@ -136,25 +108,25 @@ namespace SCP343
         /// Get Badge by <see cref="Player"/>
         /// </summary>
         /// <returns><seealso cref="Badge"/></returns>
-        public static Badge Get(Player player) => Contains(player) ? Get(b => b.Id == player.UserInfomation.Id).First() : null;
+        public static Badge Get(Player player) => Get(b => b.Id == player.UserInfomation.Id).First() ?? null;
 
         /// <summary>
         /// Get Badge by <see cref="Player.Id"/> 
         /// </summary>
         /// <returns><seealso cref="Badge"/></returns>
-        public static Badge Get(int PlayerId) => Contains(PlayerId) ? Get(b => b.Id == PlayerId).First() : null;
+        public static Badge Get(int PlayerId) => Get(b => b.Id == PlayerId).First() ?? null;
 
         /// <summary>
         /// Get Badge by <see cref="GameObject"/>
         /// </summary>
         /// <returns><seealso cref="Badge"/></returns>
-        public static Badge Get(GameObject GameObject) => ReferenceHub.TryGetHub(GameObject, out ReferenceHub _) ? Get(b => b.GameObject == GameObject).First() : null;
+        public static Badge Get(GameObject GameObject) => Get(b => b.GameObject == GameObject).First() ?? null;
 
         /// <summary>
         /// Get Badge by <see cref="ReferenceHub"/>
         /// </summary>
         /// <returns><seealso cref="Badge"/></returns>
-        public static Badge Get(ReferenceHub ReferenceHub) => ReferenceHub.HubByPlayerIds.ContainsValue(ReferenceHub) ? Get(b => b.ReferenceHub == ReferenceHub).First() : null;
+        public static Badge Get(ReferenceHub ReferenceHub) => Get(b => b.ReferenceHub == ReferenceHub).First() ?? null;
 
         /// <summary>
         /// Get Badge by predicate

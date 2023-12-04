@@ -2,6 +2,7 @@ using SCP343.Handlers;
 using Qurre.API;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
 namespace SCP343
 {
@@ -14,6 +15,8 @@ namespace SCP343
         }
 
         public static bool IsSCP343(this Player player) => Scp343BadgeList.Contains(player);
+
+        public static bool IsSCP343(this ReferenceHub referenceHub) => IsSCP343(referenceHub.GetPlayer());
 
         public static Badge GetSCPBadge(this Player player) => player.IsSCP343() ? Scp343BadgeList.Get(player) : null;
 
