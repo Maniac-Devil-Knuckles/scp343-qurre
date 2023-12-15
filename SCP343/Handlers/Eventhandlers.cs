@@ -15,6 +15,8 @@ using Qurre.API.Controllers;
 using Qurre.Events.Structs;
 using PlayerRoles;
 using Qurre.API.Attributes;
+using PlayerRoles.FirstPersonControl;
+using PlayerRoles.FirstPersonControl.NetworkMessages;
 
 namespace SCP343.Handlers
 {
@@ -52,39 +54,17 @@ namespace SCP343.Handlers
             Scp343BadgeList.Clear();
         }
 
-        [EventMethod(ROUND.Check)]
-        internal static void OnRoundEnding(RoundCheckEvent ev)
-        {
-            if (!Config.IsEnabled) return;
-            if (Scp343BadgeList.Count() > 0)
-            {
-                bool mtf = Player.List.Count(p => p.RoleInfomation.Team == Team.FoundationForces && !p.Tag.Contains(" scp035")) > 0;
-                bool classd = Player.List.Count(p => p.RoleInfomation.Role == RoleTypeId.ClassD && !p.IsSCP343() && !p.Tag.Contains(" scp035")) > 0;
-                bool chaos = Player.List.Count(p => p.RoleInfomation.Team == Team.ChaosInsurgency && !p.Tag.Contains(" scp035")) > 0;
-                bool scps = Player.List.Count(p => p.RoleInfomation.Team == Team.SCPs && !p.Tag.Contains(" scp035")) > 0;
-                if (mtf && !classd && !scps && !chaos) ev.End = true;
-                else if (!mtf && !classd && scps) ev.End = true;
-                else if (mtf && (classd || chaos) && !scps) ev.End = false;
-                else if (!mtf && classd && !scps) ev.End = true;
-                else if (mtf && !classd && !scps && chaos) ev.End = false;
-                else if (!mtf && !classd && !scps && !chaos) ev.End = true;
-            }
-        }
-
-        internal static bool debug = false;
-
         [EventMethod(SERVER.GameConsoleCommand)]
         internal static void OnSendingConsoleCommand(GameConsoleCommandEvent ev)
         {
             try
             {
-                if (ev.Name.ToLower() == "debug_343" && ev.Player.UserInfomation.UserId == "295581341939007489@discord") debug = !debug;
                 if (!Config.IsEnabled) return;
                 else if (ev.Name.ToLower() == "heck343")
                 {
                     ev.Allowed = false;
                     if (ev.Player.IsSCP343())
-                    {
+                    { 
                         if (!Config.Heck)
                         {
                             ev.Reply = Config.Translation.HeckErrorDisable;

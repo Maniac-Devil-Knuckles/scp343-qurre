@@ -27,5 +27,5 @@ namespace SCP343.Patches
                 else player.GetSCPBadge().ShootCooldown = Config.ShootCooldown;
             return result;
         }
-    }
+    }   
 }
