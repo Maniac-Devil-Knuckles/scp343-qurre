@@ -39,8 +39,8 @@ namespace SCP343
                 }
                 catch (Exception ex)
                 {
-                    Log.Info("error\n\n\n\n\n\n\n\\n\n");
-                    Log.Info(ex);//
+                    Log.Error("error\n\n\n\n\n\n\n\\n\n");
+                    Log.Error(ex);//
                 }
                 Spawn343 = new();
                 CommandProcessor.RemoteAdminCommandHandler.RegisterCommand(Spawn343);

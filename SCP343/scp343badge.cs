@@ -29,14 +29,23 @@ namespace SCP343
         }
 
         public string RoleColor { get; } = "";
+        
         public string RoleName { get; } = "";
+        
         public Player Player { get; } = null;
+        
         public int Id { get; } = 0;
+        
         public string UserId => Player.UserInfomation.UserId;
+        
         public bool CanOpenDoor { get; internal set; } = false;
+        
         public bool CanHeck { get; internal set; } = false;
+        
         public GameObject GameObject => Player.GameObject;
+        
         public ReferenceHub ReferenceHub => Player.ReferenceHub;
+        
         public bool IsSCP343
         {
             get => _IsScp343;
@@ -46,14 +55,22 @@ namespace SCP343
                 if (value) Scp343BadgeList.Add(this);
             }
         }
+        
         public string SCPName { get; internal set; } = "";
+        
         public int Revive343 { get; internal set; } = 0;
+        
         public RoleTypeId Role { get; } = RoleTypeId.None;
+        
         public Vector3 Pos { get; } = Vector3.zero;
+        
         public bool CanHeal => HealCooldown <= 0;
+
         public int HealCooldown { get; internal set; } = 120;
 
         public int ShootCooldown { get; internal set; } = 10;
+
+        public bool IsInvisible { get; internal set; } = false;
 
         private bool _IsScp343 = false;
     }

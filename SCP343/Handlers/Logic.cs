@@ -36,7 +36,7 @@ namespace SCP343.Handlers
                 else if (!IsShowed)
                 {
                     IsShowed = true;
-                    new Qurre.API.Controllers.Broadcast(player, Config.Translation.End_Cooldown, 5).Start();
+                    player.Broadcasts.Add(new Qurre.API.Controllers.Broadcast(player, Config.Translation.End_Cooldown, 5), true);
                 }
 
                 if (player.GetSCPBadge().ShootCooldown > 0) player.GetSCPBadge().ShootCooldown--;
@@ -50,7 +50,7 @@ namespace SCP343.Handlers
             {
                 yield return Timing.WaitForSeconds(1f);
                 int cooldown = player.GetSCPBadge().HealCooldown;
-                if (cooldown > 0) new Qurre.API.Controllers.Broadcast(player, Config.Translation.CoolDown.Replace("%seconds%", cooldown.ToString()), 1).Start();
+                if (cooldown > 0) player.Broadcasts.Add(new Qurre.API.Controllers.Broadcast(player, Config.Translation.CoolDown.Replace("%seconds%", cooldown.ToString()), 1), true);
             }
         }
 
@@ -66,15 +66,16 @@ namespace SCP343.Handlers
 
         internal static IEnumerator<float> RunTranq(Player player)
         {
-            player.Client.ShakeScreen();
             player.GamePlay.GodMode = true;
-            new Qurre.API.Controllers.Broadcast(player, Config.Translation.YouWereTranq, 4).Start();
-            Ragdoll ragdoll = new(player.RoleInfomation.Role, player.MovementState.Position, player.MovementState.CameraReference.rotation, new PlayerStatsSystem.CustomReasonDamageHandler("tranquilizer", 0), player);
+            player.Broadcasts.Add(new Qurre.API.Controllers.Broadcast(player, Config.Translation.YouWereTranq, 4), true);
+            Ragdoll ragdoll = new(player.RoleInfomation.Role, player.MovementState.Position + Vector3.up, player.MovementState.CameraReference.rotation, new PlayerStatsSystem.CustomReasonDamageHandler("tranquilizer", 0), player);
             Vector3 pos = player.MovementState.Position;
-            player.MovementState.Position = new(1, 1, 1);
+            yield return Timing.WaitForSeconds(0.1f);
+            player.MovementState.Position = new(0,0,0);
             yield return Timing.WaitForSeconds(5f);
-            player.GamePlay.GodMode = false;
             player.MovementState.Position = pos;
+            yield return Timing.WaitForSeconds(0.1f);
+            player.GamePlay.GodMode = false;
             player.Client.ShakeScreen();
             ragdoll.Destroy();
         }
@@ -122,7 +123,7 @@ namespace SCP343.Handlers
             if (Config.Alert && !scp0492)
             {
                 player.Broadcasts.Clear();
-                new Qurre.API.Controllers.Broadcast(player,Config.Translation.AlertText,15).Start();
+                player.Broadcasts.Add(new Qurre.API.Controllers.Broadcast(player, Config.Translation.AlertText, 15), true);
             }
             if (Config.Console && !scp0492) player.Client.SendConsole("\n----------------------------------------------------------- \n" + Config.Translation.ConsoleText.Replace("343DOORTIME", Config.OpenDoorTime.ToString()).Replace("343HECKTIME", Config.HeckTime.ToString()).Replace("\\n", "\n") + "\n-----------------------------------------------------------", "green");
 

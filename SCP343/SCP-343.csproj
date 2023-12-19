@@ -50,7 +50,8 @@
     <Reference Include="NorthwoodLib">
       <HintPath>..\..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\SCP Secret Laboratory Dedicated Server\SCPSL_Data\Managed\NorthwoodLib.dll</HintPath>
     </Reference>
-    <Reference Include="Pooling">
+    <Reference Include="Pooling, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\SCP Secret Laboratory Dedicated Server\SCPSL_Data\Managed\Pooling.dll</HintPath>
     </Reference>
     <Reference Include="Qurre, Version=2.0.0.36, Culture=neutral, processorArchitecture=MSIL">
@@ -97,7 +98,7 @@
     <Compile Include="Handlers\Logic.cs" />
     <Compile Include="Handlers\Eventhandlers.cs" />
     <Compile Include="Translation.cs" />
-    <Compile Include="Patches\FirearmPatch.cs" />
+    <Compile Include="Patches\PatchGame.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
